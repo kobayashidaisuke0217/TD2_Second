@@ -35,4 +35,6 @@ private:
 	Vector3 velocity_;
 	Vector3 acceleration_;
 	Vector3 gravity_;
+
+	bool isCollision_;
 };

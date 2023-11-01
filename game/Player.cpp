@@ -20,33 +20,42 @@ void Player::Initialize(){
 
 
 void Player::Update() {
-	//acceleration_=acceleration_ + gravity_;
+	acceleration_=acceleration_ + gravity_;
 	velocity_ = velocity_+ acceleration_ + gravity_;
 	velocity_.x = direction_;
 	velocity_.y = std::clamp(velocity_.y,-0.4f,0.4f);
+	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		velocity_.y = 3.0f;
+		acceleration_ = { 0 ,0,0 };
+	}
 	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
 	worldTransform_.UpdateMatrix();
 	obb_.center = worldTransform_.translation_;
+	isCollision_ = true;
 }
 
 void Player::OnCollision(OBB& partner) {
-	if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
-		if ((obb_.center.x - partner.center.x)>0.0f){
-			//上に載ってるときの処理
-			acceleration_ = { 0 ,0,0 };
-			velocity_ = { 0,0,0 };
-			worldTransform_.translation_.y = partner.center.y + 1.0f;
+	if (isCollision_) {
+		if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
+			if ((obb_.center.x - partner.center.x) > 0.0f) {
+				//上に載ってるときの処理
+				acceleration_ = { 0 ,0,0 };
+				velocity_ = { 0,0,0 };
+				worldTransform_.translation_.y = partner.center.y + 1.0f;
+			}
+			else {
+				//デバッグ用
+				//worldTransform_.translation_.y += 10.0f;
+			}
 		}
 		else {
-			//デバッグ用
-			//worldTransform_.translation_.y += 10.0f;
+			//横方向から当たったときの処理
+			worldTransform_.translation_.x = partner.center.x + Normalise(obb_.center - partner.center).x * 1.0f;
+			direction_ *= -1.0f;
 		}
+		isCollision_ = false;
 	}
-	else {
-		//横方向から当たったときの処理
-		worldTransform_.translation_.x = partner.center.x + Normalise(obb_.center - partner.center).x * 1.0f;
-		direction_ *= -1.0f;
-	}
+	
 }
 
 void Player::Draw(const ViewProjection& viewProjection) { model_->Draw(worldTransform_,viewProjection); }
