@@ -180,6 +180,96 @@ inline bool IsCollision(const OBB& obb, const StructSphere& sphere) {
 
 	return IsCollision(aabbOBBLocal, sphereObbLocal);
 }
+inline bool IsCollision(const OBB& obb1, const OBB& obb2) {
+	Vector3 separatingAxis[15];
+	separatingAxis[0] = obb1.orientation[0];
+	separatingAxis[1] = obb1.orientation[1];
+	separatingAxis[2] = obb1.orientation[2];
+	separatingAxis[3] = obb2.orientation[0];
+	separatingAxis[4] = obb2.orientation[1];
+	separatingAxis[5] = obb2.orientation[2];
+	int axisNum = 6;
+	for (int index1 = 0; index1 < 3; index1++)
+	{
+		for (int index2 = 0; index2 < 3; index2++)
+		{
+			separatingAxis[axisNum] = Cross(obb1.orientation[index1], obb2.orientation[index2]);
+			axisNum++;
+		}
+	}
+
+	Vector3 obb1Vetyex[8];
+	//bottom
+	obb1Vetyex[0] = Vector3{ -obb1.size.x, -obb1.size.y, -obb1.size.z };
+	obb1Vetyex[1] = Vector3{ +obb1.size.x, -obb1.size.y, -obb1.size.z };
+	obb1Vetyex[2] = Vector3{ -obb1.size.x, -obb1.size.y, +obb1.size.z };
+	obb1Vetyex[3] = Vector3{ +obb1.size.x, -obb1.size.y, +obb1.size.z };
+	//top
+	obb1Vetyex[4] = Vector3{ -obb1.size.x, +obb1.size.y, -obb1.size.z };
+	obb1Vetyex[5] = Vector3{ +obb1.size.x, +obb1.size.y, -obb1.size.z };
+	obb1Vetyex[6] = Vector3{ -obb1.size.x, +obb1.size.y, +obb1.size.z };
+	obb1Vetyex[7] = Vector3{ +obb1.size.x, +obb1.size.y, +obb1.size.z };
+
+	Matrix4x4 rotateMatrix1 = MakeRotateMatrixFromOrientations(obb1.orientation);
+
+	Vector3 obb2Vetyex[8];
+	//bottom
+	obb2Vetyex[0] = Vector3{ -obb2.size.x, -obb2.size.y, -obb2.size.z };
+	obb2Vetyex[1] = Vector3{ +obb2.size.x, -obb2.size.y, -obb2.size.z };
+	obb2Vetyex[2] = Vector3{ -obb2.size.x, -obb2.size.y, +obb2.size.z };
+	obb2Vetyex[3] = Vector3{ +obb2.size.x, -obb2.size.y, +obb2.size.z };
+	//top
+	obb2Vetyex[4] = Vector3{ -obb2.size.x, +obb2.size.y, -obb2.size.z };
+	obb2Vetyex[5] = Vector3{ +obb2.size.x, +obb2.size.y, -obb2.size.z };
+	obb2Vetyex[6] = Vector3{ -obb2.size.x, +obb2.size.y, +obb2.size.z };
+	obb2Vetyex[7] = Vector3{ +obb2.size.x, +obb2.size.y, +obb2.size.z };
+
+	Matrix4x4 rotateMatrix2 = MakeRotateMatrixFromOrientations(obb2.orientation);
+
+	for (int index = 0; index < 8; index++)
+	{
+		obb1Vetyex[index] = obb1Vetyex[index] * rotateMatrix1;
+		obb1Vetyex[index] = Add(obb1Vetyex[index], obb1.center);
+		obb2Vetyex[index] = obb2Vetyex[index] * rotateMatrix2;
+		obb2Vetyex[index] = Add(obb2Vetyex[index], obb2.center);
+	}
+
+	for (axisNum = 0; axisNum < 15; axisNum++)
+	{
+		float projectionPoint1[8];
+		float projectionPoint2[8];
+		float min1, max1;
+		float min2, max2;
+		for (int index = 0; index < 8; index++)
+		{
+			projectionPoint1[index] = Dot(obb1Vetyex[index], Normalise(separatingAxis[axisNum]));
+			projectionPoint2[index] = Dot(obb2Vetyex[index], Normalise(separatingAxis[axisNum]));
+			if (index == 0)
+			{
+				min1 = projectionPoint1[index];
+				min2 = projectionPoint2[index];
+				max1 = min1;
+				max2 = min2;
+			}
+			else
+			{
+				min1 = (std::min)(min1, projectionPoint1[index]);
+				min2 = (std::min)(min2, projectionPoint2[index]);
+				max1 = (std::max)(max1, projectionPoint1[index]);
+				max2 = (std::max)(max2, projectionPoint2[index]);
+			}
+		}
+		float L1 = max1 - min1;
+		float L2 = max2 - min2;
+		float sumSpan = L1 + L2;
+		float longSpan = (std::max)(max1, max2) - (std::min)(min1, min2);
+		if (sumSpan < longSpan)
+		{
+			return false;
+		}
+	}
+	return true;
+}
 inline Vector3 GetXAxis(const Matrix4x4& m) {
 	return { m.m[0][0],m.m[0][1],m.m[0][2] };
 }

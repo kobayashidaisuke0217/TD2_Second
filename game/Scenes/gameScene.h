@@ -11,6 +11,7 @@
 #include "Texturemanager.h"
 #include "GlobalVariables.h"
 #include "Particle.h"
+#include "game/Player.h"
 class GameScene:public Iscene
 {
 public:
@@ -32,5 +33,7 @@ private:
 	void Draw2D();
 	void Draw3D();
 	void ApplyGlobalVariables();
+
+	std::unique_ptr<Player> player_;
 };
 

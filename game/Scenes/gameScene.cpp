@@ -1,5 +1,5 @@
 #include "gameScene.h"
-
+#include "MapManager.h"
 
 GameScene::~GameScene()
 {
@@ -16,13 +16,20 @@ void GameScene::Initialize()
 
 	viewProjection_.Initialize();
 	
-	
+	MapManager::GetInstance()->Initialize();
+	MapManager::GetInstance()->MapRead();
+	player_.reset(new Player);
+	player_->Initialize();
 }
 
 void GameScene::Update()
 {
+	ImGui::Begin("testcamera");
+	ImGui::DragFloat3("rotate", &viewProjection_.rotation_.x,0.01f);
+	ImGui::DragFloat3("translate", &viewProjection_.translation_.x,0.01f);
 	
-	
+	ImGui::End();
+
 	viewProjection_.UpdateMatrix();
 	viewProjection_.TransferMatrix();
 
@@ -34,6 +41,13 @@ void GameScene::Update()
 		sceneNum = 1;
 	}
 	ImGui::End();
+	player_->Update();
+	std::vector<MapManager::Map>& mapObjects = MapManager::GetInstance()->GetMapObject();
+	for (MapManager::Map & object : mapObjects) {
+		if (IsCollision(player_->GetOBB(), object.obb)) {
+			player_->OnCollision(object.obb);
+		}
+	}
 }
 
 
@@ -52,7 +66,8 @@ void GameScene::Draw3D()
 {
 	blueMoon_->ModelPreDraw();
 	
-	
+	MapManager::GetInstance()->Draw(viewProjection_);
+	player_->Draw(viewProjection_);
 	blueMoon_->PariclePreDraw();
 	
 	blueMoon_->ModelPreDrawWireFrame();
