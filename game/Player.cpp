@@ -19,7 +19,7 @@ void Player::Initialize(){
 
 	obbFloatTrigger_.size = { worldTransform_.scale_.x / 2.0f,worldTransform_.scale_.y*2,worldTransform_.scale_.z / 2.0f };
 	obbFloatTrigger_.center = worldTransform_.translation_;
-	obbFloatTrigger_.center.y -= 1.5;
+	obbFloatTrigger_.center.y -= 2.5;
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 }
 
@@ -30,7 +30,7 @@ void Player::Update() {
 		velocity_.y = 0.0f;
 		acceleration_ = { 0 ,0.05f,0 };
 	}
-	float kSpeed = 0.1f;
+	float kSpeed = 0.3f;
 	acceleration_=acceleration_ + gravity_;
 	velocity_ = velocity_+ acceleration_ + gravity_;
 	velocity_.x = direction_ * kSpeed;

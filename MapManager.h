@@ -47,7 +47,7 @@ public:
 	std::vector<Map>& GetWall() { return wall_; };
 
 	//マップの読み込み最大幅
-	static const uint32_t kMapWidth = 20;
+	static const uint32_t kMapWidth = 30;
 	//マップの読み込み最大高さ
 	static const uint32_t kMapHeight = 20;
 
