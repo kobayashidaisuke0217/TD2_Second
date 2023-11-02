@@ -1,111 +1,121 @@
 #include "particle.h"
+#include <assert.h>
+#include "BlueMoon.h"
 
-void Particle::Initialize( const Vector4& a, const Vector4& b)
+void Particle::Initialize()
 {
-	dxCommon_ = DirectXCommon::GetInstance();
-	engine_ = BlueMoon::GetInstance();
-	CreateVartexData(a, b);
-	SetColor();
-	CreateTransform();
+	direct_ = DirectXCommon::GetInstance();
+
 	textureManager_ = Texturemanager::GetInstance();
+
 	directionalLight_ = DirectionalLight::GetInstance();
+	SettingVertex();
+	SetColor();
+	TransformMatrix();
+}
+void Particle::TransformMatrix()
+{
+
+	instancingResource_ = direct_->CreateBufferResource(direct_->GetDevice().Get(), sizeof(Matrix4x4) * kNumInstance_);
+	instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
+	CreateSRV(1);
+	for (uint32_t index = 0; index < kNumInstance_; ++index) {
+		instancingData[index] = MakeIdentity4x4();
+		transforms[index].scale = { 1.0f,1.0f,1.0f };
+		transforms[index].rotate = { 0.0f,0.0f,0.0f };
+		transforms[index].translate = { index * 0.1f,index * 0.1f,index * 0.1f };
+
+	}
+}
+void Particle::CreateSRV(uint32_t num)
+{
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;//2Dテクスチャ
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	srvDesc.Buffer.NumElements = kNumInstance_;
+	srvDesc.Buffer.StructureByteStride = sizeof(Matrix4x4);
+	srvHandleCPU_ = textureManager_->GettextureSrvHandleCPU(direct_->GetSrvHeap().Get(), textureManager_->GetSizeSRV(), num);
+	srvHandleGPU_ = textureManager_->GettextureSrvHandleGPU(direct_->GetSrvHeap().Get(), textureManager_->GetSizeSRV(), num);
+	direct_->GetDevice().Get()->CreateShaderResourceView(instancingResource_.Get(), &srvDesc, srvHandleCPU_);
 }
 void Particle::SetColor() {
-	materialResource_ = DirectXCommon::CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(Material));
+	materialResource_ = DirectXCommon::CreateBufferResource(direct_->GetDevice().Get(), sizeof(Material));
 
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	materialData_->uvTransform = MakeIdentity4x4();
-}
-void Particle::Draw(const Transform& transform, const Transform& uvTransform, const Vector4& material, uint32_t texIndex)
-{
 
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	Matrix4x4 viewMatrix = MakeIdentity4x4();
-	Matrix4x4 projectionmatrix = MakeOrthographicMatrix(0.0f, 0.0f, (float)dxCommon_->GetWin()->kClientWidth, (float)dxCommon_->GetWin()->kClientHeight, 0.0f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionmatrix));
+}
+
+void Particle::Draw(const WorldTransform& transform, const ViewProjection& viewProjection, const Vector4& material, uint32_t index)
+{
+	Transform uvTransform = { { 1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f} };
 
 	Matrix4x4 uvtransformMtrix = MakeScaleMatrix(uvTransform.scale);
 	uvtransformMtrix = Multiply(uvtransformMtrix, MakeRotateZMatrix(uvTransform.rotate.z));
 	uvtransformMtrix = Multiply(uvtransformMtrix, MakeTranslateMatrix(uvTransform.translate));
-
-
+	for (uint32_t i = 0; i < kNumInstance_; ++i) {
+		instancingData[i] = MakeAffineMatrix(transforms[i].scale, transforms[i].rotate, transforms[i].translate);
+		instancingData[i] = Multiply(instancingData[i], transform.matWorld_);
+	}
 	*materialData_ = { material,false };
-	/*materialData_->uvTransform = MakeAffineMatrix(uvTransform.scale, uvTransform.rotate, uvTransform.translate);*/
 	materialData_->uvTransform = uvtransformMtrix;
-	*wvpData_ = { worldViewProjectionMatrix,worldMatrix };
 
-	dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
-	dxCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView);
+	direct_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);//VBVを設定
 	//形状を設定。PS0にせっていしているものとはまた別。同じものを設定すると考えておけばいい
-	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight_->GetResource()->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureManager_->GetGPUHandle(texIndex));
-	dxCommon_->GetCommandList()->DrawIndexedInstanced(6, 10, 0, 0, 0);
-	//dxCommon_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	direct_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//material
+	direct_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	//worldTransform
+	direct_->GetCommandList()->SetGraphicsRootDescriptorTable(1, srvHandleGPU_);
+
+	direct_->GetCommandList()->SetGraphicsRootConstantBufferView(4, viewProjection.constBuff_->GetGPUVirtualAddress());
+	//Light
+	direct_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight_->GetResource()->GetGPUVirtualAddress());
+
+	//texture
+	direct_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureManager_->GetGPUHandle(index));
+
+
+	//描画！(DrawCall/ドローコール)・3頂点で1つのインスタンス。インスタンスについては今後
+	direct_->GetCommandList()->DrawInstanced(6, kNumInstance_, 0, 0);
 
 }
-
 void Particle::Finalize()
 {
-	/*vertexResource->Release();
-	materialResource_->Release();
-	wvpResource_->Release();
-	directionalLightResource_->Release();
-	indexResource_->Release();*/
+
 }
 
-void Particle::CreateVartexData(const Vector4& a, const Vector4& b)
-{
-	vertexResource = dxCommon_->CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(VertexData) * 6);
+void Particle::SettingVertex() {
 
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	vertexResource_ = DirectXCommon::CreateBufferResource(direct_->GetDevice().Get(), sizeof(VertexData) * 6);
+	//リソースの先頭のアドレスから使う
+	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+	//使用するリソースのサイズは頂点3つ分のサイズ
+	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 6;
+	//1頂点当たりのサイズ
+	vertexBufferView_.StrideInBytes = sizeof(VertexData);
+	//書き込むためのアドレスを取得
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	vertexData_[0].position = { -0.5f,-0.5f,0.0f,1.0f };
 
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
+	//上
+	vertexData_[1].position = { -0.5f,0.5f,0.0f,1.0f };
 
-	vertexBufferView.StrideInBytes = sizeof(VertexData);
+	//右下
+	vertexData_[2].position = { 0.5f,-0.5f,0.0f,1.0f };
 
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-
-	indexResource_ = dxCommon_->CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(uint32_t) * 6);
-
-	indexBufferView.BufferLocation = indexResource_->GetGPUVirtualAddress();
-
-	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
-
-	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-	//座標
-	vertexData_[0].position = { a.x,b.y,0.0f,1.0f };
-	vertexData_[1].position = { a.x,a.y,0.0f,1.0f };
-	vertexData_[2].position = { b.x,b.y,0.0f,1.0f };
-	vertexData_[3].position = { a.x,a.y,0.0f,1.0f };
-	vertexData_[4].position = { b.x,a.y,0.0f,1.0f };
-	vertexData_[5].position = { b.x,b.y,0.0f,1.0f };
-	//texcoord
+	vertexData_[3].position = { -0.5f,0.5,0.0f,1.0f };
+	vertexData_[4].position = { 0.5f,0.5f,0.0f,1.0f };
+	vertexData_[5].position = { 0.5f,-0.5f,0.0f,1.0f };
 	vertexData_[0].texcoord = { 0.0f,1.0f };
 	vertexData_[1].texcoord = { 0.0f,0.0f };
 	vertexData_[2].texcoord = { 1.0f,1.0f };
 	vertexData_[3].texcoord = { 0.0f,0.0f };
 	vertexData_[4].texcoord = { 1.0f,0.0f };
 	vertexData_[5].texcoord = { 1.0f,1.0f };
-	indexData_[0] = 0;
-	indexData_[1] = 1;
-	indexData_[2] = 2;
-	indexData_[3] = 4;
-	indexData_[4] = 2;
-	indexData_[5] = 3;
 	for (int i = 0; i < 6; i++) {
 		vertexData_[i].normal = { 0.0f,0.0f,-1.0f };
 	}
-
-}
-
-void Particle::CreateTransform()
-{
-
-	wvpResource_ = DirectXCommon::CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(Transformmatrix));
-	wvpResource_->Map(0, NULL, reinterpret_cast<void**>(&wvpData_));
-	wvpData_->WVP = MakeIdentity4x4();
 }

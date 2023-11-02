@@ -4,35 +4,38 @@
 #include "BlueMoon.h"
 #include "DirectionalLight.h"
 #include "TextureManager.h"
+#include "Worldtransform.h"
+#include "ViewProjection.h"
 class Particle
 {
 public:
-	void Initialize( const Vector4& a, const Vector4& b);
-
-	void Draw(const Transform& transform, const Transform& uvTransform, const  Vector4& material, uint32_t texIndex);
-	
+	void Initialize();
+	void Draw(const WorldTransform& transform, const ViewProjection& viewProjection, const Vector4& material, uint32_t index);
 	void Finalize();
-private:
 
-	DirectXCommon* dxCommon_;
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
-	VertexData* vertexData_;
-	Texturemanager* textureManager_ = nullptr;
+private:
+	void SettingVertex();
+	void SetColor();
+	void TransformMatrix();
+	void CreateSRV(uint32_t num);
+private:
+	Texturemanager* textureManager_;
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
+	DirectXCommon* direct_;
+	VertexData* vertexData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
+
 	Material* materialData_;
-	BlueMoon* engine_;
-	DirectionalLight* directionalLight_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 	Transformmatrix* wvpData_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
-	D3D12_INDEX_BUFFER_VIEW indexBufferView{};
-	uint32_t* indexData_;
-private:
-	void CreateVartexData(const Vector4& a, const Vector4& b);
-	void CreateTransform();
-	void SetColor();
-	
+	DirectionalLight* directionalLight_;
+	static	const uint32_t kNumInstance_ = 10;
+	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
+	Matrix4x4* instancingData;
+	Transform transforms[kNumInstance_];
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU_;
 };
 
