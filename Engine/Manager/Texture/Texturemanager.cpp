@@ -6,7 +6,7 @@ void Texturemanager::Initialize()
 	descriptorSizeDSV = dirctXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	descriptorSizeRTV = dirctXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	descriptorSizeSRV = dirctXCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	textureIndex_ = -1;
+	textureIndex_ = 2;
 }
 
 Texturemanager* Texturemanager::GetInstance()
@@ -18,14 +18,14 @@ Texturemanager* Texturemanager::GetInstance()
 uint32_t Texturemanager::Load(const std::string& filePath)
 {
 	textureIndex_++;
-	LoadTexture(filePath,textureIndex_);
+	LoadTexture(filePath, textureIndex_);
 	return textureIndex_;
 }
 
 
 const D3D12_GPU_DESCRIPTOR_HANDLE Texturemanager::GetGPUHandle(uint32_t textureHandle)
 {
-	D3D12_GPU_DESCRIPTOR_HANDLE GPUHandle =textureSrvHandleGPU_[textureHandle];
+	D3D12_GPU_DESCRIPTOR_HANDLE GPUHandle = textureSrvHandleGPU_[textureHandle];
 	return GPUHandle;
 }
 
