@@ -42,10 +42,22 @@ void GameScene::Update()
 	}
 	ImGui::End();
 	player_->Update();
-	std::vector<MapManager::Map>& mapObjects = MapManager::GetInstance()->GetMapObject();
+	/*std::vector<MapManager::Map>& mapObjects = MapManager::GetInstance()->GetMapObject();
 	for (MapManager::Map & object : mapObjects) {
 		if (IsCollision(player_->GetOBB(), object.obb)) {
 			player_->OnCollision(object.obb);
+		}
+	}*/
+	std::vector<MapManager::Map>& floors = MapManager::GetInstance()->GetFloor();
+	for (MapManager::Map& object : floors) {
+		if (IsCollision(player_->GetOBB(), object.obb)) {
+			player_->OnCollisionFloor(object.obb);
+		}
+	}
+	std::vector<MapManager::Map>& walls = MapManager::GetInstance()->GetWall();
+	for (MapManager::Map& object : walls) {
+		if (IsCollision(player_->GetOBB(), object.obb)) {
+			player_->OnCollisionWall(object.obb);
 		}
 	}
 }

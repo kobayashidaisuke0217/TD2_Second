@@ -65,6 +65,12 @@ void MapManager::MapBuild() {
 				obb.center = worldTransform.translation_;
 				Map object{ map[y][x] ,obb,worldTransform };
 				mapObject_.push_back(object);
+				if (map[y][x] == MapState::Block) {
+					floor_.push_back(object);
+				}
+				else if (map[y][x] == MapState::Wall) {
+					wall_.push_back(object);
+				}
 			}
 		}
 	}

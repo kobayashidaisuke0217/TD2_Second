@@ -22,6 +22,9 @@ public:
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 	void OnCollision(OBB& partner);
+	void OnCollisionFloor(OBB& partner);
+	void OnCollisionWall(OBB& partner);
+
 	OBB& GetOBB() { return obb_; };
 private:
 	Input* input_ = nullptr;
@@ -37,4 +40,6 @@ private:
 	Vector3 gravity_;
 
 	bool isCollision_;
+	bool isCollisionFloor_;
+	bool isCollisionWall_;
 };

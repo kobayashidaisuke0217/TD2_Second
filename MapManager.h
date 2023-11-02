@@ -17,6 +17,7 @@ public:
 		MapState mapState;
 		OBB obb;
 		WorldTransform worldTransform;
+		void OnCollision() {};
 	};
 
 	static MapManager* GetInstance();
@@ -31,6 +32,8 @@ public:
 	void Draw(const ViewProjection&);
 
 	std::vector<Map>& GetMapObject() { return mapObject_; };
+	std::vector<Map>& GetFloor() { return floor_; };
+	std::vector<Map>& GetWall() { return wall_; };
 
 	//マップの読み込み最大幅
 	static const uint32_t kMapWidth = 20;
@@ -45,6 +48,10 @@ private:
 	std::unique_ptr<Model> modelBlock_;
 
 	std::vector<Map> mapObject_;
+
+	std::vector<Map> floor_;
+	std::vector<Map> wall_;
+
 
 	MapState map[kMapHeight][kMapWidth];
 	uint32_t mapWidth_;
