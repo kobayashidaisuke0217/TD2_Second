@@ -13,13 +13,19 @@ void Player::Initialize(){
 	direction_ = 1.0f;
 	model_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0,0,0 });
-	obb_.size = { worldTransform_.scale_.x / 2.0f,worldTransform_.scale_.y / 2.0f,worldTransform_.scale_.z / 2.0f };	GetOrientations(rotateMatrix, obb_.orientation);
+	obb_.size = { worldTransform_.scale_.x / 2.0f,worldTransform_.scale_.y / 2.0f,worldTransform_.scale_.z / 2.0f };
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
+
+	obbFloatTrigger_.size = { worldTransform_.scale_.x / 2.0f,worldTransform_.scale_.y*2,worldTransform_.scale_.z / 2.0f };
+	obbFloatTrigger_.center = worldTransform_.translation_;
+	obbFloatTrigger_.center.y -= 1.5;
+	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 }
 
 
 void Player::Update() {
+	prePosition_ = worldTransform_.translation_;
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		velocity_.y = 0.0f;
 		acceleration_ = { 0 ,0.05f,0 };
@@ -32,6 +38,8 @@ void Player::Update() {
 	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
 	worldTransform_.UpdateMatrix();
 	obb_.center = worldTransform_.translation_;
+	obbFloatTrigger_.center = worldTransform_.translation_;
+	obbFloatTrigger_.center.y -= 1.5;
 	isCollision_ = true;
 	isCollisionFloor_ = true;
 	isCollisionWall_ = true;
@@ -40,7 +48,7 @@ void Player::Update() {
 void Player::OnCollision(OBB& partner) {
 	if (isCollision_) {
 		if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
-			if ((obb_.center.x - partner.center.x) > 0.0f) {
+			if ((obb_.center.y - prePosition_.y) < 0.0f) {
 				//上に載ってるときの処理
 				acceleration_ = { 0 ,0,0 };
 				velocity_ = { 0,0,0 };
@@ -64,7 +72,7 @@ void Player::OnCollision(OBB& partner) {
 void Player::OnCollisionFloor(OBB& partner) {
 	if (isCollisionFloor_) {
 		if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
-			if ((obb_.center.x - partner.center.x) > 0.0f) {
+			if ((obb_.center.y - prePosition_.y) <= 0.0f) {
 				//上に載ってるときの処理
 				acceleration_ = { 0 ,0,0 };
 				velocity_ = { 0,0,0 };
@@ -73,6 +81,7 @@ void Player::OnCollisionFloor(OBB& partner) {
 			else {
 				//デバッグ用
 				//worldTransform_.translation_.y += 10.0f;
+				worldTransform_.translation_.y = partner.center.y - 1.0f;
 			}
 		}
 		else {

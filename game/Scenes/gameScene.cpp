@@ -24,6 +24,10 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	if (Input::GetInstance()->PushKey(DIK_1)) {
+		MapManager::GetInstance()->MapRead();
+		player_->Initialize();
+	}
 	ImGui::Begin("testcamera");
 	ImGui::DragFloat3("rotate", &viewProjection_.rotation_.x,0.01f);
 	ImGui::DragFloat3("translate", &viewProjection_.translation_.x,0.01f);
@@ -48,10 +52,15 @@ void GameScene::Update()
 			player_->OnCollision(object.obb);
 		}
 	}*/
+	MapManager::GetInstance()->Update();
 	std::vector<MapManager::Map>& floors = MapManager::GetInstance()->GetFloor();
 	for (MapManager::Map& object : floors) {
 		if (IsCollision(player_->GetOBB(), object.obb)) {
 			player_->OnCollisionFloor(object.obb);
+			object.OnCollision();
+		}
+		if (IsCollision(player_->GetFloatTrigger(), object.obb)) {
+			object.Touch();
 		}
 	}
 	std::vector<MapManager::Map>& walls = MapManager::GetInstance()->GetWall();

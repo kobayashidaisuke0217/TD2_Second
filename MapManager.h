@@ -17,7 +17,18 @@ public:
 		MapState mapState;
 		OBB obb;
 		WorldTransform worldTransform;
-		void OnCollision() {};
+		bool isCollision_;
+		bool isTouch_;
+		bool moveFlag_;
+		bool isMove_;
+		uint32_t countUp_;
+		WorldTransform from;
+		WorldTransform to;
+		uint32_t moveAnimationLength_;
+		void Update();
+		void Move();
+		void OnCollision() ;
+		void Touch();
 	};
 
 	static MapManager* GetInstance();
@@ -39,6 +50,10 @@ public:
 	static const uint32_t kMapWidth = 20;
 	//マップの読み込み最大高さ
 	static const uint32_t kMapHeight = 15;
+
+	//ブロックの浮き上がりの高さ
+	static const uint32_t kBlockFloatForce = 4;
+	static const uint32_t kBlocckFloatAnimationLength = 60;
 private:
 	MapManager() = default;
 	~MapManager() = default;

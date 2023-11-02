@@ -26,6 +26,8 @@ public:
 	void OnCollisionWall(OBB& partner);
 
 	OBB& GetOBB() { return obb_; };
+	OBB& GetFloatTrigger() { return obbFloatTrigger_; };
+
 private:
 	Input* input_ = nullptr;
 	std::unique_ptr<Model> model_;
@@ -33,11 +35,13 @@ private:
 	WorldTransform worldTransform_;
 
 	OBB obb_;
+	OBB obbFloatTrigger_;
 
 	float direction_;
 	Vector3 velocity_;
 	Vector3 acceleration_;
 	Vector3 gravity_;
+	Vector3 prePosition_;
 
 	bool isCollision_;
 	bool isCollisionFloor_;

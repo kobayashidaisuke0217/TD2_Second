@@ -51,6 +51,9 @@ void MapManager::MapRead()
 
 void MapManager::MapBuild() {
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{0,0,0});
+	mapObject_.clear();
+	floor_.clear();
+	wall_.clear();
 	for (uint32_t y = 0; y < mapHeight_;y++) {
 		for (uint32_t x = 0; x < mapWidth_;x++) {
 			if (map[y][x] != MapState::None) {
@@ -77,11 +80,74 @@ void MapManager::MapBuild() {
 }
 
 void MapManager::Update() {
-
+	for (Map& object : floor_) {
+		object.Update();
+	}
 }
 
 void MapManager::Draw(const ViewProjection& viewProjection) {
-	for (Map& object : mapObject_) {
+	/*for (Map& object : mapObject_) {
 		modelBlock_->Draw(object.worldTransform,viewProjection);
+	}*/
+	for (Map& object : floor_) {
+		modelBlock_->Draw(object.worldTransform, viewProjection);
+	}
+	for (Map& object : wall_) {
+		modelBlock_->Draw(object.worldTransform,viewProjection);
+	}
+}
+
+void MapManager::Map::Update() {
+	if (moveFlag_ && !isTouch_) {
+		//移動開始
+		if (!isCollision_) {
+			moveFlag_ = false;
+			from.translation_ = worldTransform.translation_;
+			to.translation_ = worldTransform.translation_;
+			to.translation_.y += float(kBlockFloatForce);
+			moveAnimationLength_ = kBlocckFloatAnimationLength;
+			countUp_ = 0;
+			isMove_ = true;
+			isCollision_ = false;
+		}
+		else {
+			moveFlag_ = false;
+			from.translation_ = worldTransform.translation_;
+			to.translation_ = worldTransform.translation_;
+			to.translation_.y -= float(kBlockFloatForce);
+			moveAnimationLength_ = kBlocckFloatAnimationLength;
+			countUp_ = 0;
+			isMove_ = true;
+			isCollision_ = false;
+		}
+		moveFlag_ = false;
+	}
+	//isCollision_ = false;
+	isTouch_ = false;
+	if (isMove_) {
+		Move();
+	}
+	obb.center = worldTransform.translation_;
+	worldTransform.UpdateMatrix();
+}
+
+void MapManager::Map::Move() {
+	float t = float(countUp_) / float(moveAnimationLength_);
+	worldTransform.translation_ = Lerp(t,from.translation_,to.translation_);
+	if (countUp_ >= moveAnimationLength_) {
+		countUp_ = 0;
+		isMove_ = false;
+	}
+	countUp_++;
+}
+
+void MapManager::Map::OnCollision() {
+	isCollision_ = true;
+}
+
+void MapManager::Map::Touch() {
+	if (!isMove_) {
+		isTouch_ = true;
+		moveFlag_ = true;
 	}
 }
