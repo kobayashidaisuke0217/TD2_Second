@@ -49,7 +49,7 @@ public:
 	//マップの読み込み最大幅
 	static const uint32_t kMapWidth = 20;
 	//マップの読み込み最大高さ
-	static const uint32_t kMapHeight = 15;
+	static const uint32_t kMapHeight = 20;
 
 	//ブロックの浮き上がりの高さ
 	static const uint32_t kBlockFloatForce = 4;
