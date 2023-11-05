@@ -36,7 +36,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
 	Matrix4x4* instancingData;
 	Transform transforms[kNumInstance_];
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU_;
-	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU_;
+	uint32_t index_;
 };
 

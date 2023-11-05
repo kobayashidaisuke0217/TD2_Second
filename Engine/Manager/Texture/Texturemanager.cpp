@@ -90,7 +90,7 @@ void Texturemanager::LoadTexture(const std::string& filePath, uint32_t index)
 
 	//SRVを作成するDescripterHeapの場所を決める
 	SrvHeap_->SetGPUHandle( dirctXCommon_->GetSrvHeap().Get(), SrvHeap_->GetSizeSRV(),index);//direct_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
-	SrvHeap_->SetGPUHandle(dirctXCommon_->GetSrvHeap().Get(), SrvHeap_->GetSizeSRV(), index);
+	SrvHeap_->SetCPUHandle(dirctXCommon_->GetSrvHeap().Get(), SrvHeap_->GetSizeSRV(), index);
 	//先頭はIMGUIが使ってるからその次を使う
 	
 	SrvHeap_->AddPtr(index, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
