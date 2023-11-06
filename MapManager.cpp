@@ -67,6 +67,7 @@ void MapManager::MapBuild() {
 				GetOrientations(rotateMatrix, obb.orientation);
 				obb.center = worldTransform.translation_;
 				Map object{ map[y][x] ,obb,worldTransform };
+				object.moveDirection_ = 1.0f;
 				mapObject_.push_back(object);
 				if (map[y][x] == MapState::Block) {
 					floor_.push_back(object);
@@ -104,11 +105,12 @@ void MapManager::Map::Update() {
 			moveFlag_ = false;
 			from.translation_ = worldTransform.translation_;
 			to.translation_ = worldTransform.translation_;
-			to.translation_.y += float(kBlockFloatForce);
+			to.translation_.y += float(kBlockFloatForce) * moveDirection_;
 			moveAnimationLength_ = kBlocckFloatAnimationLength;
 			countUp_ = 0;
 			isMove_ = true;
 			isCollision_ = false;
+			moveDirection_ *= -1.0f;
 		}
 		else {
 			/*moveFlag_ = false;

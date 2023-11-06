@@ -5,7 +5,7 @@
 #include "Mymath.h"
 void Player::Initialize(){
 	worldTransform_.Initialize();
-	worldTransform_.translation_.x = 2.0f;
+	worldTransform_.translation_.x = 2.01f;
 	worldTransform_.translation_.y = 2.0f;
 	velocity_ = {0,0,0};
 	acceleration_ = {0,0,0};
@@ -28,12 +28,22 @@ void Player::Update() {
 	prePosition_ = worldTransform_.translation_;
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		velocity_.y = 0.0f;
-		acceleration_ = { 0 ,0.06f,0 };
+		acceleration_ = { 0 ,0.07f,0 };
 	}
-	float kSpeed = 0.2f;
+	float kSpeed = 0.1f;
 	acceleration_=acceleration_ + gravity_;
 	velocity_ = velocity_+ acceleration_ + gravity_;
-	velocity_.x = direction_ * kSpeed;
+	//velocity_.x = direction_ * kSpeed;
+	if (Input::GetInstance()->PressKey(DIK_LEFT)) {
+		//velocity_.y = 0.0f;
+		//acceleration_ = { 0 ,0.06f,0 };
+		velocity_.x = -1.0f * kSpeed;
+	}
+	if (Input::GetInstance()->PressKey(DIK_RIGHT)) {
+		//velocity_.y = 0.0f;
+		//acceleration_ = { 0 ,0.06f,0 };
+		velocity_.x = 1.0f * kSpeed;
+	}
 	velocity_.y = std::clamp(velocity_.y,-0.4f,0.4f);
 	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
 	worldTransform_.UpdateMatrix();
@@ -70,7 +80,7 @@ void Player::OnCollision(OBB& partner) {
 }
 
 void Player::OnCollisionFloor(OBB& partner) {
-	if (isCollisionFloor_) {
+	if (isCollisionFloor_ || 1) {
 		if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
 			if ((obb_.center.y - prePosition_.y) <= 0.0f) {
 				//上に載ってるときの処理
@@ -81,12 +91,14 @@ void Player::OnCollisionFloor(OBB& partner) {
 			else {
 				//デバッグ用
 				//worldTransform_.translation_.y += 10.0f;
+				acceleration_ = { 0 ,0,0 };
+				velocity_ = { 0,0,0 };
 				worldTransform_.translation_.y = partner.center.y - 1.0f;
 			}
 		}
 		else {
 			//横方向から当たったときの処理
-		//	worldTransform_.translation_.x = partner.center.x + Normalise(obb_.center - partner.center).x * 1.0f;
+			worldTransform_.translation_.x = partner.center.x + (obb_.center.x - partner.center.x)/(std::sqrtf(std::powf(obb_.center.x - partner.center.x,2))) * (obb_.size.x + partner.size.x);
 			//direction_ *= -1.0f;
 		}
 		isCollisionFloor_ = false;
@@ -100,11 +112,11 @@ void Player::OnCollisionWall(OBB& partner) {
 	
 		{
 			//横方向から当たったときの処理
-			worldTransform_.translation_.x = partner.center.x + -direction_ * 1.0f;
-			direction_ *= -1.0f;
+			worldTransform_.translation_.x = partner.center.x + (obb_.center.x - partner.center.x) / (std::sqrtf(std::powf(obb_.center.x - partner.center.x, 2))) * (obb_.size.x + partner.size.x);
+			//direction_ *= -1.0f;
 			if (isCollisionFloor_) {
-				velocity_.y = 0.0f;
-				acceleration_ = { 0 ,0.06f,0 };
+				//velocity_.y = 0.0f;
+				//acceleration_ = { 0 ,0.06f,0 };
 			}
 		}
 		isCollisionWall_ = false;

@@ -29,6 +29,7 @@ public:
 		void Move();
 		void OnCollision() ;
 		void Touch();
+		float moveDirection_;
 	};
 
 	static MapManager* GetInstance();
