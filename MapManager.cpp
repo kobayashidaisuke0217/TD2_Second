@@ -111,13 +111,15 @@ void MapManager::Map::Update() {
 			isCollision_ = false;
 		}
 		else {
-			moveFlag_ = false;
+			/*moveFlag_ = false;
 			from.translation_ = worldTransform.translation_;
 			to.translation_ = worldTransform.translation_;
 			to.translation_.y -= float(kBlockFloatForce);
 			moveAnimationLength_ = kBlocckFloatAnimationLength;
 			countUp_ = 0;
 			isMove_ = true;
+			isCollision_ = false;*/
+			//isMove_ = true;
 			isCollision_ = false;
 		}
 		moveFlag_ = false;

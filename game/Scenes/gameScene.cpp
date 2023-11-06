@@ -13,7 +13,7 @@ void GameScene::Initialize()
 	directXCommon_ = DirectXCommon::GetInstance();
 
 	textureManager_ = Texturemanager::GetInstance();
-
+	textureManager_->Initialize();
 	viewProjection_.Initialize();
 	
 	MapManager::GetInstance()->Initialize();
@@ -24,7 +24,8 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	if (Input::GetInstance()->PushKey(DIK_1)) {
+	if (Input::GetInstance()->PressKey(DIK_1)) {
+		textureManager_->Initialize();
 		MapManager::GetInstance()->MapRead();
 		player_->Initialize();
 	}

@@ -5,8 +5,8 @@
 #include "Mymath.h"
 void Player::Initialize(){
 	worldTransform_.Initialize();
-	worldTransform_.translation_.x = 4.0f;
-	worldTransform_.translation_.y = 4.0f;
+	worldTransform_.translation_.x = 2.0f;
+	worldTransform_.translation_.y = 2.0f;
 	velocity_ = {0,0,0};
 	acceleration_ = {0,0,0};
 	gravity_ = {0,-0.005f,0};
@@ -28,9 +28,9 @@ void Player::Update() {
 	prePosition_ = worldTransform_.translation_;
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		velocity_.y = 0.0f;
-		acceleration_ = { 0 ,0.05f,0 };
+		acceleration_ = { 0 ,0.06f,0 };
 	}
-	float kSpeed = 0.3f;
+	float kSpeed = 0.2f;
 	acceleration_=acceleration_ + gravity_;
 	velocity_ = velocity_+ acceleration_ + gravity_;
 	velocity_.x = direction_ * kSpeed;
@@ -90,6 +90,7 @@ void Player::OnCollisionFloor(OBB& partner) {
 			//direction_ *= -1.0f;
 		}
 		isCollisionFloor_ = false;
+		worldTransform_.UpdateMatrix();
 	}
 
 }
@@ -103,10 +104,11 @@ void Player::OnCollisionWall(OBB& partner) {
 			direction_ *= -1.0f;
 			if (isCollisionFloor_) {
 				velocity_.y = 0.0f;
-				acceleration_ = { 0 ,0.05f,0 };
+				acceleration_ = { 0 ,0.06f,0 };
 			}
 		}
 		isCollisionWall_ = false;
+		worldTransform_.UpdateMatrix();
 	}
 
 }
