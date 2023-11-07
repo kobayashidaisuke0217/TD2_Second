@@ -82,7 +82,7 @@ void Player::OnCollision(OBB& partner) {
 void Player::OnCollisionFloor(OBB& partner) {
 	if (isCollisionFloor_ || 1) {
 		if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
-			if ((obb_.center.y - prePosition_.y) < 0.0f) {
+			/*if ((obb_.center.y - prePosition_.y) < 0.0f || (obb_.center.y - partner.center.y)>0.0f) {
 				//上に載ってるときの処理
 				acceleration_ = { 0 ,0,0 };
 				velocity_ = { 0,0,0 };
@@ -94,7 +94,10 @@ void Player::OnCollisionFloor(OBB& partner) {
 				acceleration_ = { 0 ,0,0 };
 				velocity_ = { 0,0,0 };
 				worldTransform_.translation_.y = partner.center.y - 1.0f;
-			}
+			}*/
+			acceleration_ = { 0 ,0,0 };
+			velocity_ = { 0,0,0 };
+			worldTransform_.translation_.y = partner.center.y + (obb_.center.y - partner.center.y) / (std::sqrtf(std::powf(obb_.center.y - partner.center.y, 2))) * (obb_.size.y + partner.size.y);
 		}
 		else {
 			//横方向から当たったときの処理
