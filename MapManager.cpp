@@ -101,7 +101,7 @@ void MapManager::Draw(const ViewProjection& viewProjection) {
 void MapManager::Map::Update() {
 	if (moveFlag_ && !isTouch_) {
 		//移動開始
-		if (!isCollision_) {
+		if (isCollision_) {
 			moveFlag_ = false;
 			from.translation_ = worldTransform.translation_;
 			to.translation_ = worldTransform.translation_;

@@ -5,7 +5,7 @@
 #include "Mymath.h"
 void Player::Initialize(){
 	worldTransform_.Initialize();
-	worldTransform_.translation_.x = 2.01f;
+	worldTransform_.translation_.x = 2.0f;
 	worldTransform_.translation_.y = 2.0f;
 	velocity_ = {0,0,0};
 	acceleration_ = {0,0,0};
