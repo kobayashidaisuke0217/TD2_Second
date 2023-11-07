@@ -30,6 +30,7 @@ public:
 		void OnCollision() ;
 		void Touch();
 		float moveDirection_;
+		void Reverse();
 	};
 
 	static MapManager* GetInstance();

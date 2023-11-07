@@ -31,15 +31,17 @@ void Player::Initialize(){
 	obbFloatTrigger_.center = worldTransform_.translation_;
 	obbFloatTrigger_.center.y -= 2.5;
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
+	jumpAble_ = true;
 }
 
 
 void Player::Update() {
 	ApplyGlobalVariables();
 	prePosition_ = worldTransform_.translation_;
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+	if (Input::GetInstance()->PushKey(DIK_SPACE) && jumpAble_) {
 		velocity_.y = 0.0f;
 		acceleration_ = jumpAccerelation_;
+		jumpAble_ = false;
 	}
 	float kSpeed = 0.1f;
 	acceleration_=acceleration_ + gravity_;
@@ -93,7 +95,7 @@ void Player::OnCollision(OBB& partner) {
 void Player::OnCollisionFloor(OBB& partner) {
 	if (isCollisionFloor_ || 1) {
 		if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
-			
+			jumpAble_ = true;
 			acceleration_ = { 0 ,0,0 };
 			velocity_ = { 0,0,0 };
 			worldTransform_.translation_.y = partner.center.y + (obb_.center.y - partner.center.y) / (std::sqrtf(std::powf(obb_.center.y - partner.center.y, 2))) * (obb_.size.y + partner.size.y);

@@ -1,6 +1,7 @@
 #include "MapManager.h"
 #include "Globalvariables.h"
 #include "Easing.h"
+#include "Input.h"
 uint32_t MapManager::kBlockFloatForce = 4;
 uint32_t MapManager::kBlocckFloatAnimationLength = 60;
 uint32_t MapManager::kBlocckFloatAnimationDelay = 2;
@@ -94,6 +95,9 @@ void MapManager::Update() {
 	ApplyGlobalVariables();
 	for (Map& object : floor_) {
 		object.Update();
+		if (Input::GetInstance()->PushKey(DIK_X)) {
+			object.Reverse();
+		}
 	}
 }
 
@@ -113,15 +117,7 @@ void MapManager::Map::Update() {
 	if (moveFlag_ && !isTouch_) {
 		//移動開始
 		if (isCollision_) {
-			moveFlag_ = false;
-			from.translation_ = worldTransform.translation_;
-			to.translation_ = worldTransform.translation_;
-			to.translation_.y += float(kBlockFloatForce) * moveDirection_;
-			moveAnimationLength_ = kBlocckFloatAnimationLength;
-			countUp_ = 0;
-			isMove_ = true;
-			isCollision_ = false;
-			moveDirection_ *= -1.0f;
+			Reverse();
 		}
 		else {
 			/*moveFlag_ = false;
@@ -144,6 +140,18 @@ void MapManager::Map::Update() {
 	}
 	obb.center = worldTransform.translation_;
 	worldTransform.UpdateMatrix();
+}
+
+void MapManager::Map::Reverse() {
+	moveFlag_ = false;
+	from.translation_ = worldTransform.translation_;
+	to.translation_ = worldTransform.translation_;
+	to.translation_.y = float(kBlockFloatForce) * (((moveDirection_) + 1.0f) / 2.0f) + 1.0f;
+	moveAnimationLength_ = kBlocckFloatAnimationLength;
+	countUp_ = 0;
+	isMove_ = true;
+	isCollision_ = false;
+	moveDirection_ *= -1.0f;
 }
 
 void MapManager::Map::Move() {

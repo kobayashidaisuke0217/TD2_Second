@@ -49,6 +49,8 @@ private:
 	bool isCollisionFloor_;
 	bool isCollisionWall_;
 
+	bool jumpAble_;
+
 	//パラメータ群
 	//Vector3 gravity_;
 	Vector3 jumpAccerelation_;
