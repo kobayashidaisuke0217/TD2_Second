@@ -28,6 +28,8 @@ public:
 	OBB& GetOBB() { return obb_; };
 	OBB& GetFloatTrigger() { return obbFloatTrigger_; };
 
+
+	void ApplyGlobalVariables();
 private:
 	Input* input_ = nullptr;
 	std::unique_ptr<Model> model_;
@@ -46,4 +48,9 @@ private:
 	bool isCollision_;
 	bool isCollisionFloor_;
 	bool isCollisionWall_;
+
+	//パラメータ群
+	//Vector3 gravity_;
+	Vector3 jumpAccerelation_;
+	float moveSpeed_;
 };

@@ -1,5 +1,9 @@
 #include "MapManager.h"
-
+#include "Globalvariables.h"
+#include "Easing.h"
+uint32_t MapManager::kBlockFloatForce = 4;
+uint32_t MapManager::kBlocckFloatAnimationLength = 60;
+uint32_t MapManager::kBlocckFloatAnimationDelay = 2;
 MapManager* MapManager::GetInstance()
 {
 	static MapManager instance;
@@ -7,9 +11,15 @@ MapManager* MapManager::GetInstance()
 }
 
 void MapManager::Initialize() {
-	
-		MapRead();
-		modelBlock_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "Map";
+	globalVariables->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "FloatForce", 4);
+	globalVariables->AddItem(groupName, "FloatAnimationLength", 60);
+	globalVariables->AddItem(groupName, "FloatAnimationDelay", 2);
+
+	MapRead();
+	modelBlock_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
 	
 }
 
@@ -81,6 +91,7 @@ void MapManager::MapBuild() {
 }
 
 void MapManager::Update() {
+	ApplyGlobalVariables();
 	for (Map& object : floor_) {
 		object.Update();
 	}
@@ -137,7 +148,8 @@ void MapManager::Map::Update() {
 
 void MapManager::Map::Move() {
 	float t = float(countUp_) / float(moveAnimationLength_);
-	worldTransform.translation_ = Lerp(t,from.translation_,to.translation_);
+	float easedT = EaseIn(t,kBlocckFloatAnimationDelay);
+	worldTransform.translation_ = Lerp(easedT,from.translation_,to.translation_);
 	if (countUp_ >= moveAnimationLength_) {
 		countUp_ = 0;
 		isMove_ = false;
@@ -154,4 +166,13 @@ void MapManager::Map::Touch() {
 		isTouch_ = true;
 		moveFlag_ = true;
 	}
+}
+
+void MapManager::ApplyGlobalVariables()
+{
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "Map";
+	kBlockFloatForce = globalVariables->GetIntValue(groupName, "FloatForce");
+	kBlocckFloatAnimationLength = globalVariables->GetIntValue(groupName, "FloatAnimationLength");
+	kBlocckFloatAnimationDelay = globalVariables->GetIntValue(groupName, "FloatAnimationDelay");
 }

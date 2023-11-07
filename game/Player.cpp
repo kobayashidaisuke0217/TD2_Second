@@ -3,7 +3,17 @@
 #include <algorithm>
 #include <math.h>
 #include "Mymath.h"
+#include "Globalvariables.h"
 void Player::Initialize(){
+
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "Player";
+	//jumpAccerelation_ = globalVariables->GetVector3Value(groupName, "jump");
+	//moveSpeed_ = globalVariables->GetFloatValue(groupName, "speed");
+	globalVariables->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "jump", jumpAccerelation_);
+	globalVariables->AddItem(groupName, "speed", moveSpeed_);
+
 	worldTransform_.Initialize();
 	worldTransform_.translation_.x = 2.0f;
 	worldTransform_.translation_.y = 2.0f;
@@ -25,10 +35,11 @@ void Player::Initialize(){
 
 
 void Player::Update() {
+	ApplyGlobalVariables();
 	prePosition_ = worldTransform_.translation_;
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		velocity_.y = 0.0f;
-		acceleration_ = { 0 ,0.07f,0 };
+		acceleration_ = jumpAccerelation_;
 	}
 	float kSpeed = 0.1f;
 	acceleration_=acceleration_ + gravity_;
@@ -37,19 +48,19 @@ void Player::Update() {
 	if (Input::GetInstance()->PressKey(DIK_LEFT)) {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
-		velocity_.x = -1.0f * kSpeed;
+		velocity_.x = -1.0f * moveSpeed_;
 	}
 	if (Input::GetInstance()->PressKey(DIK_RIGHT)) {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
-		velocity_.x = 1.0f * kSpeed;
+		velocity_.x = 1.0f * moveSpeed_;
 	}
 	velocity_.y = std::clamp(velocity_.y,-0.4f,0.4f);
 	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
 	worldTransform_.UpdateMatrix();
 	obb_.center = worldTransform_.translation_;
 	obbFloatTrigger_.center = worldTransform_.translation_;
-	obbFloatTrigger_.center.y -= 1.5;
+	obbFloatTrigger_.center.y -= 2.5;
 	isCollision_ = true;
 	isCollisionFloor_ = true;
 	isCollisionWall_ = true;
@@ -82,19 +93,7 @@ void Player::OnCollision(OBB& partner) {
 void Player::OnCollisionFloor(OBB& partner) {
 	if (isCollisionFloor_ || 1) {
 		if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
-			/*if ((obb_.center.y - prePosition_.y) < 0.0f || (obb_.center.y - partner.center.y)>0.0f) {
-				//上に載ってるときの処理
-				acceleration_ = { 0 ,0,0 };
-				velocity_ = { 0,0,0 };
-				worldTransform_.translation_.y = partner.center.y + 1.0f;
-			}
-			else {
-				//デバッグ用
-				//worldTransform_.translation_.y += 10.0f;
-				acceleration_ = { 0 ,0,0 };
-				velocity_ = { 0,0,0 };
-				worldTransform_.translation_.y = partner.center.y - 1.0f;
-			}*/
+			
 			acceleration_ = { 0 ,0,0 };
 			velocity_ = { 0,0,0 };
 			worldTransform_.translation_.y = partner.center.y + (obb_.center.y - partner.center.y) / (std::sqrtf(std::powf(obb_.center.y - partner.center.y, 2))) * (obb_.size.y + partner.size.y);
@@ -129,3 +128,11 @@ void Player::OnCollisionWall(OBB& partner) {
 }
 
 void Player::Draw(const ViewProjection& viewProjection) { model_->Draw(worldTransform_,viewProjection); }
+
+void Player::ApplyGlobalVariables()
+{
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "Player";
+	jumpAccerelation_ = globalVariables->GetVector3Value(groupName, "jump");
+	moveSpeed_ = globalVariables->GetFloatValue(groupName, "speed");
+}

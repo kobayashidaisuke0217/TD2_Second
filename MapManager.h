@@ -47,14 +47,17 @@ public:
 	std::vector<Map>& GetFloor() { return floor_; };
 	std::vector<Map>& GetWall() { return wall_; };
 
+	void ApplyGlobalVariables();
+
 	//マップの読み込み最大幅
 	static const uint32_t kMapWidth = 30;
 	//マップの読み込み最大高さ
 	static const uint32_t kMapHeight = 20;
 
 	//ブロックの浮き上がりの高さ
-	static const uint32_t kBlockFloatForce = 4;
-	static const uint32_t kBlocckFloatAnimationLength = 60;
+	static uint32_t kBlockFloatForce;
+	static uint32_t kBlocckFloatAnimationLength;
+	static uint32_t kBlocckFloatAnimationDelay;
 private:
 	MapManager() = default;
 	~MapManager() = default;
