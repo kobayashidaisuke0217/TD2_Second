@@ -14,6 +14,10 @@
 #include "game/Player.h"
 #include "game/Enemy.h"
 #include <list>
+#pragma region エネミー
+#include"game/Enemy/IEnemy.h"
+#include"game/Enemy/BoundEnemy.h"
+#pragma endregion
 class GameScene:public Iscene
 {
 public:
@@ -37,10 +41,11 @@ private:
 	void ApplyGlobalVariables();
 
 	std::unique_ptr<Player> player_;
-	std::list<Enemy*> enemys_;
+	//std::list<Enemy*> enemys_;
+	std::list <IEnemy*>enemys_;
 	float EnemyVelocity_;
 	uint32_t enemyTex_;
 private:
-	void EnemySpawn(const WorldTransform& worldTransform,ReflectionCount reflect);
+	void EnemySpawn(const WorldTransform& worldTransform,EnemyType type);
 };
 

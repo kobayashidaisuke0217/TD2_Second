@@ -3,7 +3,7 @@
 
 GameScene::~GameScene()
 {
-	enemys_.remove_if([](Enemy* enemy) {
+	enemys_.remove_if([](IEnemy* enemy) {
 
 		delete enemy;
 		return true;
@@ -28,7 +28,7 @@ void GameScene::Initialize()
 	player_.reset(new Player);
 	player_->Initialize();
 	EnemyVelocity_ = 0.25f;
-	EnemySpawn(player_->GetWorldTransform(),ReflectInfinit);
+	EnemySpawn(player_->GetWorldTransform(),kBound);
 }
 
 void GameScene::Update()
@@ -44,10 +44,10 @@ void GameScene::Update()
 	
 	ImGui::End();
 	if (Input::GetInstance()->PushKey(DIK_E)) {
-		EnemySpawn(player_->GetWorldTransform(),ReflectInfinit);
+		EnemySpawn(player_->GetWorldTransform(),kBound);
 	}
 	if (Input::GetInstance()->PushKey(DIK_S)) {
-		EnemySpawn(player_->GetWorldTransform(), reflect4);
+		EnemySpawn(player_->GetWorldTransform(), kBound);
 	}
 	viewProjection_.UpdateMatrix();
 	viewProjection_.TransferMatrix();
@@ -61,7 +61,7 @@ void GameScene::Update()
 	}
 	ImGui::End();
 	player_->Update();
-	enemys_.remove_if([](Enemy* enemy) {
+	enemys_.remove_if([](IEnemy* enemy) {
 		if (!enemy->GetIsAlive()) {
 			delete enemy;
 			return true;
@@ -75,7 +75,7 @@ void GameScene::Update()
 			player_->OnCollision(object.obb);
 		}
 	}*/
-	for (Enemy* enemy : enemys_) {
+	for (IEnemy* enemy : enemys_) {
 		enemy->Update();
 	}
 	MapManager::GetInstance()->Update();
@@ -96,19 +96,19 @@ void GameScene::Update()
 			player_->OnCollisionWall(object.obb);
 		}
 	}
-	for (Enemy* enemy : enemys_) {
+	for (IEnemy* enemy : enemys_) {
 		for (MapManager::Map& object : floors) {
 			if (IsCollision(enemy->GetOBB(), object.obb)&&!enemy->GetIsHit()) {
 				
-				enemy->SetPartener(flore);
+				enemy->SetPartener(kflore);
 				enemy->isCollision(object.obb);
 				
 			}
 		}
-		if (enemy->getReflection() == reflect4) {
+		if (enemy->GetType() == kReflect) {
 			for (MapManager::Map& object : walls) {
 				if (IsCollision(enemy->GetOBB(), object.obb)) {
-					enemy->SetPartener(wall);
+					enemy->SetPartener(kwall);
 						enemy->isCollision(object.obb);
 						
 				}
@@ -140,7 +140,7 @@ void GameScene::Draw3D()
 	
 	MapManager::GetInstance()->Draw(viewProjection_);
 	player_->Draw(viewProjection_);
-	for (Enemy* enemy : enemys_) {
+	for (IEnemy* enemy : enemys_) {
 		enemy->Draw(viewProjection_);
 	}
 	blueMoon_->PariclePreDraw();
@@ -158,10 +158,17 @@ void GameScene::ApplyGlobalVariables()
 
 }
 
-void GameScene::EnemySpawn(const WorldTransform& worldTransform, ReflectionCount reflect)
+void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 {
-	Enemy* enemy = new Enemy();
-	enemy->Initialize(player_->GetWorldTransform(),EnemyVelocity_,enemyTex_,reflect);
+	IEnemy* enemy;
+	Transform trans = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
+	if (type == kBound) {
+		enemy =new BoundEnemy() ;
+	}
+	else {
+		enemy = new BoundEnemy();
+	}
+	enemy->Initialize(trans,{2.0f,0.0f,0.0f},0.25f,enemyTex_,player_->GetWorldTransform());
 
 	enemys_.push_back(enemy);
 }
@@ -173,7 +180,7 @@ void GameScene::Draw2D() {
 }
 void GameScene::Finalize()
 {
-	enemys_.remove_if([](Enemy* enemy) {
+	enemys_.remove_if([](IEnemy* enemy) {
 		
 			delete enemy;
 			return true;
