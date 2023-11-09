@@ -94,11 +94,9 @@ void GameScene::Update()
 	}
 	for (Enemy* enemy : enemys_) {
 		for (MapManager::Map& object : floors) {
-			if (IsCollision(enemy->GetOBB(), object.obb)) {
+			if (IsCollision(enemy->GetOBB(), object.obb)&&!enemy->GetIsHit()) {
 				
-				Vector3 reflection = Subtract(object.worldTransform.GetWorldPos(), enemy->worldTransform_.GetWorldPos());
-				reflection = Normalise(reflection);
-				enemy->SetReflection(reflection);
+				
 				enemy->isCollision(object.obb);
 			}
 		}

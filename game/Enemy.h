@@ -18,6 +18,7 @@ public:
 	void isCollision(OBB pertner);
 	WorldTransform worldTransform_;
 	void SetReflection(Vector3 reflect) { reflection_ = reflect; }
+	bool GetIsHit() { return ishit_; }
 private:
 	Texturemanager* texManager_;
 	std::unique_ptr<Sphere> sphere_;
