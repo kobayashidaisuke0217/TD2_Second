@@ -8,6 +8,10 @@ enum ReflectionCount{
 	ReflectInfinit,
 	reflect4,
 };
+enum collisionPartner {
+	wall,
+	flore,
+};
 class Enemy
 {
 public:
@@ -22,6 +26,8 @@ public:
 	WorldTransform worldTransform_;
 	void SetReflection(Vector3 reflect) { reflection_ = reflect; }
 	bool GetIsHit() { return ishit_; }
+	ReflectionCount getReflection() { return reflectionCount_; }
+	void SetPartener(collisionPartner partner) { collisionpartner_ = partner; }
 private:
 	Texturemanager* texManager_;
 	std::unique_ptr<Sphere> sphere_;
@@ -40,5 +46,6 @@ private:
 	int reflectCount_;
 	Vector3 prePos_;
 	bool isDown_;
+	collisionPartner collisionpartner_;
 };
 

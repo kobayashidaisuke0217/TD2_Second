@@ -102,17 +102,18 @@ void GameScene::Update()
 				
 				
 				enemy->isCollision(object.obb);
+				enemy->SetPartener(flore);
 			}
 		}
-		/*for (MapManager::Map& object : walls) {
-			if (IsCollision(enemy->GetOBB(), object.obb)) {
-			
-				Vector3 reflection = Subtract(object.worldTransform.GetWorldPos(), enemy->worldTransform_.GetWorldPos());
-				reflection = Normalise(reflection);
-				enemy->SetReflection(reflection);
-				enemy->isCollision();
+		if (enemy->getReflection() == reflect4) {
+			for (MapManager::Map& object : walls) {
+				if (IsCollision(enemy->GetOBB(), object.obb)) {
+					
+						enemy->isCollision(object.obb);
+						enemy->SetPartener(wall);
+				}
 			}
-		}*/
+		}
 	
 	}
 	

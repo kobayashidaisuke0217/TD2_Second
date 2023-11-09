@@ -84,34 +84,33 @@ void Enemy::isCollision(OBB partner)
 {
 	//isAlive_ = false;
 	if (!ishit_) {
-		/*velocity_ = Reflect(velocity_, reflection_);
-		velocity_ = Normalise(velocity_);
-		velocity_ = Multiply(MoveSpeed_, velocity_);*/
+		
 		ishit_ = true;
 		reflectCount_++;
-		
+		if (collisionpartner_ == flore) {
 			if (std::abs(obb_.center.y - partner.center.y) <= 2.0f) {
 				velocity_.y *= -1.0f;
 				worldTransform_.translation_ = prePos_;
-				/*if(isDown_){
-					isDown_ = false;
-				}
-				else {
-					isDown_ = true;
-				}*/
+
 			}
-			else if (std::abs(obb_.center.x - partner.center.x) <=2.0f) {
-			/*	velocity_.y *= -1.0f;
-				velocity_.x *= -1.0f;
-				worldTransform_.translation_ = prePos_;*/
+			else if (std::abs(obb_.center.x - partner.center.x) <= 2.0f) {
+
 				velocity_.x *= -1.0f;
 				worldTransform_.translation_ = prePos_;
 			}
-			/*
-			else {
+		}
+		/*else {
+			if (std::abs(obb_.center.x - partner.center.x) <= 2.0f) {
+
 				velocity_.x *= -1.0f;
 				worldTransform_.translation_ = prePos_;
-			}*/
+			}else if (std::abs(obb_.center.y - partner.center.y) <= 2.0f) {
+				velocity_.y *= -1.0f;
+				worldTransform_.translation_ = prePos_;
+
+			}
+		}*/
+			
 			
 	}
 }
