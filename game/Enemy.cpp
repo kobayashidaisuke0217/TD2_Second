@@ -66,6 +66,9 @@ void Enemy::Update()
 	ImGui::DragFloat3("translate", &worldTransform_.translation_.x);
 
 	ImGui::End();
+	if (worldTransform_.translation_.y <= -5.0f) {
+		isAlive_ = false;
+	}
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
@@ -86,15 +89,22 @@ void Enemy::isCollision(OBB partner)
 			//上に載ってるときの処理
 			//acceleration_ = { 0.0f ,0.0f,0.0f };
 			//velocity_ = { 0.0f,0.0f,0.0f };
+
 			
-			reflectCount_++;
 		}
-		if (obb_.center.y - partner.center.y >= 0.0f) {
-			velocity_.y *= -1.0f;
-			worldTransform_.translation_ = prePos_;
-		}
-		else {
-			worldTransform_.translation_.y = partner.center.y-1.0f;
-		}
+			if (obb_.center.y - partner.center.y >= 0.5f) {
+				velocity_.y *= -1.0f;
+				worldTransform_.translation_ = prePos_;
+				reflectCount_++;
+			}
+			
+			else if (std::abs(obb_.center.x - partner.center.x) > 0.5f) {
+				velocity_.x *= -1.0f;
+				reflectCount_++;
+			}
+			else {
+				worldTransform_.translation_.y = partner.center.y - 1.0f;
+				/*velocity_.y *= -1.0f;*/
+			}
 	}
 }
