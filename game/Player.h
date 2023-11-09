@@ -27,7 +27,7 @@ public:
 
 	OBB& GetOBB() { return obb_; };
 	OBB& GetFloatTrigger() { return obbFloatTrigger_; };
-
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 private:
 	Input* input_ = nullptr;
 	std::unique_ptr<Model> model_;

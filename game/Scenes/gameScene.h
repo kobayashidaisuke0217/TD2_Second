@@ -12,6 +12,8 @@
 #include "GlobalVariables.h"
 #include "Particle.h"
 #include "game/Player.h"
+#include "game/Enemy.h"
+#include <list>
 class GameScene:public Iscene
 {
 public:
@@ -35,5 +37,9 @@ private:
 	void ApplyGlobalVariables();
 
 	std::unique_ptr<Player> player_;
+	std::list<Enemy*> enemys_;
+	float EnemyVelocity_;
+private:
+	void EnemySpawn(const WorldTransform& worldTransform);
 };
 
