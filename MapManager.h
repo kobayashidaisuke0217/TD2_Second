@@ -33,6 +33,7 @@ public:
 		float moveDirection_;
 		void Reverse();
 		uint32_t delay_;
+		bool isFrameCollision_;
 	};
 
 	static MapManager* GetInstance();

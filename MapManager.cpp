@@ -80,6 +80,7 @@ void MapManager::MapBuild() {
 			if (map[y][x] != MapState::None) {
 				WorldTransform worldTransform;
 				worldTransform.Initialize();
+				worldTransform.scale_ = {2.0f,2.0f,2.0f};
 				worldTransform.translation_.x = float(int(x) - int(mapWidth_/2))*2.0f*worldTransform.scale_.x;
 				worldTransform.translation_.y = (float( mapHeight_) - float(y+1))*2.0f * worldTransform.scale_.y;
 				worldTransform.UpdateMatrix();
@@ -125,6 +126,7 @@ void MapManager::Draw(const ViewProjection& viewProjection) {
 }
 
 void MapManager::Map::Update() {
+	isFrameCollision_ = false;
 	if (moveFlag_ && !isTouch_) {
 		//移動開始
 		if (isCollision_) {
@@ -179,6 +181,7 @@ void MapManager::Map::Move() {
 
 void MapManager::Map::OnCollision() {
 	isCollision_ = true;
+	//isFrameCollision_ = true;
 }
 
 void MapManager::Map::Touch() {

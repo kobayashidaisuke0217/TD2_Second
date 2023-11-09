@@ -22,7 +22,7 @@ public:
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 	void OnCollision(OBB& partner);
-	void OnCollisionFloorVertical(OBB& partner);
+	bool OnCollisionFloorVertical(OBB& partner);
 	void OnCollisionFloorHorizon(OBB& partner);
 	void OnCollisionWall(OBB& partner);
 

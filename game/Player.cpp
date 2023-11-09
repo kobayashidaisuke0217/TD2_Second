@@ -19,7 +19,7 @@ void Player::Initialize(){
 
 
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = {0.5f,0.5f,0.5f};
+	worldTransform_.scale_ = {1.0f,1.0f,1.0f};
 	worldTransform_.translation_.x = 0.0f;
 	worldTransform_.translation_.y = 2.0f;
 	velocity_ = {0,0,0};
@@ -32,7 +32,7 @@ void Player::Initialize(){
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
 
-	obbFloatTrigger_.size = { worldTransform_.scale_.x / 2.0f,worldTransform_.scale_.y*2,worldTransform_.scale_.z / 2.0f };
+	obbFloatTrigger_.size = { worldTransform_.scale_.x ,worldTransform_.scale_.y*2,worldTransform_.scale_.z };
 	obbFloatTrigger_.center = worldTransform_.translation_;
 	obbFloatTrigger_.center.y -= 2.5;
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
@@ -103,16 +103,20 @@ void Player::OnCollision(OBB& partner) {
 	
 }
 
-void Player::OnCollisionFloorVertical(OBB& partner) {
+bool Player::OnCollisionFloorVertical(OBB& partner) {
 	if (isCollisionFloor_ || 1) {
 		if (std::abs(obb_.center.x - partner.center.x) <= std::abs(obb_.center.y - partner.center.y)) {
 			jumpAble_ = true;
 			//acceleration_ = { 0 ,0,0 };
 			velocity_ = { 0,0,0 };
+			if ((obb_.center.y - partner.center.y) / (std::sqrtf(std::powf(obb_.center.y - partner.center.y, 2))) * (obb_.size.y + partner.size.y) < 0) {
+				worldTransform_.UpdateMatrix();
+			}
 			worldTransform_.translation_.y = partner.center.y + (obb_.center.y - partner.center.y) / (std::sqrtf(std::powf(obb_.center.y - partner.center.y, 2))) * (obb_.size.y + partner.size.y);
 			obb_.center = worldTransform_.translation_;
 			isCollisionFloor_ = false;
 			worldTransform_.UpdateMatrix();
+			return true;
 		}
 		else {
 			//横方向から当たったときの処理
@@ -122,6 +126,7 @@ void Player::OnCollisionFloorVertical(OBB& partner) {
 		}
 		
 	}
+	return false;
 
 }
 
@@ -133,8 +138,8 @@ void Player::OnCollisionFloorHorizon(OBB& partner) {
 			//velocity_ = { 0,0,0 };
 			//worldTransform_.translation_.y = partner.center.y + (obb_.center.y - partner.center.y) / (std::sqrtf(std::powf(obb_.center.y - partner.center.y, 2))) * (obb_.size.y + partner.size.y);
 			//obb_.center = worldTransform_.translation_;
-			isCollisionFloor_ = false;
-			worldTransform_.UpdateMatrix();
+			//isCollisionFloor_ = false;
+			//worldTransform_.UpdateMatrix();
 		}
 		else {
 			//横方向から当たったときの処理

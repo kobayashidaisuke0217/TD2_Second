@@ -66,7 +66,7 @@ void GameScene::Update()
 	std::vector<MapManager::Map>& floors = MapManager::GetInstance()->GetFloor();
 	for (MapManager::Map& object : floors) {
 		if (IsCollision(player_->GetOBB(), object.obb)) {
-			player_->OnCollisionFloorVertical(object.obb);
+			object.isFrameCollision_= player_->OnCollisionFloorVertical(object.obb);
 			object.OnCollision();
 		}
 		if (IsCollision(player_->GetFloatTrigger(), object.obb)) {
@@ -74,7 +74,7 @@ void GameScene::Update()
 		}
 	}
 	for (MapManager::Map& object : floors) {
-		if (IsCollision(player_->GetOBB(), object.obb)) {
+		if (IsCollision(player_->GetOBB(), object.obb) && (object.isFrameCollision_==false)) {
 			player_->OnCollisionFloorHorizon(object.obb);
 		}
 	}
