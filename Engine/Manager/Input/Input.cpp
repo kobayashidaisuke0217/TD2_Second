@@ -37,7 +37,7 @@ void Input::Update()
 
 }
 
-bool Input::PushKey(uint8_t keyNumber)const
+bool Input::IsReleseKey(uint8_t keyNumber)const
 {
 	if (!keys[keyNumber] && preKeys[keyNumber]) {
 		return true;
@@ -57,7 +57,7 @@ bool Input::PressKey(uint8_t keyNumber)const
 }
 
 
-bool Input::IsReleseKey(uint8_t keyNumber)const
+bool Input::PushKey(uint8_t keyNumber)const
 {
 	if (keys[keyNumber] && !preKeys[keyNumber]) {
 		return true;
