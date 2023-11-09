@@ -40,9 +40,9 @@ void Player::Initialize(){
 
 
 void Player::Update() {
-	ApplyGlobalVariables();
+		ApplyGlobalVariables();
 	prePosition_ = worldTransform_.translation_;
-	if (Input::GetInstance()->PushKey(DIK_SPACE) && jumpAble_) {
+	if ((Input::GetInstance()->PushKey(DIK_SPACE) || joyState_->Gamepad.wButtons & XINPUT_GAMEPAD_A) && jumpAble_) {
 		velocity_.y = 0.0f;
 		velocity_.y = jumpAccerelation_.y;
 		jumpAble_ = false;
@@ -51,12 +51,12 @@ void Player::Update() {
 	acceleration_=  gravity_;
 	velocity_ = velocity_+ acceleration_ ;
 	//velocity_.x = direction_ * kSpeed;
-	if (Input::GetInstance()->PressKey(DIK_LEFT)) {
+	if (Input::GetInstance()->PressKey(DIK_LEFT) || joyState_->Gamepad.sThumbLX < 0) {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
 		velocity_.x = -1.0f * moveSpeed_;
 	}
-	if (Input::GetInstance()->PressKey(DIK_RIGHT)) {
+	if (Input::GetInstance()->PressKey(DIK_RIGHT) || joyState_->Gamepad.sThumbLX > 0) {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
 		velocity_.x = 1.0f * moveSpeed_;

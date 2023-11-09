@@ -18,12 +18,19 @@ void GameScene::Initialize()
 	
 	MapManager::GetInstance()->Initialize();
 	MapManager::GetInstance()->MapRead();
+	MapManager::GetInstance()->SetJoyState(&joyState_);
+	MapManager::GetInstance()->SetPreJoyState(&preJoyState_);
+
 	player_.reset(new Player);
 	player_->Initialize();
+	player_->SetJoyState(&joyState_);
+	player_->SetPreJoyState(&preJoyState_);
 }
 
 void GameScene::Update()
 {
+	preJoyState_ = joyState_;
+	Input::GetInstance()->GetJoystickState(0, joyState_);
 	if (Input::GetInstance()->PressKey(DIK_1)) {
 		textureManager_->Initialize();
 		MapManager::GetInstance()->MapRead();

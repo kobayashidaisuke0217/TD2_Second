@@ -29,10 +29,14 @@ public:
 	OBB& GetOBB() { return obb_; };
 	OBB& GetFloatTrigger() { return obbFloatTrigger_; };
 
+	void SetJoyState(XINPUT_STATE* joystate) { joyState_ = joystate; };
+	void SetPreJoyState(XINPUT_STATE* joystate) { preJoyState_ = joystate; };
 
 	void ApplyGlobalVariables();
 private:
 	Input* input_ = nullptr;
+	XINPUT_STATE* joyState_;
+	XINPUT_STATE* preJoyState_;
 	std::unique_ptr<Model> model_;
 	
 	WorldTransform worldTransform_;

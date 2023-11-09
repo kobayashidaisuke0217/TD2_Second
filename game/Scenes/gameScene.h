@@ -12,6 +12,7 @@
 #include "GlobalVariables.h"
 #include "Particle.h"
 #include "game/Player.h"
+#include "Input.h"
 class GameScene:public Iscene
 {
 public:
@@ -33,6 +34,9 @@ private:
 	void Draw2D();
 	void Draw3D();
 	void ApplyGlobalVariables();
+
+	XINPUT_STATE joyState_;
+	XINPUT_STATE preJoyState_;
 
 	std::unique_ptr<Player> player_;
 };

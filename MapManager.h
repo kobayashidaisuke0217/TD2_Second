@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include "Mymath.h"
+#include "Input.h"
 class MapManager
 {
 public:
@@ -51,6 +52,10 @@ public:
 
 	void ApplyGlobalVariables();
 
+	void SetJoyState(XINPUT_STATE* joystate) { joyState_ = joystate; };
+	void SetPreJoyState(XINPUT_STATE* joystate) { preJoyState_ = joystate; };
+
+
 	//マップの読み込み最大幅
 	static const uint32_t kMapWidth = 30;
 	//マップの読み込み最大高さ
@@ -66,6 +71,9 @@ private:
 	~MapManager() = default;
 	MapManager(const MapManager&) = delete;
 	MapManager& operator=(const MapManager&) = delete;
+
+	XINPUT_STATE* joyState_;
+	XINPUT_STATE* preJoyState_;
 
 	std::unique_ptr<Model> modelBlock_;
 

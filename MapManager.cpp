@@ -1,7 +1,7 @@
 #include "MapManager.h"
 #include "Globalvariables.h"
 #include "Easing.h"
-#include "Input.h"
+//#include "Input.h"
 uint32_t MapManager::kBlockFloatForce = 4;
 uint32_t MapManager::kBlocckFloatAnimationLength = 60;
 uint32_t MapManager::kBlocckFloatAnimationDelay = 2;
@@ -104,7 +104,7 @@ void MapManager::Update() {
 	ApplyGlobalVariables();
 	for (Map& object : floor_) {
 		object.Update();
-		if (Input::GetInstance()->PushKey(DIK_X)) {
+		if (Input::GetInstance()->PushKey(DIK_X) || (joyState_->Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD && preJoyState_->Gamepad.bRightTrigger < XINPUT_GAMEPAD_TRIGGER_THRESHOLD)) {
 			object.Reverse();
 			object.delay_ = kReverseFloatAnimationDelay;
 		}
