@@ -11,15 +11,17 @@ void Player::Initialize(){
 	//jumpAccerelation_ = globalVariables->GetVector3Value(groupName, "jump");
 	//moveSpeed_ = globalVariables->GetFloatValue(groupName, "speed");
 	globalVariables->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "gravity", gravity_);
 	globalVariables->AddItem(groupName, "jump", jumpAccerelation_);
 	globalVariables->AddItem(groupName, "speed", moveSpeed_);
+
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_.x = 2.0f;
 	worldTransform_.translation_.y = 2.0f;
 	velocity_ = {0,0,0};
 	acceleration_ = {0,0,0};
-	gravity_ = {0,-0.005f,0};
+	//gravity_ = {0,-0.005f,0};
 	direction_ = 1.0f;
 	model_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0,0,0 });
@@ -40,12 +42,12 @@ void Player::Update() {
 	prePosition_ = worldTransform_.translation_;
 	if (Input::GetInstance()->PushKey(DIK_SPACE) && jumpAble_) {
 		velocity_.y = 0.0f;
-		acceleration_ = jumpAccerelation_;
+		velocity_.y = jumpAccerelation_.y;
 		jumpAble_ = false;
 	}
 	float kSpeed = 0.1f;
-	acceleration_=acceleration_ + gravity_;
-	velocity_ = velocity_+ acceleration_ + gravity_;
+	acceleration_=  gravity_;
+	velocity_ = velocity_+ acceleration_ ;
 	//velocity_.x = direction_ * kSpeed;
 	if (Input::GetInstance()->PressKey(DIK_LEFT)) {
 		//velocity_.y = 0.0f;
@@ -135,6 +137,7 @@ void Player::ApplyGlobalVariables()
 {
 	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
 	const char* groupName = "Player";
+	gravity_ = globalVariables->GetVector3Value(groupName, "gravity");
 	jumpAccerelation_ = globalVariables->GetVector3Value(groupName, "jump");
 	moveSpeed_ = globalVariables->GetFloatValue(groupName, "speed");
 }

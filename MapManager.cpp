@@ -47,6 +47,9 @@ void MapManager::MapRead()
 			if (ptr != NULL) {
 				map[y][x] = MapState(atoi(ptr));
 			}
+			else {
+				map[y][x] = MapState(atoi("1"));
+			}
 			
 			x++;
 		}

@@ -42,7 +42,7 @@ private:
 	float direction_;
 	Vector3 velocity_;
 	Vector3 acceleration_;
-	Vector3 gravity_;
+	//Vector3 gravity_;
 	Vector3 prePosition_;
 
 	bool isCollision_;
@@ -52,7 +52,7 @@ private:
 	bool jumpAble_;
 
 	//パラメータ群
-	//Vector3 gravity_;
+	Vector3 gravity_;
 	Vector3 jumpAccerelation_;
 	float moveSpeed_;
 };
