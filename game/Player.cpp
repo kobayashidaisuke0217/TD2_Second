@@ -68,7 +68,7 @@ void Player::Update() {
 		//acceleration_ = { 0 ,0.06f,0 };
 		velocity_.x = 1.0f * moveSpeed_;
 	}
-	velocity_.y = std::clamp(velocity_.y,-1.0f,1.0f);
+	velocity_.y = std::clamp(velocity_.y,-0.8f,0.8f);
 	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
 	worldTransform_.UpdateMatrix();
 	obb_.center = worldTransform_.translation_;
