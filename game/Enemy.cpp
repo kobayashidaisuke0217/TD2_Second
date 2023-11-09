@@ -15,7 +15,7 @@ void Enemy::Initialize(const WorldTransform& transform,const float& velo )
 	sphere_->Initialize();
 	worldTransform_.translation_.y = 10.0f;
 	worldTransform_.translation_.x = 10.0f;
-	worldTransform_.scale_ = { 0.5f,0.5f,0.5f };
+	worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 	worldTransform_.Initialize();
 	MoveSpeed_ = velo;
 	targetWordTransform_ = transform;
@@ -46,7 +46,7 @@ void Enemy::Update()
 	if (ishit_ == true) {
 		cooltime_++;
 	}
-	if (cooltime_ >= 5) {
+	if (cooltime_ >= 10) {
 		ishit_ = false;
 		cooltime_ = 0;
 	}
@@ -86,7 +86,7 @@ void Enemy::isCollision(OBB partner)
 		ishit_ = true;
 
 		
-			if (std::abs(obb_.center.y - partner.center.y) <= 1.0f) {
+			if (std::abs(obb_.center.y - partner.center.y) <= 2.0f) {
 				velocity_.y *= -1.0f;
 				worldTransform_.translation_ = prePos_;
 				/*if(isDown_){
@@ -96,7 +96,7 @@ void Enemy::isCollision(OBB partner)
 					isDown_ = true;
 				}*/
 			}
-			else if (std::abs(obb_.center.x - partner.center.x) <=1.0f) {
+			else if (std::abs(obb_.center.x - partner.center.x) <=2.0f) {
 			/*	velocity_.y *= -1.0f;
 				velocity_.x *= -1.0f;
 				worldTransform_.translation_ = prePos_;*/
