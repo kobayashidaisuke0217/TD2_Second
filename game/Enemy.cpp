@@ -46,7 +46,7 @@ void Enemy::Update()
 	if (ishit_ == true) {
 		cooltime_++;
 	}
-	if (cooltime_ >= 10) {
+	if (cooltime_ >= 5) {
 		ishit_ = false;
 		cooltime_ = 0;
 	}
