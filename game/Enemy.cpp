@@ -99,7 +99,7 @@ void Enemy::isCollision(OBB partner)
 				worldTransform_.translation_ = prePos_;
 			}
 		}
-		/*else {
+		else {
 			if (std::abs(obb_.center.x - partner.center.x) <= 2.0f) {
 
 				velocity_.x *= -1.0f;
@@ -109,7 +109,7 @@ void Enemy::isCollision(OBB partner)
 				worldTransform_.translation_ = prePos_;
 
 			}
-		}*/
+		}
 			
 			
 	}

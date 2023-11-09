@@ -4,11 +4,11 @@
 GameScene::~GameScene()
 {
 	enemys_.remove_if([](Enemy* enemy) {
-		if (!enemy->GetIsAlive()) {
-			delete enemy;
-			return true;
-		}
-		return false;
+
+		delete enemy;
+		return true;
+
+
 		});
 }
 
@@ -100,17 +100,17 @@ void GameScene::Update()
 		for (MapManager::Map& object : floors) {
 			if (IsCollision(enemy->GetOBB(), object.obb)&&!enemy->GetIsHit()) {
 				
-				
-				enemy->isCollision(object.obb);
 				enemy->SetPartener(flore);
+				enemy->isCollision(object.obb);
+				
 			}
 		}
 		if (enemy->getReflection() == reflect4) {
 			for (MapManager::Map& object : walls) {
 				if (IsCollision(enemy->GetOBB(), object.obb)) {
-					
+					enemy->SetPartener(wall);
 						enemy->isCollision(object.obb);
-						enemy->SetPartener(wall);
+						
 				}
 			}
 		}
@@ -174,11 +174,11 @@ void GameScene::Draw2D() {
 void GameScene::Finalize()
 {
 	enemys_.remove_if([](Enemy* enemy) {
-		if (!enemy->GetIsAlive()) {
+		
 			delete enemy;
 			return true;
-		}
-		return false;
+		
+		
 		});
 }
 
