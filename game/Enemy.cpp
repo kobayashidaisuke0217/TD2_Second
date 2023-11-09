@@ -85,13 +85,7 @@ void Enemy::isCollision(OBB partner)
 		velocity_ = Multiply(MoveSpeed_, velocity_);*/
 		ishit_ = true;
 
-		if (std::abs(obb_.center.x - partner.center.x) < obb_.center.y - partner.center.y) {
-			//上に載ってるときの処理
-			//acceleration_ = { 0.0f ,0.0f,0.0f };
-			//velocity_ = { 0.0f,0.0f,0.0f };
-
-			
-		}
+		
 			if (obb_.center.y - partner.center.y >= 0.5f) {
 				velocity_.y *= -1.0f;
 				worldTransform_.translation_ = prePos_;
