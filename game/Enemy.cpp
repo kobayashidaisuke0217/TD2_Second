@@ -55,9 +55,11 @@ void Enemy::Update()
 			isAlive_ = false;
 		}
 	}
-	if (worldTransform_.translation_.y >= 11.0f && velocity_.y >= -0.2f) {
-		isDown_ = true;
-		velocity_.y -= 0.005f;
+	if (reflectionCount_ == ReflectInfinit) {
+		if (worldTransform_.translation_.y >= 11.0f && velocity_.y >= -0.2f) {
+			isDown_ = true;
+			velocity_.y -= 0.005f;
+		}
 	}
 	/*if (isDown_ == true && velocity_.y >= -0.2f) {
 		
