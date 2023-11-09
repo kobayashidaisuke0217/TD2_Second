@@ -4,13 +4,16 @@
 #include "Sphere.h"
 #include <memory>
 #include "textureManager.h"
-
+enum ReflectionCount{
+	ReflectInfinit,
+	reflect4,
+};
 class Enemy
 {
 public:
 	Enemy();
 	~Enemy();
-	void Initialize(const WorldTransform& transform, const float& velo);
+	void Initialize(const WorldTransform& transform, const float& velo,uint32_t Texture,ReflectionCount reflection);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 	bool GetIsAlive() { return isAlive_; }
@@ -22,7 +25,7 @@ public:
 private:
 	Texturemanager* texManager_;
 	std::unique_ptr<Sphere> sphere_;
-	
+	ReflectionCount reflectionCount_;
 	WorldTransform targetWordTransform_;
 	Vector3 velocity_;
 	 float MoveSpeed_;

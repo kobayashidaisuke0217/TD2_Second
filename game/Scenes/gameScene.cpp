@@ -20,6 +20,7 @@ void GameScene::Initialize()
 
 	textureManager_ = Texturemanager::GetInstance();
 	textureManager_->Initialize();
+	enemyTex_=textureManager_->Load("resource/black.png");
 	viewProjection_.Initialize();
 	
 	MapManager::GetInstance()->Initialize();
@@ -27,7 +28,7 @@ void GameScene::Initialize()
 	player_.reset(new Player);
 	player_->Initialize();
 	EnemyVelocity_ = 0.25f;
-	EnemySpawn(player_->GetWorldTransform());
+	EnemySpawn(player_->GetWorldTransform(),ReflectInfinit);
 }
 
 void GameScene::Update()
@@ -43,7 +44,10 @@ void GameScene::Update()
 	
 	ImGui::End();
 	if (Input::GetInstance()->PushKey(DIK_E)) {
-		EnemySpawn(player_->GetWorldTransform());
+		EnemySpawn(player_->GetWorldTransform(),ReflectInfinit);
+	}
+	if (Input::GetInstance()->PushKey(DIK_S)) {
+		EnemySpawn(player_->GetWorldTransform(), reflect4);
 	}
 	viewProjection_.UpdateMatrix();
 	viewProjection_.TransferMatrix();
@@ -153,10 +157,10 @@ void GameScene::ApplyGlobalVariables()
 
 }
 
-void GameScene::EnemySpawn(const WorldTransform& worldTransform)
+void GameScene::EnemySpawn(const WorldTransform& worldTransform, ReflectionCount reflect)
 {
 	Enemy* enemy = new Enemy();
-	enemy->Initialize(player_->GetWorldTransform(),EnemyVelocity_);
+	enemy->Initialize(player_->GetWorldTransform(),EnemyVelocity_,enemyTex_,reflect);
 
 	enemys_.push_back(enemy);
 }

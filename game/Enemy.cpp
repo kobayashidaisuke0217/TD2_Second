@@ -8,7 +8,7 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::Initialize(const WorldTransform& transform,const float& velo )
+void Enemy::Initialize(const WorldTransform& transform,const float& velo,  uint32_t Texture, ReflectionCount reflection)
 {
 	texManager_ = Texturemanager::GetInstance();
 	sphere_ = std::make_unique<Sphere>();
@@ -21,10 +21,10 @@ void Enemy::Initialize(const WorldTransform& transform,const float& velo )
 	targetWordTransform_ = transform;
 	velocity_ = Subtract( targetWordTransform_.translation_, worldTransform_.translation_);
 	velocity_ = Normalise(velocity_);
-	
+	texindex_ = Texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	velocity_.y = -0.2f;
-	texindex_ = texManager_->Load("resource/black.png");
+	reflectionCount_ = reflection;
 	isAlive_ = true;
 	ishit_ = false;
 	cooltime_ = 0;
@@ -50,8 +50,10 @@ void Enemy::Update()
 		ishit_ = false;
 		cooltime_ = 0;
 	}
-	if (reflectCount_ >= 3) {
-		isAlive_ = false;
+	if (reflectionCount_ == reflect4) {
+		if (reflectCount_ >= 4) {
+			isAlive_ = false;
+		}
 	}
 	if (worldTransform_.translation_.y >= 11.0f && velocity_.y >= -0.2f) {
 		isDown_ = true;
@@ -84,7 +86,7 @@ void Enemy::isCollision(OBB partner)
 		velocity_ = Normalise(velocity_);
 		velocity_ = Multiply(MoveSpeed_, velocity_);*/
 		ishit_ = true;
-
+		reflectCount_++;
 		
 			if (std::abs(obb_.center.y - partner.center.y) <= 2.0f) {
 				velocity_.y *= -1.0f;

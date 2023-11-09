@@ -39,7 +39,8 @@ private:
 	std::unique_ptr<Player> player_;
 	std::list<Enemy*> enemys_;
 	float EnemyVelocity_;
+	uint32_t enemyTex_;
 private:
-	void EnemySpawn(const WorldTransform& worldTransform);
+	void EnemySpawn(const WorldTransform& worldTransform,ReflectionCount reflect);
 };
 
