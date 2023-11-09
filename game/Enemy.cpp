@@ -86,19 +86,16 @@ void Enemy::isCollision(OBB partner)
 		ishit_ = true;
 
 		
-			if (obb_.center.y - partner.center.y >= 0.5f) {
+			if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
 				velocity_.y *= -1.0f;
 				worldTransform_.translation_ = prePos_;
-				reflectCount_++;
+				
 			}
 			
-			else if (std::abs(obb_.center.x - partner.center.x) > 0.5f) {
-				velocity_.x *= -1.0f;
-				reflectCount_++;
-			}
 			else {
-				worldTransform_.translation_.y = partner.center.y - 1.0f;
-				/*velocity_.y *= -1.0f;*/
+				velocity_.x *= -1.0f;
+				
 			}
+			
 	}
 }
