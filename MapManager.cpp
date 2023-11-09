@@ -46,17 +46,21 @@ void MapManager::MapRead()
 			ptr = strtok_s(NULL, ",", &context);
 			if (ptr != NULL) {
 				map[y][x] = MapState(atoi(ptr));
+				
 			}
-			else {
-				map[y][x] = MapState(atoi("1"));
+			if (map[y][x] == MapState::Wall) {
+				//mapWidth_ = x+1;
+				if (mapWidth_ < x) {
+					mapWidth_ = x + 1;
+				}
 			}
-			
 			x++;
+			
 		}
 		y++;
-		if (mapWidth_ < x) {
+		/*if (mapWidth_ < x) {
 			mapWidth_ = x;
-		}
+		}*/
 		mapHeight_ = y;
 	}
 	fclose(fp);	
@@ -73,8 +77,8 @@ void MapManager::MapBuild() {
 			if (map[y][x] != MapState::None) {
 				WorldTransform worldTransform;
 				worldTransform.Initialize();
-				worldTransform.translation_.x = float(x);
-				worldTransform.translation_.y = float( mapHeight_) - float(y);
+				worldTransform.translation_.x = float(int(x) - int(mapWidth_/2));
+				worldTransform.translation_.y = float( mapHeight_) - float(y+1);
 				worldTransform.UpdateMatrix();
 				OBB obb;
 				obb.size = { worldTransform.scale_.x/2.0f,worldTransform.scale_.y / 2.0f,worldTransform.scale_.z / 2.0f };
@@ -149,7 +153,7 @@ void MapManager::Map::Reverse() {
 	moveFlag_ = false;
 	from.translation_ = worldTransform.translation_;
 	to.translation_ = worldTransform.translation_;
-	to.translation_.y = float(kBlockFloatForce) * (((moveDirection_) + 1.0f) / 2.0f) + 1.0f;
+	to.translation_.y = float(kBlockFloatForce) * (((moveDirection_) + 1.0f) / 2.0f) + 0.0f;
 	moveAnimationLength_ = kBlocckFloatAnimationLength;
 	countUp_ = 0;
 	isMove_ = true;
