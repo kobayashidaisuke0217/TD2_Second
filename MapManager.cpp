@@ -5,6 +5,7 @@
 uint32_t MapManager::kBlockFloatForce = 4;
 uint32_t MapManager::kBlocckFloatAnimationLength = 60;
 uint32_t MapManager::kBlocckFloatAnimationDelay = 2;
+uint32_t MapManager::kReverseFloatAnimationDelay = 2;
 MapManager* MapManager::GetInstance()
 {
 	static MapManager instance;
@@ -18,6 +19,7 @@ void MapManager::Initialize() {
 	globalVariables->AddItem(groupName, "FloatForce", 4);
 	globalVariables->AddItem(groupName, "FloatAnimationLength", 60);
 	globalVariables->AddItem(groupName, "FloatAnimationDelay", 2);
+	globalVariables->AddItem(groupName, "ReverseAnimationDelay", 2);
 
 	MapRead();
 	modelBlock_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
@@ -104,6 +106,7 @@ void MapManager::Update() {
 		object.Update();
 		if (Input::GetInstance()->PushKey(DIK_X)) {
 			object.Reverse();
+			object.delay_ = kReverseFloatAnimationDelay;
 		}
 	}
 }
@@ -125,6 +128,7 @@ void MapManager::Map::Update() {
 		//移動開始
 		if (isCollision_) {
 			Reverse();
+			delay_ = kBlocckFloatAnimationDelay;
 		}
 		else {
 			/*moveFlag_ = false;
@@ -163,7 +167,7 @@ void MapManager::Map::Reverse() {
 
 void MapManager::Map::Move() {
 	float t = float(countUp_) / float(moveAnimationLength_);
-	float easedT = EaseIn(t,kBlocckFloatAnimationDelay);
+	float easedT = EaseIn(t,delay_);
 	worldTransform.translation_ = Lerp(easedT,from.translation_,to.translation_);
 	if (countUp_ >= moveAnimationLength_) {
 		countUp_ = 0;
@@ -190,4 +194,5 @@ void MapManager::ApplyGlobalVariables()
 	kBlockFloatForce = globalVariables->GetIntValue(groupName, "FloatForce");
 	kBlocckFloatAnimationLength = globalVariables->GetIntValue(groupName, "FloatAnimationLength");
 	kBlocckFloatAnimationDelay = globalVariables->GetIntValue(groupName, "FloatAnimationDelay");
+	kReverseFloatAnimationDelay = globalVariables->GetIntValue(groupName, "ReverseAnimationDelay");
 }

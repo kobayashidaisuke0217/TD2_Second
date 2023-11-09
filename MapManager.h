@@ -31,6 +31,7 @@ public:
 		void Touch();
 		float moveDirection_;
 		void Reverse();
+		uint32_t delay_;
 	};
 
 	static MapManager* GetInstance();
@@ -59,6 +60,7 @@ public:
 	static uint32_t kBlockFloatForce;
 	static uint32_t kBlocckFloatAnimationLength;
 	static uint32_t kBlocckFloatAnimationDelay;
+	static uint32_t kReverseFloatAnimationDelay;
 private:
 	MapManager() = default;
 	~MapManager() = default;
