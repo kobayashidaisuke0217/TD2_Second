@@ -1,6 +1,6 @@
 #include "gameScene.h"
 #include "MapManager.h"
-
+#include "GameController.h"
 GameScene::~GameScene()
 {
 	
@@ -25,12 +25,14 @@ void GameScene::Initialize()
 	player_->Initialize();
 	player_->SetJoyState(&joyState_);
 	player_->SetPreJoyState(&preJoyState_);
+	GameController::GetInstance()->Initialize();
 }
 
 void GameScene::Update()
 {
-	preJoyState_ = joyState_;
-	Input::GetInstance()->GetJoystickState(0, joyState_);
+	//preJoyState_ = joyState_;
+	//Input::GetInstance()->GetJoystickState(0, joyState_);
+	GameController::GetInstance()->Update();
 	if (Input::GetInstance()->PressKey(DIK_1)) {
 		textureManager_->Initialize();
 		MapManager::GetInstance()->MapRead();

@@ -148,6 +148,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Disabled</Optimization>
     </ClCompile>
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="game\Manager\SceneManager.cpp" />
     <ClCompile Include="game\Player.cpp" />
     <ClCompile Include="game\Scenes\gameScene.cpp" />
@@ -188,6 +189,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="GameController.h" />
     <ClInclude Include="game\Manager\SceneManager.h" />
     <ClInclude Include="game\Player.h" />
     <ClInclude Include="game\Scenes\gameScene.h" />
