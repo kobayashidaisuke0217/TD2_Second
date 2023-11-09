@@ -53,14 +53,14 @@ void Enemy::Update()
 	if (reflectCount_ >= 3) {
 		isAlive_ = false;
 	}
-	if (worldTransform_.translation_.y >= 11.0f) {
+	if (worldTransform_.translation_.y >= 11.0f && velocity_.y >= -0.2f) {
 		isDown_ = true;
-		
-	}
-	if (isDown_ == true && velocity_.y >= -0.2f) {
 		velocity_.y -= 0.005f;
-		isDown_ = false;
 	}
+	/*if (isDown_ == true && velocity_.y >= -0.2f) {
+		
+		isDown_ = false;
+	}*/
 	ImGui::Begin("enemy");
 	ImGui::DragFloat3("velocity", &velocity_.x);
 	ImGui::DragFloat3("translate", &worldTransform_.translation_.x);
@@ -86,15 +86,25 @@ void Enemy::isCollision(OBB partner)
 		ishit_ = true;
 
 		
-			if (std::abs(obb_.center.x - partner.center.x) < std::abs(obb_.center.y - partner.center.y)) {
+			if (std::abs(worldTransform_.translation_.x - partner.center.x) < std::abs(worldTransform_.translation_.y - partner.center.y)) {
 				velocity_.y *= -1.0f;
 				worldTransform_.translation_ = prePos_;
-				
+				/*if(isDown_){
+					isDown_ = false;
+				}
+				else {
+					isDown_ = true;
+				}*/
+			}
+			else if (std::abs(worldTransform_.translation_.x - partner.center.x) == std::abs(worldTransform_.translation_.y - partner.center.y)) {
+				velocity_.y *= -1.0f;
+				velocity_.x *= -1.0f;
+				worldTransform_.translation_ = prePos_;
 			}
 			
 			else {
 				velocity_.x *= -1.0f;
-				
+				worldTransform_.translation_ = prePos_;
 			}
 			
 	}
