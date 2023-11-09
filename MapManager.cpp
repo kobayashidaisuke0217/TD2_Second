@@ -80,11 +80,11 @@ void MapManager::MapBuild() {
 			if (map[y][x] != MapState::None) {
 				WorldTransform worldTransform;
 				worldTransform.Initialize();
-				worldTransform.translation_.x = float(int(x) - int(mapWidth_/2));
-				worldTransform.translation_.y = float( mapHeight_) - float(y+1);
+				worldTransform.translation_.x = float(int(x) - int(mapWidth_/2))*2.0f*worldTransform.scale_.x;
+				worldTransform.translation_.y = (float( mapHeight_) - float(y+1))*2.0f * worldTransform.scale_.y;
 				worldTransform.UpdateMatrix();
 				OBB obb;
-				obb.size = { worldTransform.scale_.x/2.0f,worldTransform.scale_.y / 2.0f,worldTransform.scale_.z / 2.0f };
+				obb.size = { worldTransform.scale_.x,worldTransform.scale_.y,worldTransform.scale_.z };
 				GetOrientations(rotateMatrix, obb.orientation);
 				obb.center = worldTransform.translation_;
 				Map object{ map[y][x] ,obb,worldTransform };
