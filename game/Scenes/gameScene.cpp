@@ -57,13 +57,19 @@ void GameScene::Update()
 	std::vector<MapManager::Map>& floors = MapManager::GetInstance()->GetFloor();
 	for (MapManager::Map& object : floors) {
 		if (IsCollision(player_->GetOBB(), object.obb)) {
-			player_->OnCollisionFloor(object.obb);
+			player_->OnCollisionFloorVertical(object.obb);
 			object.OnCollision();
 		}
 		if (IsCollision(player_->GetFloatTrigger(), object.obb)) {
 			object.Touch();
 		}
 	}
+	for (MapManager::Map& object : floors) {
+		if (IsCollision(player_->GetOBB(), object.obb)) {
+			player_->OnCollisionFloorHorizon(object.obb);
+		}
+	}
+
 	std::vector<MapManager::Map>& walls = MapManager::GetInstance()->GetWall();
 	for (MapManager::Map& object : walls) {
 		if (IsCollision(player_->GetOBB(), object.obb)) {

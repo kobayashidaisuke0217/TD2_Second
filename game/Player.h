@@ -22,7 +22,8 @@ public:
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 	void OnCollision(OBB& partner);
-	void OnCollisionFloor(OBB& partner);
+	void OnCollisionFloorVertical(OBB& partner);
+	void OnCollisionFloorHorizon(OBB& partner);
 	void OnCollisionWall(OBB& partner);
 
 	OBB& GetOBB() { return obb_; };
@@ -55,4 +56,5 @@ private:
 	Vector3 gravity_;
 	Vector3 jumpAccerelation_;
 	float moveSpeed_;
+	float jumpDampingX_;
 };
