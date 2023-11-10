@@ -174,7 +174,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		break;
 	case kBound:
 		enemy = new BoundEnemy();
-		enemy->Initialize(trans, { 2.0f,-1.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(trans, { 0.3f,-1.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
 
 		enemys_.push_back(enemy);
 		break;

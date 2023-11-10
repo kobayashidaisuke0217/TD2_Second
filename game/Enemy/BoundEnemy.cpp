@@ -22,7 +22,6 @@ void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity,
 	worldTransform_.Initialize();
 	MoveSpeed_ = moveSpeed;
 	targetWordTransform_ = targettransform;
-	velocity_ = Subtract(targetWordTransform_.translation_, worldTransform_.translation_);
 	velocity_ = velocity;
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
@@ -58,9 +57,16 @@ void BoundEnemy::Update()
 	
 		if (worldTransform_.translation_.y >= 11.0f && velocity_.y >= MoveSpeed_) {
 		
-			velocity_.y -= 0.005f;
+			isDown_ = true;
 		}
-	
+		if (isDown_) {
+			if (velocity_.y >= -MoveSpeed_) {
+				velocity_.y -= 0.005f;
+			}
+			else {
+				isDown_ = false;
+			}
+	}
 
 	ImGui::Begin("enemy");
 	ImGui::DragFloat3("velocity", &velocity_.x);
@@ -84,7 +90,7 @@ void BoundEnemy::isCollision(OBB pertner)
 	if (!ishit_) {
 
 		ishit_ = true;
-		
+		isDown_ = false;
 		if (collisionpartner_ == kflore) {
 			if (std::abs(obb_.center.y - pertner.center.y) <= 2.0f) {
 				velocity_.y *= -1.0f;
