@@ -17,6 +17,7 @@
 #pragma region エネミー
 #include"game/Enemy/IEnemy.h"
 #include"game/Enemy/BoundEnemy.h"
+#include"game/Enemy/ReflectEnemy.h"
 #pragma endregion
 class GameScene:public Iscene
 {

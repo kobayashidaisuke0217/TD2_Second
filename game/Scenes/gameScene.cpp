@@ -28,7 +28,7 @@ void GameScene::Initialize()
 	player_.reset(new Player);
 	player_->Initialize();
 	EnemyVelocity_ = 0.25f;
-	EnemySpawn(player_->GetWorldTransform(),kBound);
+	EnemySpawn(player_->GetWorldTransform(),kReflect);
 }
 
 void GameScene::Update()
@@ -47,7 +47,7 @@ void GameScene::Update()
 		EnemySpawn(player_->GetWorldTransform(),kBound);
 	}
 	if (Input::GetInstance()->PushKey(DIK_S)) {
-		EnemySpawn(player_->GetWorldTransform(), kBound);
+		EnemySpawn(player_->GetWorldTransform(), kReflect);
 	}
 	viewProjection_.UpdateMatrix();
 	viewProjection_.TransferMatrix();
@@ -109,7 +109,7 @@ void GameScene::Update()
 			for (MapManager::Map& object : walls) {
 				if (IsCollision(enemy->GetOBB(), object.obb)) {
 					enemy->SetPartener(kwall);
-						enemy->isCollision(object.obb);
+					enemy->isCollision(object.obb);
 						
 				}
 			}
@@ -162,15 +162,46 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 {
 	IEnemy* enemy;
 	Transform trans = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
-	if (type == kBound) {
-		enemy =new BoundEnemy() ;
-	}
-	else {
-		enemy = new BoundEnemy();
-	}
-	enemy->Initialize(trans,{2.0f,0.0f,0.0f},0.25f,enemyTex_,player_->GetWorldTransform());
+	switch (type)
+	{
+	case kBullet:
+		break;
+	case kReflect:
+		enemy = new ReflectEnemy();
+		enemy->Initialize(trans, { 2.0f,-1.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
 
-	enemys_.push_back(enemy);
+		enemys_.push_back(enemy);
+		break;
+	case kBound:
+		enemy = new BoundEnemy();
+		enemy->Initialize(trans, { 2.0f,-1.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
+
+		enemys_.push_back(enemy);
+		break;
+	case kTire:
+		break;
+	case kSpear:
+		break;
+	case kRaser:
+		break;
+	case kAimBullet:
+		break;
+	case kAimBound:
+		break;
+	case kStageUp:
+		break;
+	case kStageDown:
+		break;
+	case kHoming:
+		break;
+	default:
+		enemy = new ReflectEnemy();
+		enemy->Initialize(trans, { 2.0f,0.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
+
+		enemys_.push_back(enemy);
+		break;
+	}
+	
 }
 
 void GameScene::Draw2D() {

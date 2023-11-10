@@ -150,6 +150,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="game\Enemy.cpp" />
     <ClCompile Include="game\Enemy\BoundEnemy.cpp" />
     <ClCompile Include="game\Enemy\IENEMY.CPP" />
+    <ClCompile Include="game\Enemy\ReflectEnemy.cpp" />
     <ClCompile Include="game\Manager\SceneManager.cpp" />
     <ClCompile Include="game\Player.cpp" />
     <ClCompile Include="game\Scenes\gameScene.cpp" />
@@ -191,6 +192,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="game\Enemy.h" />
     <ClInclude Include="game\Enemy\BoundEnemy.h" />
+    <ClInclude Include="game\Enemy\ReflectEnemy.h" />
     <ClInclude Include="game\IEnemy.h" />
     <ClInclude Include="game\Manager\SceneManager.h" />
     <ClInclude Include="game\Player.h" />

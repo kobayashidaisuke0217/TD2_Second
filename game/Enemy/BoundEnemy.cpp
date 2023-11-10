@@ -26,7 +26,7 @@ void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity,
 	velocity_ = velocity;
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
-	velocity_.y = -MoveSpeed_;
+	//velocity_.y = -MoveSpeed_;
 	
 	isAlive_ = true;
 	ishit_ = false;
