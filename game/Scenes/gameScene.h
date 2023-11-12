@@ -13,6 +13,7 @@
 #include "Particle.h"
 #include "game/Player.h"
 #include "Input.h"
+#include "FollowCamera.h"
 class GameScene:public Iscene
 {
 public:
@@ -30,6 +31,7 @@ private:
 	Texturemanager* textureManager_;
 
 	int blendCount_;
+	std::unique_ptr<FollowCamera> followCamera_;
 	ViewProjection viewProjection_;
 	void Draw2D();
 	void Draw3D();

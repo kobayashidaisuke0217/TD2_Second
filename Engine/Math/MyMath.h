@@ -298,3 +298,5 @@ inline Vector3 Reflect(const Vector3& input, const Vector3& normal) {
 	r = r * 0.8f;
 	return r;
 }
+
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);

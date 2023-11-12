@@ -33,6 +33,7 @@ public:
 	void SetPreJoyState(XINPUT_STATE* joystate) { preJoyState_ = joystate; };
 
 	void ApplyGlobalVariables();
+	WorldTransform& GetWorldTransform() { return worldTransform_; };
 private:
 	Input* input_ = nullptr;
 	XINPUT_STATE* joyState_;

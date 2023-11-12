@@ -26,6 +26,11 @@ void GameScene::Initialize()
 	player_->SetJoyState(&joyState_);
 	player_->SetPreJoyState(&preJoyState_);
 	GameController::GetInstance()->Initialize();
+
+	followCamera_.reset(new FollowCamera);
+	followCamera_->Initialize();
+	followCamera_->SetForcusPoint({0,1.0f,100.0f});
+	followCamera_->SetTarget(&player_->GetWorldTransform());
 }
 
 void GameScene::Update()
@@ -44,8 +49,8 @@ void GameScene::Update()
 	
 	ImGui::End();
 
-	viewProjection_.UpdateMatrix();
-	viewProjection_.TransferMatrix();
+	//viewProjection_.UpdateMatrix();
+	//viewProjection_.TransferMatrix();
 
 	ImGui::Begin("Scene");
 	
@@ -85,6 +90,12 @@ void GameScene::Update()
 			player_->OnCollisionWall(object.obb);
 		}
 	}
+
+	followCamera_->Update();
+
+	viewProjection_.matView = followCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
 }
 
 
