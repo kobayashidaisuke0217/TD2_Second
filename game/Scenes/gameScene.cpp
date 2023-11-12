@@ -29,7 +29,7 @@ void GameScene::Initialize()
 
 	followCamera_.reset(new FollowCamera);
 	followCamera_->Initialize();
-	followCamera_->SetForcusPoint({0,1.0f,100.0f});
+	//followCamera_->SetForcusPoint({0,1.0f,100.0f});
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 }
 

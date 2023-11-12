@@ -15,16 +15,17 @@ public:
 	inline void SetTarget(WorldTransform* target) { target_ = target; };
 	inline const ViewProjection& GetViewProjection() { return viewProjection_; };
 	//void Reset();
-	//void ApplyGlobalVariables();
+	void ApplyGlobalVariables();
 private:
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
-
-	Vector3 forcusPoint_;
+	//視点の先、Zを大きくするほど傾きが小さくなる
+	Vector3 forcusPoint_ = {0,0,100.0f};
 	WorldTransform* target_ = nullptr;
 	//Vector3 interTargert_;
 	
-	Vector3 offset_ = {0,2.0f,-20.0f};
+	//カメラの位置
+	Vector3 offset_ = {0,2.0f,-100.0f};
 	
 	//補間の強さ
 	//float cameraDelay_;
