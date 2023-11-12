@@ -16,16 +16,13 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 
 	
 	worldTransform_.translation_ = transform.translate;
-
+	worldTransform_.scale_ = transform.scale;
 	worldTransform_.Initialize();
 	MoveSpeed_ = moveSpeed;
 	targetWordTransform_ = targettransform;
-	velocity_ = Subtract(targetWordTransform_.translation_, worldTransform_.translation_);
 	velocity_ = velocity;
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
-	//velocity_.y = -MoveSpeed_;
-
 	isAlive_ = true;
 	ishit_ = false;
 	cooltime_ = 0;

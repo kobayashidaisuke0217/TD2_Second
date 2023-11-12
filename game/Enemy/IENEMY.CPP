@@ -1,9 +1,13 @@
-#include "IEnemy.h"
+#include"IEnemy.h"
 
-IEnemy::IEnemy()
-{
+IEnemy::IEnemy() {
+
+}
+IEnemy::~IEnemy() {
+
 }
 
-IEnemy::~IEnemy()
-{
-}
+
+
+
+ 

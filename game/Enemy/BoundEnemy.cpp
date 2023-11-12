@@ -104,6 +104,7 @@ void BoundEnemy::isCollision(OBB pertner)
 			}
 		}
 		else {
+
 			if (std::abs(obb_.center.x - pertner.center.x) <= 2.0f) {
 
 				velocity_.x *= -1.0f;

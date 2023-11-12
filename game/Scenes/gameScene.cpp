@@ -27,8 +27,12 @@ void GameScene::Initialize()
 	MapManager::GetInstance()->MapRead();
 	player_.reset(new Player);
 	player_->Initialize();
-	EnemyVelocity_ = 0.25f;
-	EnemySpawn(player_->GetWorldTransform(),kReflect);
+	EnemymoveSpeed_ = 0.25f;
+	enemyVelocity_ = { -1.0f,0.0f,0.0f };
+	type = kBullet;
+	 enemyTransform = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
+	//EnemySpawn(player_->GetWorldTransform(),type);
+
 }
 
 void GameScene::Update()
@@ -43,12 +47,29 @@ void GameScene::Update()
 	ImGui::DragFloat3("translate", &viewProjection_.translation_.x,0.01f);
 	
 	ImGui::End();
+	ImGui::Begin("EnemyPopData");
+	if (ImGui::BeginCombo("EnemyType", "Types")) {
+		if (ImGui::Selectable("Bullet", type == kBullet)) {
+			type = kBullet;
+		}
+		if (ImGui::Selectable("Bound", type == kBound)) {
+			type = kBound;
+		}if (ImGui::Selectable("Reflect", type == kReflect)) {
+			type = kReflect;
+		}
+	
+		ImGui::EndCombo();
+	
+	}
+	ImGui::DragFloat("speed", &EnemymoveSpeed_, 0.05f);
+	ImGui::DragFloat3("velocity", &enemyVelocity_.x, 0.05f);
+	ImGui::DragFloat3("translate", &enemyTransform.translate.x, 0.05f);
+	ImGui::DragFloat3("scale", &enemyTransform.scale.x, 0.05f);
+	ImGui::End();
 	if (Input::GetInstance()->PushKey(DIK_E)) {
-		EnemySpawn(player_->GetWorldTransform(),kBound);
+		EnemySpawn(player_->GetWorldTransform(),type);
 	}
-	if (Input::GetInstance()->PushKey(DIK_S)) {
-		EnemySpawn(player_->GetWorldTransform(), kReflect);
-	}
+
 	viewProjection_.UpdateMatrix();
 	viewProjection_.TransferMatrix();
 
@@ -118,7 +139,7 @@ void GameScene::Update()
 	}
 	
 	ImGui::Begin("velo");
-	ImGui::DragFloat("veloc", &EnemyVelocity_, 0.05f);
+	
 	ImGui::End();
 }
 
@@ -161,20 +182,25 @@ void GameScene::ApplyGlobalVariables()
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 {
 	IEnemy* enemy;
-	Transform trans = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
+
 	switch (type)
 	{
 	case kBullet:
+		enemy = new BulletEnemy();
+		enemy->Initialize(enemyTransform,enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+
+		enemys_.push_back(enemy);
 		break;
 	case kReflect:
 		enemy = new ReflectEnemy();
-		enemy->Initialize(trans, { 2.0f,-1.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
 
 		enemys_.push_back(enemy);
 		break;
 	case kBound:
 		enemy = new BoundEnemy();
-		enemy->Initialize(trans, { 0.3f,-1.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform,enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
 
 		enemys_.push_back(enemy);
 		break;
@@ -196,7 +222,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		break;
 	default:
 		enemy = new ReflectEnemy();
-		enemy->Initialize(trans, { 2.0f,0.0f,0.0f }, 0.25f, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
 
 		enemys_.push_back(enemy);
 		break;

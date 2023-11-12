@@ -9,5 +9,12 @@ public:
 	virtual void Update() override;
 	virtual void Draw(const ViewProjection& viewProjection) override;
 	virtual void isCollision(OBB pertner) override;
+
+	virtual bool GetIsAlive()override { return isAlive_; }
+	virtual OBB& GetOBB()override { return obb_; };
+
+
+	virtual bool GetIsHit()override { return ishit_; }
+	virtual void SetPartener(collisionPartner partner)override { collisionpartner_ = partner; }
 };
 

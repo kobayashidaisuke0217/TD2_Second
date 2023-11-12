@@ -18,6 +18,7 @@
 #include"game/Enemy/IEnemy.h"
 #include"game/Enemy/BoundEnemy.h"
 #include"game/Enemy/ReflectEnemy.h"
+#include"game/Enemy/BulletEnemy.h"
 #pragma endregion
 class GameScene:public Iscene
 {
@@ -44,8 +45,11 @@ private:
 	std::unique_ptr<Player> player_;
 	//std::list<Enemy*> enemys_;
 	std::list <IEnemy*>enemys_;
-	float EnemyVelocity_;
+	float EnemymoveSpeed_;
+	Vector3 enemyVelocity_;
 	uint32_t enemyTex_;
+	EnemyType type;
+	Transform enemyTransform;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform,EnemyType type);
 };
