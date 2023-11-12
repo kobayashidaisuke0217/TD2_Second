@@ -32,15 +32,16 @@ void GameScene::Initialize()
 	type = kBullet;
 	 enemyTransform = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
 	//EnemySpawn(player_->GetWorldTransform(),type);
-
+	 enemyPop_ = false;
 }
 
 void GameScene::Update()
 {
-	if (Input::GetInstance()->PressKey(DIK_1)) {
+	if (Input::GetInstance()->PressKey(DIK_1)||enemyPop_) {
 		textureManager_->Initialize();
 		MapManager::GetInstance()->MapRead();
 		player_->Initialize();
+		enemyPop_ = false;
 	}
 	ImGui::Begin("testcamera");
 	ImGui::DragFloat3("rotate", &viewProjection_.rotation_.x,0.01f);
@@ -54,10 +55,16 @@ void GameScene::Update()
 		}
 		if (ImGui::Selectable("Bound", type == kBound)) {
 			type = kBound;
-		}if (ImGui::Selectable("Reflect", type == kReflect)) {
+		}
+		if (ImGui::Selectable("Reflect", type == kReflect)) {
 			type = kReflect;
 		}
-	
+		if (ImGui::Selectable("Reflect", type == kStageDown)) {
+			type = kStageDown;
+		}
+		if (ImGui::Selectable("Reflect", type == kStageUp)) {
+			type = kStageUp;
+		}
 		ImGui::EndCombo();
 	
 	}
@@ -65,6 +72,7 @@ void GameScene::Update()
 	ImGui::DragFloat3("velocity", &enemyVelocity_.x, 0.05f);
 	ImGui::DragFloat3("translate", &enemyTransform.translate.x, 0.05f);
 	ImGui::DragFloat3("scale", &enemyTransform.scale.x, 0.05f);
+	ImGui::Checkbox("POP", &enemyPop_);
 	ImGui::End();
 	if (Input::GetInstance()->PushKey(DIK_E)) {
 		EnemySpawn(player_->GetWorldTransform(),type);
@@ -123,7 +131,12 @@ void GameScene::Update()
 				
 				enemy->SetPartener(kflore);
 				enemy->isCollision(object.obb);
+				if(enemy->GetType()==kStageUp){
 				
+				}
+				if (enemy->GetType() == kStageDown) {
+
+				}
 			}
 		}
 		if (enemy->GetType() == kReflect) {
@@ -215,8 +228,17 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kAimBound:
 		break;
 	case kStageUp:
+		enemy = new StageChangeEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->SetType(kStageUp);
+		enemys_.push_back(enemy);
 		break;
 	case kStageDown:
+		enemy = new StageChangeEnemy();
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->SetType(kStageDown);
+		enemys_.push_back(enemy);
 		break;
 	case kHoming:
 		break;

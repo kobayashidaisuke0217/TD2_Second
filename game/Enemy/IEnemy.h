@@ -37,7 +37,7 @@ public:
 	virtual bool GetIsAlive() { return isAlive_; }
 	virtual OBB& GetOBB() { return obb_; };
 	
-	
+	virtual void SetType(EnemyType a) { type_ = a; }
 	virtual bool GetIsHit() { return ishit_; }
 	virtual void SetPartener(collisionPartner partner) { collisionpartner_ = partner; }
 	virtual EnemyType GetType() { return type_; }

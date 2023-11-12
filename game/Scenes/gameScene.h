@@ -19,6 +19,7 @@
 #include"game/Enemy/BoundEnemy.h"
 #include"game/Enemy/ReflectEnemy.h"
 #include"game/Enemy/BulletEnemy.h"
+#include"game/Enemy/StageChangeEnemy.h"
 #pragma endregion
 class GameScene:public Iscene
 {
@@ -50,6 +51,7 @@ private:
 	uint32_t enemyTex_;
 	EnemyType type;
 	Transform enemyTransform;
+	bool enemyPop_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform,EnemyType type);
 };
