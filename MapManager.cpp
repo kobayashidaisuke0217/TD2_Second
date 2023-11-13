@@ -120,6 +120,7 @@ void MapManager::Draw(const ViewProjection& viewProjection) {
 	}*/
 	for (Map& object : floor_) {
 		modelBlock_->Draw(object.worldTransform, viewProjection);
+		
 	}
 	for (Map& object : wall_) {
 		modelBlock_->Draw(object.worldTransform,viewProjection);

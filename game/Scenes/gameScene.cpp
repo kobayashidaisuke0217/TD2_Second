@@ -150,14 +150,16 @@ void GameScene::Update()
 			if (IsCollision(enemy->GetOBB(), object.obb) && !enemy->GetIsHit()) {
 				
 					if (enemy->GetType() == kStageUp) {
-						/*object.moveDirection_ *= -1.0f;*/
-						object.OnCollision();
-						object.Touch();
+						if (object.worldTransform.translation_.y == 0.0f) {
+							object.OnCollision();
+							object.Touch();
+						}
 					}
 					if (enemy->GetType() == kStageDown) {
-						/*object.moveDirection_ *= -1.0f;*/
-						object.OnCollision();
-						object.Touch();
+						if (object.worldTransform.translation_.y == 4.0f) {
+							object.OnCollision();
+							object.Touch();
+						}
 					}
 				
 				enemy->SetPartener(kflore);
