@@ -78,12 +78,12 @@ void ReflectEnemy::isCollision(OBB pertner)
 				ishit_ = true;
 				reflectCount_++;
 				if (collisionpartner_ == kflore) {
-					if (std::abs(obb_.center.y - pertner.center.y) <= 2.0f) {
+					if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
 						velocity_.y *= -1.0f;
 						worldTransform_.translation_ = prePos_;
 		
 					}
-					else if (std::abs(obb_.center.x - pertner.center.x) <= 2.0f) {
+					else if (std::abs(obb_.center.x - pertner.center.x) <= worldTransform_.scale_.x * 2.0f) {
 		
 						velocity_.x *= -1.0f;
 						worldTransform_.translation_ = prePos_;
@@ -91,11 +91,11 @@ void ReflectEnemy::isCollision(OBB pertner)
 				}
 				else {
 				
-					if (std::abs(obb_.center.x - pertner.center.x) <= 2.0f) {
+					if (std::abs(obb_.center.x - pertner.center.x) <= worldTransform_.scale_.x * 2.0f) {
 		
 						velocity_.x *= -1.0f;
 						worldTransform_.translation_ = prePos_;
-					}else if (std::abs(obb_.center.y - pertner.center.y) <= 2.0f) {
+					}else if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
 						velocity_.y *= -1.0f;
 						worldTransform_.translation_ = prePos_;
 		

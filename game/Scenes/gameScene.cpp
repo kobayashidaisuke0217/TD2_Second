@@ -41,7 +41,7 @@ void GameScene::Initialize()
 	EnemymoveSpeed_ = 0.25f;
 	enemyVelocity_ = { -1.0f,0.0f,0.0f };
 	type = kBullet;
-	enemyTransform = { {1.0f,1.0f,1.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
+	enemyTransform = { {3.0f,3.0f,3.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
 	//EnemySpawn(player_->GetWorldTransform(),type);
 	enemyPop_ = false;
 }
@@ -73,10 +73,10 @@ void GameScene::Update()
 		if (ImGui::Selectable("Reflect", type == kReflect)) {
 			type = kReflect;
 		}
-		if (ImGui::Selectable("Reflect", type == kStageDown)) {
+		if (ImGui::Selectable("StageDown", type == kStageDown)) {
 			type = kStageDown;
 		}
-		if (ImGui::Selectable("Reflect", type == kStageUp)) {
+		if (ImGui::Selectable("StageUp", type == kStageUp)) {
 			type = kStageUp;
 		}
 		ImGui::EndCombo();
@@ -88,8 +88,9 @@ void GameScene::Update()
 	ImGui::DragFloat3("scale", &enemyTransform.scale.x, 0.05f);
 	ImGui::Checkbox("POP", &enemyPop_);
 	ImGui::End();
-	if (Input::GetInstance()->PushKey(DIK_E)) {
+	if (Input::GetInstance()->PushKey(DIK_E)||enemyPop_) {
 		EnemySpawn(player_->GetWorldTransform(), type);
+		enemyPop_ = false;
 	}
 
 	//viewProjection_.UpdateMatrix();

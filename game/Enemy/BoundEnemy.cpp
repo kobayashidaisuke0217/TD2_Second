@@ -18,7 +18,7 @@ void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity,
 	worldTransform_.translation_.x = 10.0f;
 	worldTransform_.scale_ = { 1.0f,1.0f,1.0f };*/
 	worldTransform_.translation_ = transform.translate;
-
+	worldTransform_.scale_ = transform.scale;
 	worldTransform_.Initialize();
 	MoveSpeed_ = moveSpeed;
 	targetWordTransform_ = targettransform;
@@ -55,13 +55,13 @@ void BoundEnemy::Update()
 	}
 	
 	
-		if (worldTransform_.translation_.y >= 11.0f && velocity_.y >= MoveSpeed_) {
+		if (worldTransform_.translation_.y >= 11.0f /*&& velocity_.y >= MoveSpeed_*/) {
 		
 			isDown_ = true;
 		}
 		if (isDown_) {
 			if (velocity_.y >= -MoveSpeed_) {
-				velocity_.y -= 0.005f;
+				velocity_.y -= 0.05f;
 			}
 			else {
 				isDown_ = false;
@@ -75,7 +75,7 @@ void BoundEnemy::Update()
 	ImGui::End();
 	if (worldTransform_.translation_.y <= -5.0f) {
 		isAlive_ = false;
-	}if (std::abs(worldTransform_.translation_.x) > 30.0f) {
+	}if (std::abs(worldTransform_.translation_.x) > 150.0f) {
 		isAlive_ = false;
 	}
 }
@@ -92,12 +92,12 @@ void BoundEnemy::isCollision(OBB pertner)
 		ishit_ = true;
 		isDown_ = false;
 		if (collisionpartner_ == kflore) {
-			if (std::abs(obb_.center.y - pertner.center.y) <= 2.0f) {
+			if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
 				velocity_.y *= -1.0f;
 				worldTransform_.translation_ = prePos_;
 
 			}
-			else if (std::abs(obb_.center.x - pertner.center.x) <= 2.0f) {
+			else if (std::abs(obb_.center.x - pertner.center.x) <= worldTransform_.scale_.x * 2.0f) {
 
 				velocity_.x *= -1.0f;
 				worldTransform_.translation_ = prePos_;
@@ -105,12 +105,12 @@ void BoundEnemy::isCollision(OBB pertner)
 		}
 		else {
 
-			if (std::abs(obb_.center.x - pertner.center.x) <= 2.0f) {
+			if (std::abs(obb_.center.x - pertner.center.x) <= worldTransform_.scale_.x * 2.0f) {
 
 				velocity_.x *= -1.0f;
 				worldTransform_.translation_ = prePos_;
 			}
-			else if (std::abs(obb_.center.y - pertner.center.y) <= 2.0f) {
+			else if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
 				velocity_.y *= -1.0f;
 				worldTransform_.translation_ = prePos_;
 
