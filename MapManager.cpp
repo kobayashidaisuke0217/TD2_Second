@@ -107,6 +107,7 @@ void MapManager::Update() {
 	for (Map& object : floor_) {
 		object.Update();
 		if (GameController::GetInstance()->Reverse()) {
+			
 			object.Reverse();
 			object.delay_ = kReverseFloatAnimationDelay;
 		}
@@ -130,6 +131,7 @@ void MapManager::Map::Update() {
 	if (moveFlag_ && !isTouch_) {
 		//移動開始
 		if (isCollision_) {
+		
 			Reverse();
 			delay_ = kBlocckFloatAnimationDelay;
 		}

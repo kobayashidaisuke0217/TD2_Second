@@ -24,6 +24,7 @@ void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& vel
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	type_ = kBullet;
 	isAlive_ = true;
+	count = 0;
 }
 
 void StageChangeEnemy::Update()
@@ -39,6 +40,12 @@ void StageChangeEnemy::Update()
 	obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y / 2.0f ,worldTransform_.scale_.z / 2.0f };
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
+	if (ishit_ == true) {
+		count++;
+	}
+	if (count > 5) {
+		isAlive_ = false;
+	}
 }
 
 void StageChangeEnemy::Draw(const ViewProjection& viewProjection)
@@ -48,5 +55,6 @@ void StageChangeEnemy::Draw(const ViewProjection& viewProjection)
 
 void StageChangeEnemy::isCollision(OBB pertner)
 {
+	ishit_ = true;
 	isAlive_ = false;
 }

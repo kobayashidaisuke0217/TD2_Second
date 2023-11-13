@@ -16,5 +16,6 @@ public:
 
 	virtual bool GetIsHit()override { return ishit_; }
 	virtual void SetPartener(collisionPartner partner)override { collisionpartner_ = partner; }
-
+private:
+	int count;
 };

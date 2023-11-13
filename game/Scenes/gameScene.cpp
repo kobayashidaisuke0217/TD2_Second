@@ -88,7 +88,7 @@ void GameScene::Update()
 	ImGui::DragFloat3("scale", &enemyTransform.scale.x, 0.05f);
 	ImGui::Checkbox("POP", &enemyPop_);
 	ImGui::End();
-	if (Input::GetInstance()->PushKey(DIK_E)||enemyPop_) {
+	if (Input::GetInstance()->PushKey(DIK_E) || enemyPop_) {
 		EnemySpawn(player_->GetWorldTransform(), type);
 		enemyPop_ = false;
 	}
@@ -148,15 +148,21 @@ void GameScene::Update()
 	for (IEnemy* enemy : enemys_) {
 		for (MapManager::Map& object : floors) {
 			if (IsCollision(enemy->GetOBB(), object.obb) && !enemy->GetIsHit()) {
-
+				
+					if (enemy->GetType() == kStageUp) {
+						/*object.moveDirection_ *= -1.0f;*/
+						object.OnCollision();
+						object.Touch();
+					}
+					if (enemy->GetType() == kStageDown) {
+						/*object.moveDirection_ *= -1.0f;*/
+						object.OnCollision();
+						object.Touch();
+					}
+				
 				enemy->SetPartener(kflore);
 				enemy->isCollision(object.obb);
-				if (enemy->GetType() == kStageUp) {
-
-				}
-				if (enemy->GetType() == kStageDown) {
-
-				}
+				
 			}
 		}
 		if (enemy->GetType() == kReflect) {
@@ -175,9 +181,6 @@ void GameScene::Update()
 	viewProjection_.matView = followCamera_->GetViewProjection().matView;
 	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 	viewProjection_.TransferMatrix();
-	ImGui::Begin("velo");
-
-	ImGui::End();
 }
 
 
