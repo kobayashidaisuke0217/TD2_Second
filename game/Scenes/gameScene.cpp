@@ -132,7 +132,7 @@ void GameScene::Update()
 				enemy->SetPartener(kflore);
 				enemy->isCollision(object.obb);
 				if(enemy->GetType()==kStageUp){
-				
+				object.
 				}
 				if (enemy->GetType() == kStageDown) {
 
