@@ -52,16 +52,22 @@ void Player::Update() {
 		isJumpReception_ = true;
 		jumpReceptionRest_ = jumpReceptionLength_;
 	}
-	if (GameController::GetInstance()->ContinueJump() && isJumpReception_) {
+	if ((!GameController::GetInstance()->ContinueJump()) && isJumpReception_) {
 		velocity_.y = 0.0f;
-		velocity_.y = jumpAccerelation_.y;
+		isJumpReception_ = false;
+		//velocity_.y = jumpAccerelation_.y;
 		jumpReceptionRest_--;
 		if (jumpReceptionRest_<0) {
 			isJumpReception_ = false;
 		}
 	}
 	else {
-		isJumpReception_ = false;
+		jumpReceptionRest_--;
+		if (jumpReceptionRest_ < 0) {
+			isJumpReception_ = false;
+		}
+		//velocity_.y = 0.0f;
+		//isJumpReception_ = false;
 	}
 
 	float kSpeed = 0.1f;
