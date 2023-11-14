@@ -53,7 +53,7 @@ void Player::Update() {
 		jumpReceptionRest_ = jumpReceptionLength_;
 	}
 	if ((!GameController::GetInstance()->ContinueJump()) && isJumpReception_) {
-		velocity_.y = 0.0f;
+		velocity_.y *= 0.6f;
 		isJumpReception_ = false;
 		//velocity_.y = jumpAccerelation_.y;
 		jumpReceptionRest_--;
