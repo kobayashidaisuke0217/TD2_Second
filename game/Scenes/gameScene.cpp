@@ -44,6 +44,7 @@ void GameScene::Initialize()
 	enemyTransform = { {3.0f,3.0f,3.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
 	//EnemySpawn(player_->GetWorldTransform(),type);
 	enemyPop_ = false;
+	enemys_.clear();
 }
 
 void GameScene::Update()
@@ -146,6 +147,10 @@ void GameScene::Update()
 		}
 	}
 	for (IEnemy* enemy : enemys_) {
+		if (IsCollision(enemy->GetOBB(),player_->GetOBB())) {
+			Initialize();
+			return;
+		}
 		for (MapManager::Map& object : floors) {
 			if (IsCollision(enemy->GetOBB(), object.obb) && !enemy->GetIsHit()) {
 				

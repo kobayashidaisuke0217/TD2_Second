@@ -27,8 +27,8 @@ void FollowCamera::Update()
 
 		//interTargert_ = Lerp(interTargert_, target_->GetWorldPosition(), cameraDelay_);
 
-		viewProjection_.translation_ = target_->GetWorldPos() + TransformNormal(offset_, rotateMatrix);;
-		//viewProjection_.translation_.x += target_->GetWorldPos().x;
+		viewProjection_.translation_ =  TransformNormal(offset_, rotateMatrix);;
+		viewProjection_.translation_.x += target_->GetWorldPos().x;
 	
 		//手動アップデート
 		viewProjection_.matView = Inverse(Multiply(Multiply(MakeScaleMatrix({1.0f,1.0f,1.0f}) , rotateMatrix),MakeTranslateMatrix(viewProjection_.translation_)) );

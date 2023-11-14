@@ -25,6 +25,7 @@ public:
 	bool OnCollisionFloorVertical(OBB& partner);
 	void OnCollisionFloorHorizon(OBB& partner);
 	void OnCollisionWall(OBB& partner);
+	void OnCollisionEnemy();
 
 	OBB& GetOBB() { return obb_; };
 	OBB& GetFloatTrigger() { return obbFloatTrigger_; };

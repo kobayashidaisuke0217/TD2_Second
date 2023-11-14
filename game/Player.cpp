@@ -172,6 +172,10 @@ void Player::OnCollisionWall(OBB& partner) {
 
 }
 
+void Player::OnCollisionEnemy() {
+
+}
+
 void Player::Draw(const ViewProjection& viewProjection) { model_->Draw(worldTransform_,viewProjection); }
 
 void Player::ApplyGlobalVariables()
