@@ -32,6 +32,19 @@ bool GameController::Jump() {
 	}
 	return false;
 }
+
+bool GameController::ContinueJump() {
+	if (Input::GetInstance()->PressKey(DIK_SPACE)) {
+		rastInput_ = 0;
+		return true;
+	}
+	if ((joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_A)) {
+		rastInput_ = 1;
+		return true;
+	}
+	return false;
+}
+
 bool GameController::Reverse() {
 	if (Input::GetInstance()->PushKey(DIK_X)) {
 		rastInput_ = 0;

@@ -15,7 +15,8 @@ void Player::Initialize(){
 	globalVariables->AddItem(groupName, "gravity", gravity_);
 	globalVariables->AddItem(groupName, "jump", jumpAccerelation_);
 	globalVariables->AddItem(groupName, "speed", moveSpeed_);
-	globalVariables->AddItem(groupName, "jumpDampingX",jumpDampingX_);
+	globalVariables->AddItem(groupName, "jumpDampingX", jumpDampingX_);
+	globalVariables->AddItem(groupName, "jumpReceptionLength",jumpReceptionLength_);
 
 
 	worldTransform_.Initialize();
@@ -37,6 +38,7 @@ void Player::Initialize(){
 	obbFloatTrigger_.center.y -= 2.5;
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 	jumpAble_ = true;
+	isJumpReception_ = false;
 }
 
 
@@ -47,7 +49,21 @@ void Player::Update() {
 		velocity_.y = 0.0f;
 		velocity_.y = jumpAccerelation_.y;
 		jumpAble_ = false;
+		isJumpReception_ = true;
+		jumpReceptionRest_ = jumpReceptionLength_;
 	}
+	if (GameController::GetInstance()->ContinueJump() && isJumpReception_) {
+		velocity_.y = 0.0f;
+		velocity_.y = jumpAccerelation_.y;
+		jumpReceptionRest_--;
+		if (jumpReceptionRest_<0) {
+			isJumpReception_ = false;
+		}
+	}
+	else {
+		isJumpReception_ = false;
+	}
+
 	float kSpeed = 0.1f;
 	acceleration_=  gravity_;
 	velocity_ = velocity_+ acceleration_ ;
@@ -186,4 +202,5 @@ void Player::ApplyGlobalVariables()
 	jumpAccerelation_ = globalVariables->GetVector3Value(groupName, "jump");
 	moveSpeed_ = globalVariables->GetFloatValue(groupName, "speed");
 	jumpDampingX_ = globalVariables->GetFloatValue(groupName, "jumpDampingX");
+	jumpReceptionLength_ = globalVariables->GetIntValue(groupName, "jumpReceptionLength");
 }

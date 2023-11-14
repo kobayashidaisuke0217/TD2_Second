@@ -11,6 +11,7 @@ public:
 	bool Enter();
 	bool Cancel();
 	bool Jump();
+	bool ContinueJump();
 	bool Reverse();
 	//float Move();
 	bool Left();

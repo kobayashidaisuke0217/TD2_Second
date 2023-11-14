@@ -58,9 +58,14 @@ private:
 
 	bool jumpAble_;
 
+	//長押し入力が途切れるまで
+	bool isJumpReception_;
+	int32_t jumpReceptionRest_;
+
 	//パラメータ群
 	Vector3 gravity_;
 	Vector3 jumpAccerelation_;
 	float moveSpeed_;
 	float jumpDampingX_;
+	int32_t jumpReceptionLength_;
 };
