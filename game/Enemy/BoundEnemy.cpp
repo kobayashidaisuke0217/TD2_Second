@@ -23,6 +23,9 @@ void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity,
 	MoveSpeed_ = moveSpeed;
 	targetWordTransform_ = targettransform;
 	velocity_ = velocity;
+	velocity_.x = std::clamp(velocity_.x, -1.0f, 1.0f);
+	velocity_.y = std::clamp(velocity_.y, -1.0f, 1.0f);
+	velocity_.z = std::clamp(velocity_.z, -1.0f, 1.0f);
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	//velocity_.y = -MoveSpeed_;
@@ -61,7 +64,7 @@ void BoundEnemy::Update()
 		}
 		if (isDown_) {
 			if (velocity_.y >= -MoveSpeed_) {
-				velocity_.y -= 0.05f;
+				velocity_.y -= MoveSpeed_/5.0f;
 			}
 			else {
 				isDown_ = false;
