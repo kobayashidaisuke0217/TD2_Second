@@ -45,6 +45,7 @@ void GameScene::Initialize()
 	//EnemySpawn(player_->GetWorldTransform(),type);
 	enemyPop_ = false;
 	enemys_.clear();
+	waveNum_ = 0;
 }
 
 void GameScene::Update()
@@ -58,6 +59,14 @@ void GameScene::Update()
 		player_->Initialize();
 		enemyPop_ = false;
 	}
+	if (Input::GetInstance()->PressKey(DIK_2)) {
+		MapManager::GetInstance()->WaveRead(waveNum_);
+	}
+
+	ImGui::Begin("wave");
+	ImGui::DragInt("wave", &waveNum_,1,0,30);
+	ImGui::End();
+
 	ImGui::Begin("testcamera");
 	ImGui::DragFloat3("rotate", &viewProjection_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("translate", &viewProjection_.translation_.x, 0.01f);

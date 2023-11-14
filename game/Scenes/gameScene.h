@@ -57,6 +57,7 @@ private:
 	EnemyType type;
 	Transform enemyTransform;
 	bool enemyPop_;
+	int32_t waveNum_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

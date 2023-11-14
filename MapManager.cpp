@@ -75,6 +75,7 @@ void MapManager::MapBuild() {
 	mapObject_.clear();
 	floor_.clear();
 	wall_.clear();
+	uint32_t floorID = 0;
 	for (uint32_t y = 0; y < mapHeight_;y++) {
 		for (uint32_t x = 0; x < mapWidth_;x++) {
 			if (map[y][x] != MapState::None) {
@@ -92,6 +93,7 @@ void MapManager::MapBuild() {
 				object.moveDirection_ = 1.0f;
 				mapObject_.push_back(object);
 				if (map[y][x] == MapState::Block) {
+					object.id = floorID++;
 					floor_.push_back(object);
 				}
 				else if (map[y][x] == MapState::Wall) {
@@ -99,6 +101,47 @@ void MapManager::MapBuild() {
 				}
 			}
 		}
+	}
+}
+
+void MapManager::WaveRead(uint32_t wave) {
+	char readString[256];
+	int wavestate[32] = {0};
+	char* ptr;
+	char* context = nullptr;
+	FILE* fp = NULL;
+	fopen_s(&fp, "Resource/Map/waveMap.csv", "rt");
+	if (fp == NULL) {
+		return;
+	}
+	uint32_t column=0;
+	uint32_t x = 0, y = 0;
+	while (fgets(readString, sizeof(readString) / sizeof(char), fp) != NULL && y < kMapHeight) {
+		if (column != wave) {
+			column++;
+			continue;
+		}
+		ptr = strtok_s(readString, ",", &context);
+		wavestate[x] = atoi(ptr);
+		x = 1;
+		while (ptr != NULL && x < 32) {
+			ptr = strtok_s(NULL, ",", &context);
+			if (ptr != NULL) {
+				wavestate[x] = atoi(ptr);
+			}
+			x++;
+		}
+		break;
+	}
+	fclose(fp);
+	MapBuild();
+	x = 0;
+	for (Map& object : floor_) {
+		if (wavestate[x] == 1) {
+			object.worldTransform.translation_.y = float(kBlockFloatForce);
+			object.moveDirection_ = -1.0f;
+		}
+		x++;
 	}
 }
 

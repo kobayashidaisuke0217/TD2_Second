@@ -34,6 +34,7 @@ public:
 		void Reverse();
 		uint32_t delay_;
 		bool isFrameCollision_;
+		uint32_t id;
 	};
 
 	static MapManager* GetInstance();
@@ -44,6 +45,9 @@ public:
 	void MapRead();
 	//マップ情報からWorldtransformをさくせいしてリストする
 	void MapBuild();
+
+	//指定ウェーブの床の位置を読み取って移動させる
+	void WaveRead(uint32_t wave);
 
 	void Draw(const ViewProjection&);
 
