@@ -32,9 +32,9 @@ void Player::Initialize(){
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
 
-	obbFloatTrigger_.size = { worldTransform_.scale_.x ,worldTransform_.scale_.y*2,worldTransform_.scale_.z };
+	obbFloatTrigger_.size = { worldTransform_.scale_.x ,worldTransform_.scale_.y*5,worldTransform_.scale_.z };
 	obbFloatTrigger_.center = worldTransform_.translation_;
-	obbFloatTrigger_.center.y -= 2.5;
+	obbFloatTrigger_.center.y -= 5.5;
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 	jumpAble_ = true;
 }
@@ -73,7 +73,7 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 	obb_.center = worldTransform_.translation_;
 	obbFloatTrigger_.center = worldTransform_.translation_;
-	obbFloatTrigger_.center.y -= 2.5;
+	obbFloatTrigger_.center.y -= 5.5;
 	isCollision_ = true;
 	isCollisionFloor_ = true;
 	isCollisionWall_ = true;
