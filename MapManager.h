@@ -18,10 +18,10 @@ public:
 		MapState mapState;
 		OBB obb;
 		WorldTransform worldTransform;
-		bool isCollision_;
-		bool isTouch_;
-		bool moveFlag_;
-		bool isMove_;
+		bool isCollision_=false;
+		bool isTouch_ = false;
+		bool moveFlag_ = false;
+		bool isMove_ = false;
 		uint32_t countUp_;
 		WorldTransform from;
 		WorldTransform to;
@@ -33,7 +33,7 @@ public:
 		float moveDirection_;
 		void Reverse();
 		uint32_t delay_;
-		bool isFrameCollision_;
+		bool isFrameCollision_ = false;
 		uint32_t id;
 	};
 
@@ -51,9 +51,9 @@ public:
 
 	void Draw(const ViewProjection&);
 
-	std::vector<Map>& GetMapObject() { return mapObject_; };
-	std::vector<Map>& GetFloor() { return floor_; };
-	std::vector<Map>& GetWall() { return wall_; };
+	std::vector<std::shared_ptr<Map>>& GetMapObject() { return mapObject_; };
+	std::vector<std::shared_ptr<Map>>& GetFloor() { return floor_; };
+	std::vector<std::shared_ptr<Map>>& GetWall() { return wall_; };
 
 	void ApplyGlobalVariables();
 
@@ -71,6 +71,12 @@ public:
 	static uint32_t kBlocckFloatAnimationLength;
 	static uint32_t kBlocckFloatAnimationDelay;
 	static uint32_t kReverseFloatAnimationDelay;
+	void Clear() {
+		mapObject_.clear();
+		floor_.clear();
+		wall_.clear();
+	};
+
 private:
 	MapManager() = default;
 	~MapManager() = default;
@@ -82,10 +88,10 @@ private:
 
 	std::unique_ptr<Model> modelBlock_;
 
-	std::vector<Map> mapObject_;
+	std::vector <std::shared_ptr<Map>> mapObject_;
 
-	std::vector<Map> floor_;
-	std::vector<Map> wall_;
+	std::vector<std::shared_ptr<Map>> floor_;
+	std::vector<std::shared_ptr<Map>> wall_;
 
 
 	MapState map[kMapHeight][kMapWidth];

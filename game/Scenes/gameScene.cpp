@@ -24,7 +24,7 @@ void GameScene::Initialize()
 	viewProjection_.Initialize();
 
 	MapManager::GetInstance()->Initialize();
-	MapManager::GetInstance()->MapRead();
+	//MapManager::GetInstance()->MapRead();
 	MapManager::GetInstance()->SetJoyState(&joyState_);
 	MapManager::GetInstance()->SetPreJoyState(&preJoyState_);
 
@@ -44,6 +44,9 @@ void GameScene::Initialize()
 	enemyTransform = { {3.0f,3.0f,3.0f},{1.0f,1.0f,1.0f},{10.0f,10.0f,0.0f} };
 	//EnemySpawn(player_->GetWorldTransform(),type);
 	enemyPop_ = false;
+	for (IEnemy* enemy : enemys_ ) {
+		delete enemy;
+	}
 	enemys_.clear();
 	waveNum_ = 0;
 }
@@ -54,13 +57,14 @@ void GameScene::Update()
 	//Input::GetInstance()->GetJoystickState(0, joyState_);
 	GameController::GetInstance()->Update();
 	if (Input::GetInstance()->PressKey(DIK_1)) {
-		textureManager_->Initialize();
+		//textureManager_->Initialize();
 		MapManager::GetInstance()->MapRead();
-		player_->Initialize();
+		//player_->Initialize();
 		enemyPop_ = false;
 	}
 	if (Input::GetInstance()->PressKey(DIK_2)) {
 		MapManager::GetInstance()->WaveRead(waveNum_);
+		//MapManager::GetInstance()->Clear();
 	}
 
 	ImGui::Begin("wave");
@@ -133,26 +137,26 @@ void GameScene::Update()
 		enemy->Update();
 	}
 	MapManager::GetInstance()->Update();
-	std::vector<MapManager::Map>& floors = MapManager::GetInstance()->GetFloor();
-	for (MapManager::Map& object : floors) {
-		if (IsCollision(player_->GetOBB(), object.obb)) {
-			object.isFrameCollision_ = player_->OnCollisionFloorVertical(object.obb);
-			object.OnCollision();
+	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
+	for (std::shared_ptr<MapManager::Map> object : floors) {
+		if (IsCollision(player_->GetOBB(), object->obb)) {
+			object->isFrameCollision_ = player_->OnCollisionFloorVertical(object->obb);
+			object->OnCollision();
 		}
-		if (IsCollision(player_->GetFloatTrigger(), object.obb)) {
-			object.Touch();
+		if (IsCollision(player_->GetFloatTrigger(), object->obb)) {
+			object->Touch();
 		}
 	}
-	for (MapManager::Map& object : floors) {
-		if (IsCollision(player_->GetOBB(), object.obb) && (object.isFrameCollision_ == false)) {
-			player_->OnCollisionFloorHorizon(object.obb);
+	for (std::shared_ptr<MapManager::Map> object : floors) {
+		if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
+			player_->OnCollisionFloorHorizon(object->obb);
 		}
 	}
 
-	std::vector<MapManager::Map>& walls = MapManager::GetInstance()->GetWall();
-	for (MapManager::Map& object : walls) {
-		if (IsCollision(player_->GetOBB(), object.obb)) {
-			player_->OnCollisionWall(object.obb);
+	std::vector<std::shared_ptr<MapManager::Map>>& walls = MapManager::GetInstance()->GetWall();
+	for (std::shared_ptr<MapManager::Map> object : walls) {
+		if (IsCollision(player_->GetOBB(), object->obb)) {
+			player_->OnCollisionWall(object->obb);
 		}
 	}
 	for (IEnemy* enemy : enemys_) {
@@ -160,30 +164,30 @@ void GameScene::Update()
 			Initialize();
 			return;
 		}
-		for (MapManager::Map& object : floors) {
-			if (IsCollision(enemy->GetOBB(), object.obb) && !enemy->GetIsHit()) {
+		for (std::shared_ptr<MapManager::Map> object : floors) {
+			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
 				
 					if (enemy->GetType() == kStageUp) {
 						/*object.moveDirection_ *= -1.0f;*/
-						object.OnCollision();
-						object.Touch();
+						object->OnCollision();
+						object->Touch();
 					}
 					if (enemy->GetType() == kStageDown) {
 						/*object.moveDirection_ *= -1.0f;*/
-						object.OnCollision();
-						object.Touch();
+						object->OnCollision();
+						object->Touch();
 					}
 				
 				enemy->SetPartener(kflore);
-				enemy->isCollision(object.obb);
+				enemy->isCollision(object->obb);
 				
 			}
 		}
 		if (enemy->GetType() == kReflect) {
-			for (MapManager::Map& object : walls) {
-				if (IsCollision(enemy->GetOBB(), object.obb)) {
+			for (std::shared_ptr<MapManager::Map> object : walls) {
+				if (IsCollision(enemy->GetOBB(), object->obb)) {
 					enemy->SetPartener(kwall);
-					enemy->isCollision(object.obb);
+					enemy->isCollision(object->obb);
 
 				}
 			}

@@ -73,31 +73,44 @@ void MapManager::MapRead()
 void MapManager::MapBuild() {
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{0,0,0});
 	mapObject_.clear();
+	//mapObject_.shrink_to_fit();
 	floor_.clear();
+	//floor_.shrink_to_fit();
 	wall_.clear();
+	//wall_.shrink_to_fit();
 	uint32_t floorID = 0;
 	for (uint32_t y = 0; y < mapHeight_;y++) {
 		for (uint32_t x = 0; x < mapWidth_;x++) {
 			if (map[y][x] != MapState::None) {
-				WorldTransform worldTransform;
+				/*WorldTransform worldTransform;
 				worldTransform.Initialize();
 				worldTransform.scale_ = {2.0f,2.0f,2.0f};
 				worldTransform.translation_.x = float(int(x) - int(mapWidth_/2))*2.0f*worldTransform.scale_.x;
 				worldTransform.translation_.y = (float( mapHeight_) - float(y+1))*2.0f * worldTransform.scale_.y;
-				worldTransform.UpdateMatrix();
+				//worldTransform.UpdateMatrix();
 				OBB obb;
-				obb.size = { worldTransform.scale_.x,worldTransform.scale_.y,worldTransform.scale_.z };
+				obb.size = { object->worldTransform.scale_.x,object->worldTransform.scale_.y,object->worldTransform.scale_.z };
 				GetOrientations(rotateMatrix, obb.orientation);
-				obb.center = worldTransform.translation_;
-				Map object{ map[y][x] ,obb,worldTransform };
-				object.moveDirection_ = 1.0f;
-				mapObject_.push_back(object);
+				obb.center = object->worldTransform.translation_;*/
+				std::shared_ptr<Map> object;
+				object.reset( new Map);
+				object->mapState = map[y][x];
+				object->worldTransform.Initialize();
+				object->worldTransform.scale_ = { 2.0f,2.0f,2.0f };
+				object->worldTransform.translation_.x = float(int(x) - int(mapWidth_ / 2)) * 2.0f * object->worldTransform.scale_.x;
+				object->worldTransform.translation_.y = (float(mapHeight_) - float(y + 1)) * 2.0f * object->worldTransform.scale_.y;
+				object->worldTransform.UpdateMatrix();
+				object->obb.size = { object->worldTransform.scale_.x,object->worldTransform.scale_.y,object->worldTransform.scale_.z };
+				GetOrientations(rotateMatrix, object->obb.orientation);
+				object->obb.center = object->worldTransform.translation_;
+				object->moveDirection_ = 1.0f;
+				mapObject_.push_back((object));
 				if (map[y][x] == MapState::Block) {
-					object.id = floorID++;
-					floor_.push_back(object);
+					//object->id = floorID++;
+					floor_.push_back((object));
 				}
 				else if (map[y][x] == MapState::Wall) {
-					wall_.push_back(object);
+					wall_.push_back((object));
 				}
 			}
 		}
@@ -136,10 +149,10 @@ void MapManager::WaveRead(uint32_t wave) {
 	fclose(fp);
 	MapBuild();
 	x = 0;
-	for (Map& object : floor_) {
+	for (std::shared_ptr<Map> object : floor_) {
 		if (wavestate[x] == 1) {
-			object.worldTransform.translation_.y = float(kBlockFloatForce);
-			object.moveDirection_ = -1.0f;
+			object->worldTransform.translation_.y = float(kBlockFloatForce);
+			object->moveDirection_ = -1.0f;
 		}
 		x++;
 	}
@@ -147,25 +160,32 @@ void MapManager::WaveRead(uint32_t wave) {
 
 void MapManager::Update() {
 	ApplyGlobalVariables();
-	for (Map& object : floor_) {
-		object.Update();
+	if ((*mapObject_.begin()) == (*wall_.begin())) {
+
+	
+	for (std::shared_ptr<Map> object : floor_) {
+		object->Update();
 		if (GameController::GetInstance()->Reverse()) {
-			
-			object.Reverse();
-			object.delay_ = kReverseFloatAnimationDelay;
+
+			object->Reverse();
+			object->delay_ = kReverseFloatAnimationDelay;
 		}
 	}
+	for (std::shared_ptr<Map> object : wall_) {
+		//object->Update();
+	}
+}
 }
 
 void MapManager::Draw(const ViewProjection& viewProjection) {
 	/*for (Map& object : mapObject_) {
 		modelBlock_->Draw(object.worldTransform,viewProjection);
 	}*/
-	for (Map& object : floor_) {
-		modelBlock_->Draw(object.worldTransform, viewProjection);
+	for (std::shared_ptr<Map> object : floor_) {
+		modelBlock_->Draw(object->worldTransform, viewProjection);
 	}
-	for (Map& object : wall_) {
-		modelBlock_->Draw(object.worldTransform,viewProjection);
+	for (std::shared_ptr<Map> object : wall_) {
+		modelBlock_->Draw(object->worldTransform,viewProjection);
 	}
 }
 
@@ -198,6 +218,7 @@ void MapManager::Map::Update() {
 		Move();
 	}
 	obb.center = worldTransform.translation_;
+	worldTransform.translation_ = obb.center;
 	worldTransform.UpdateMatrix();
 }
 
