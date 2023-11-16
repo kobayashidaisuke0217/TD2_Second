@@ -41,5 +41,4 @@ struct WorldTransform {
 
 	Vector3 GetWorldPos();
 
-	~WorldTransform() {};
 };
