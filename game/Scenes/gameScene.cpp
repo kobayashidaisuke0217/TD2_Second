@@ -56,6 +56,8 @@ void GameScene::Initialize()
 	waveNum_ = 0;
 	WaveManager::GetInstance()->SetEnemyList(&enemys_);
 	WaveManager::GetInstance()->SetWave(waveNum_);
+	WaveManager::GetInstance()->SetGameScene(this);
+	WaveManager::GetInstance()->SetPlayer(player_.get());
 	WaveManager::GetInstance()->LoadFile();
 }
 
