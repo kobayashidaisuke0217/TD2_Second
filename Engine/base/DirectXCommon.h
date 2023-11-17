@@ -45,7 +45,7 @@ public:
 	
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetDsvHeap() { return dsvDescriptorHeap_; }
 	D3D12_RENDER_TARGET_VIEW_DESC getRtvDesc() { return rtvDesc; }
-
+	static int count;
 
 private:
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};

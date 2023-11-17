@@ -83,7 +83,7 @@ void WaveManager::Update() {
 				transform.rotate = {0,0,0};
 				transform.translate = enemy.translate;
 				WorldTransform w;
-				newEnemy->Initialize(transform, enemy.velocity,enemy.speed, 2, w);
+				newEnemy->Initialize(transform, enemy.velocity,enemy.speed, 2);
 
 				enemyList_->push_back(newEnemy);
 				break;

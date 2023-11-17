@@ -266,9 +266,10 @@ void DirectXCommon::Finalize() {
 	
 }
 
-
+int DirectXCommon::count;
 Microsoft::WRL::ComPtr <ID3D12Resource> DirectXCommon::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes)
 {
+	count++;
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uplodeHeapProperties{};
 	uplodeHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
@@ -285,8 +286,8 @@ Microsoft::WRL::ComPtr <ID3D12Resource> DirectXCommon::CreateBufferResource(ID3D
 	//バッファの場合はこれにする決まり
 	ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	HRESULT hr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
-	//	ID3D12Resource* Resource = nullptr;
+	//Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
+		ID3D12Resource* Resource = nullptr;
 	//実際に頂点リソースを作る
 	hr = device->CreateCommittedResource(&uplodeHeapProperties, D3D12_HEAP_FLAG_NONE,
 		&ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,

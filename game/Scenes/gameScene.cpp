@@ -11,6 +11,10 @@ GameScene::~GameScene()
 
 
 		});
+	bullets_.remove_if([](PlayerAimBullet* bullet) {
+		delete bullet;
+		return true;
+		});
 }
 
 void GameScene::Initialize()
@@ -28,7 +32,7 @@ void GameScene::Initialize()
 	//MapManager::GetInstance()->MapRead();
 	MapManager::GetInstance()->SetJoyState(&joyState_);
 	MapManager::GetInstance()->SetPreJoyState(&preJoyState_);
-
+	
 	player_.reset(new Player);
 	player_->Initialize();
 	player_->SetJoyState(&joyState_);
@@ -98,6 +102,9 @@ void GameScene::Update()
 		if (ImGui::Selectable("StageUp", type == kStageUp)) {
 			type = kStageUp;
 		}
+		if (ImGui::Selectable("Aimheight", type == kAimbulletheight)) {
+			type = kAimbulletheight;
+		}
 		ImGui::EndCombo();
 
 	}
@@ -117,13 +124,17 @@ void GameScene::Update()
 
 	ImGui::Begin("Scene");
 
-	ImGui::InputInt("blendCount", &blendCount_);
+	ImGui::InputInt("blendCount", &directXCommon_->count);
 	ImGui::InputInt("SceneNum", &sceneNum);
 	if (sceneNum > 1) {
 		sceneNum = 1;
 	}
 	ImGui::End();
 	player_->Update();
+	for (PlayerAimBullet* bullet : bullets_) {
+
+		bullet->Update();
+	}
 	enemys_.remove_if([](IEnemy* enemy) {
 		if (!enemy->GetIsAlive()) {
 			delete enemy;
@@ -131,7 +142,7 @@ void GameScene::Update()
 		}
 		return false;
 		});
-
+	
 	/*std::vector<MapManager::Map>& mapObjects = MapManager::GetInstance()->GetMapObject();
 	for (MapManager::Map & object : mapObjects) {
 		if (IsCollision(player_->GetOBB(), object.obb)) {
@@ -173,14 +184,16 @@ void GameScene::Update()
 			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
 				
 					if (enemy->GetType() == kStageUp) {
-						/*object.moveDirection_ *= -1.0f;*/
-						object->OnCollision();
-						object->Touch();
+						if (object->worldTransform.translation_.y == 0.0f) {
+							object->OnCollision();
+							object->Touch();
+						}
 					}
 					if (enemy->GetType() == kStageDown) {
-						/*object.moveDirection_ *= -1.0f;*/
-						object->OnCollision();
-						object->Touch();
+						if (object->worldTransform.translation_.y == 4.0f) {
+							object->OnCollision();
+							object->Touch();
+						}
 					}
 				
 				enemy->SetPartener(kflore);
@@ -227,6 +240,10 @@ void GameScene::Draw3D()
 	for (IEnemy* enemy : enemys_) {
 		enemy->Draw(viewProjection_);
 	}
+	for (PlayerAimBullet* bullet : bullets_) {
+
+		bullet->Draw(viewProjection_);
+	}
 	blueMoon_->PariclePreDraw();
 
 	blueMoon_->ModelPreDrawWireFrame();
@@ -250,20 +267,20 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	{
 	case kBullet:
 		enemy = new BulletEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 
 		enemys_.push_back(enemy);
 		break;
 	case kReflect:
 		enemy = new ReflectEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 
 		enemys_.push_back(enemy);
 		break;
 	case kBound:
 		enemy = new BoundEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 
 		enemys_.push_back(enemy);
 		break;
@@ -273,20 +290,28 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		break;
 	case kRaser:
 		break;
-	case kAimBullet:
+	case kAimBulletWidth:
+		break;
+	case kAimbulletheight:
+		enemy = new AimBulletEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->SetPlayer(player_.get());
+		enemy->SetGameScene(this);
+		enemys_.push_back(enemy);
 		break;
 	case kAimBound:
 		break;
 	case kStageUp:
 		enemy = new StageChangeEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 		enemy->SetType(kStageUp);
 		enemys_.push_back(enemy);
 		break;
 	case kStageDown:
 		enemy = new StageChangeEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 		enemy->SetType(kStageDown);
 		enemys_.push_back(enemy);
 		break;
@@ -294,7 +319,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		break;
 	default:
 		enemy = new ReflectEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, player_->GetWorldTransform());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 
 		enemys_.push_back(enemy);
 		break;
@@ -316,5 +341,10 @@ void GameScene::Finalize()
 
 
 		});
+}
+
+void GameScene::AddEnemyBullet(PlayerAimBullet* enemyBullet)
+{
+	bullets_.push_back(enemyBullet);
 }
 

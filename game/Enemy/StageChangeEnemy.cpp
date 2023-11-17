@@ -8,7 +8,7 @@ StageChangeEnemy::~StageChangeEnemy()
 {
 }
 
-void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, const WorldTransform& targettransform)
+void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
 {
 	sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();
@@ -18,7 +18,6 @@ void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& vel
 	worldTransform_.scale_ = transform.scale;
 
 	MoveSpeed_ = moveSpeed;
-	targetWordTransform_ = targettransform;
 	velocity_ = velocity;
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);

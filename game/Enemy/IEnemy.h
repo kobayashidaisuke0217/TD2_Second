@@ -19,18 +19,21 @@ enum EnemyType {
 	kTire,
 	kSpear,
 	kRaser,
-	kAimBullet,
+	kAimBulletWidth,
+	kAimbulletheight,
 	kAimBound,
 	kStageUp,
 	kStageDown,
 	kHoming
 };
+class GameScene;
+class Player;
 class IEnemy
 {
 public:
 	IEnemy();
 	~IEnemy();
-	virtual void Initialize(const Transform& transform, const Vector3& velocity,float moveSpeed,uint32_t texture,const WorldTransform& targettransform)=0;
+	virtual void Initialize(const Transform& transform, const Vector3& velocity,float moveSpeed,uint32_t texture)=0;
 	virtual void Update()=0;
 	virtual void Draw(const ViewProjection& viewProjection)=0;
 	virtual void isCollision(OBB pertner)=0;
@@ -41,6 +44,8 @@ public:
 	virtual bool GetIsHit() { return ishit_; }
 	virtual void SetPartener(collisionPartner partner) { collisionpartner_ = partner; }
 	virtual EnemyType GetType() { return type_; }
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	void SetPlayer(Player* player) { player_ = player; }
 protected:
 	Texturemanager* texManager_;
 	std::unique_ptr<Sphere> sphere_;
@@ -59,5 +64,7 @@ protected:
 	collisionPartner collisionpartner_;
 	EnemyType type_;
 	WorldTransform worldTransform_;
+	GameScene* gameScene_;
+	Player* player_;
 };
 

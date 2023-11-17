@@ -19,6 +19,8 @@
 #include"game/Enemy/ReflectEnemy.h"
 #include"game/Enemy/BulletEnemy.h"
 #include"game/Enemy/StageChangeEnemy.h"
+#include"game/Enemy/AimBulletEnemy.h"
+#include"game/Enemy/PlayerAimBullet.h"
 #pragma endregion
 #include "Input.h"
 #include "FollowCamera.h"
@@ -31,6 +33,7 @@ public:
 
 	void Draw()override;
 	void Finalize()override;
+	void AddEnemyBullet(PlayerAimBullet* enemyBullet);
 private:
 
 	BlueMoon* blueMoon_;
@@ -58,6 +61,7 @@ private:
 	Transform enemyTransform;
 	bool enemyPop_;
 	int32_t waveNum_;
+	std::list<PlayerAimBullet*> bullets_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };
