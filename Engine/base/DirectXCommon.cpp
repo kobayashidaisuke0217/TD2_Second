@@ -286,8 +286,8 @@ Microsoft::WRL::ComPtr <ID3D12Resource> DirectXCommon::CreateBufferResource(ID3D
 	//バッファの場合はこれにする決まり
 	ResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	HRESULT hr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
-	//	ID3D12Resource* Resource = nullptr;
+	//Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
+		ID3D12Resource* Resource = nullptr;
 	//実際に頂点リソースを作る
 	hr = device->CreateCommittedResource(&uplodeHeapProperties, D3D12_HEAP_FLAG_NONE,
 		&ResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
