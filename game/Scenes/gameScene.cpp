@@ -135,6 +135,13 @@ void GameScene::Update()
 
 		bullet->Update();
 	}
+	bullets_.remove_if([](PlayerAimBullet* bullet) {
+		if (!bullet->GetIsAlive()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
 	enemys_.remove_if([](IEnemy* enemy) {
 		if (!enemy->GetIsAlive()) {
 			delete enemy;
@@ -167,6 +174,13 @@ void GameScene::Update()
 		if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
 			player_->OnCollisionFloorHorizon(object->obb);
 		}
+		for (PlayerAimBullet* bullet : bullets_) {
+			if (IsCollision(bullet->GetOBB(), object->obb)) {
+ 				bullet->isCollision();
+			}
+			
+		}
+
 	}
 
 	std::vector<std::shared_ptr<MapManager::Map>>& walls = MapManager::GetInstance()->GetWall();
