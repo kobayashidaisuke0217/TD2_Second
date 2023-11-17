@@ -1,16 +1,16 @@
 wave 1
 
 enemy a
-position 1 1 0
-velocity 0.0f 0.0f 0.0f
-speed 0.3f
+position -10 3 0
+velocity 1.0 0.0 0.0
+speed 0.3
 type 0
 frame 0
 
 enemy b
-position 1 1 0
-velocity 0.0f 0.0f 0.0f
-speed 0.3f
+position 10 3 0
+velocity -1.0 0.0 0.0
+speed 0.3
 type 0
 frame 20
 
@@ -19,16 +19,16 @@ length 120
 wave 2コメントコメント
 
 enemy あーテステス
-position 1 1 0
-velocity 0.0f 0.0f 0.0f
-speed 0.3f
+position 3 10 0
+velocity 0.0 -1.0 0.0
+speed 0.3
 type 0
 frame 0
 
 enemy b
-position 1 1 0
-velocity 0.0f 0.0f 0.0f
-speed 0.3f
+position 0 10 0
+velocity 0.5 -0.2 0.0
+speed 0.3
 type 0
 frame 20
 

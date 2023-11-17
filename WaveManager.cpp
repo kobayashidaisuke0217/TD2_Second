@@ -1,5 +1,7 @@
 #include "WaveManager.h"
 #include "MapManager.h"
+#include "game/Enemy/IEnemy.h"
+#include"game/Enemy/BulletEnemy.h"
 #include <fstream>
 #include <sstream>
 WaveManager* WaveManager::GetInstance() {
@@ -48,7 +50,9 @@ void WaveManager::LoadFile() {
 		else if (identifilter == "type") {
 			int32_t type;
 			s >> type;
-			newEnemyData->type = EnemyType(type);
+			if (newEnemyData) {
+				newEnemyData->type = EnemyType(type);
+			}
 		}
 		else if (identifilter == "frame") {
 			if (newEnemyData) {
@@ -68,11 +72,27 @@ void WaveManager::Update() {
 	for (EnemyData& enemy : waves_[size_t(waveNum_)].enemyDatas) {
 		if (currentFrame_ == enemy.frame) {
 			//Enemyの生成処理	
+			IEnemy* newEnemy;
+
+			switch (enemy.type)
+			{
+			case kBullet:
+				newEnemy = new BulletEnemy();
+				Transform transform;
+				transform.scale = { 1.0f,1.0f,1.0f };
+				transform.rotate = {0,0,0};
+				transform.translate = enemy.translate;
+				WorldTransform w;
+				newEnemy->Initialize(transform, enemy.velocity,enemy.speed, 2, w);
+
+				enemyList_->push_back(newEnemy);
+				break;
+			}
 		}
 	}
 	currentFrame_++;
 	if (currentFrame_ >= waves_[size_t(waveNum_)].length) {
-		if (waves_.size() < waveNum_) {
+		if (waves_.size() -1> waveNum_) {
 			waveNum_++;
 		}
 		currentFrame_ = 0;
