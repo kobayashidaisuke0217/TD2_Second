@@ -9,7 +9,7 @@ WaveManager* WaveManager::GetInstance() {
 
 void WaveManager::LoadFile() {
 	std::string line;
-	std::ifstream file("Resource/Wave/waveData.txt");
+	std::ifstream file("Resource/Wave/waveData.wave");
 	assert(file.is_open());
 	EnemyData* newEnemyData = nullptr;
 	Wave* newWave = nullptr;
