@@ -1,18 +1,53 @@
 wave 1
 
 enemy a
-position -10 3 0
+position -15 1 0
 velocity 1.0 0.0 0.0
 speed 0.3
 type 0
 frame 0
 
-enemy b
-position 10 3 0
-velocity -1.0 0.0 0.0
+enemy a
+position -15 2 0
+velocity 1.0 0.0 0.0
+speed 0.3
+type 0
+frame 10
+
+enemy a
+position -15 3 0
+velocity 1.0 0.0 0.0
 speed 0.3
 type 0
 frame 20
+
+enemy a
+position -15 4 0
+velocity 1.0 0.0 0.0
+speed 0.3
+type 0
+frame 30
+
+enemy a
+position -15 5 0
+velocity 1.0 0.0 0.0
+speed 0.3
+type 0
+frame 40
+
+enemy a
+position -15 6 0
+velocity 1.0 0.0 0.0
+speed 0.3
+type 0
+frame 50
+
+enemy a
+position -15 7 0
+velocity 1.0 0.0 0.0
+speed 0.3
+type 0
+frame 60
 
 length 120
 
