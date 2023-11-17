@@ -8,17 +8,16 @@ BulletEnemy::~BulletEnemy()
 {
 }
 
-void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, const WorldTransform& targettransform)
+void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
 {
 	sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();
 
-worldTransform_.Initialize();
+    worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.scale_ = transform.scale;
 	
 	MoveSpeed_ = moveSpeed;
-	targetWordTransform_ = targettransform;
 	velocity_ = velocity;
 	velocity_.x = std::clamp(velocity_.x, -1.0f, 1.0f);
 	velocity_.y = std::clamp(velocity_.y, -1.0f, 1.0f);

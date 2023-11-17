@@ -78,6 +78,7 @@ void MapManager::MapBuild() {
 	for (uint32_t y = 0; y < mapHeight_;y++) {
 		for (uint32_t x = 0; x < mapWidth_;x++) {
 			if (map[y][x] != MapState::None) {
+
 				WorldTransform worldTransform;
 				worldTransform.Initialize();
 				worldTransform.scale_ = {2.0f,2.0f,2.0f};

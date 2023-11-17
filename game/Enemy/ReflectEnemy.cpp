@@ -8,7 +8,7 @@ ReflectEnemy::~ReflectEnemy()
 {
 }
 
-void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, const WorldTransform& targettransform)
+void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
 {
 	texManager_ = Texturemanager::GetInstance();
 	sphere_ = std::make_unique<Sphere>();
@@ -19,7 +19,6 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	worldTransform_.scale_ = transform.scale;
 	worldTransform_.Initialize();
 	MoveSpeed_ = moveSpeed;
-	targetWordTransform_ = targettransform;
 	velocity_ = velocity;
 	velocity_.x = std::clamp(velocity_.x, -1.0f, 1.0f);
 	velocity_.y = std::clamp(velocity_.y, -1.0f, 1.0f);
