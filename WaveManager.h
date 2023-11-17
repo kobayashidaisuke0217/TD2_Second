@@ -25,7 +25,7 @@ public:
 	static WaveManager* GetInstance();
 
 	void LoadFile();
-	void SetWave(uint32_t waveNum) { waveNum_ = waveNum; };
+	void SetWave(uint32_t waveNum) { waveNum_ = waveNum; currentFrame_ = 0; };
 
 	void Update();
 
@@ -41,5 +41,6 @@ private:
 	size_t waveNum_;
 
 	std::list<IEnemy*> *enemyList_;
+	int32_t currentFrame_;
 };
 

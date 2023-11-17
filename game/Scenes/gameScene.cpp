@@ -1,6 +1,7 @@
 #include "gameScene.h"
 #include "MapManager.h"
 #include "GameController.h"
+#include "WaveManager.h"
 GameScene::~GameScene()
 {
 	enemys_.remove_if([](IEnemy* enemy) {
@@ -49,6 +50,9 @@ void GameScene::Initialize()
 	}
 	enemys_.clear();
 	waveNum_ = 0;
+	WaveManager::GetInstance()->SetEnemyList(&enemys_);
+	WaveManager::GetInstance()->SetWave(waveNum_);
+	WaveManager::GetInstance()->LoadFile();
 }
 
 void GameScene::Update()
@@ -59,11 +63,12 @@ void GameScene::Update()
 	if (Input::GetInstance()->PressKey(DIK_1)) {
 		//textureManager_->Initialize();
 		MapManager::GetInstance()->MapRead();
-		//player_->Initialize();
+		player_->Initialize();
 		enemyPop_ = false;
 	}
 	if (Input::GetInstance()->PressKey(DIK_2)) {
 		MapManager::GetInstance()->WaveRead(waveNum_);
+		WaveManager::GetInstance()->SetWave(waveNum_);
 		//MapManager::GetInstance()->Clear();
 	}
 
@@ -106,7 +111,7 @@ void GameScene::Update()
 		EnemySpawn(player_->GetWorldTransform(), type);
 		enemyPop_ = false;
 	}
-
+	WaveManager::GetInstance()->Update();
 	//viewProjection_.UpdateMatrix();
 	//viewProjection_.TransferMatrix();
 

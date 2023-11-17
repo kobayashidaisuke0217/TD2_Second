@@ -41,4 +41,10 @@ struct WorldTransform {
 
 	Vector3 GetWorldPos();
 
+	~WorldTransform() {
+		if (constBuff_) {
+			constBuff_->Release();
+			constBuff_.Reset();
+		}
+	};
 };
