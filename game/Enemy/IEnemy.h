@@ -20,7 +20,7 @@ enum EnemyType {
 	kSpear,
 	kRaser,
 	kAimBulletWidth,
-	kAimbulletheight,
+	kAimBulletHeight,
 	kAimBound,
 	kStageUp,
 	kStageDown,

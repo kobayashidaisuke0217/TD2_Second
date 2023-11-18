@@ -103,8 +103,8 @@ void GameScene::Update()
 		if (ImGui::Selectable("StageUp", type == kStageUp)) {
 			type = kStageUp;
 		}
-		if (ImGui::Selectable("Aimheight", type == kAimbulletheight)) {
-			type = kAimbulletheight;
+		if (ImGui::Selectable("Aimheight", type == kAimBulletHeight)) {
+			type = kAimBulletHeight;
 		}
 		if (ImGui::Selectable("AimWidth", type == kAimBulletWidth)) {
 			type = kAimBulletWidth;
@@ -321,7 +321,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		enemy->SetGameScene(this);
 		enemys_.push_back(enemy);
 		break;
-	case kAimbulletheight:
+	case kAimBulletHeight:
 		enemy = new AimBulletEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
 		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
