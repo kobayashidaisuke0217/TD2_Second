@@ -53,6 +53,7 @@ void GameScene::Initialize()
 		delete enemy;
 	}
 	enemys_.clear();
+	bullets_.clear();
 	waveNum_ = 0;
 	WaveManager::GetInstance()->SetEnemyList(&enemys_);
 	WaveManager::GetInstance()->SetWave(waveNum_);
