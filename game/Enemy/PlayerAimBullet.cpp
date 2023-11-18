@@ -15,6 +15,12 @@ void PlayerAimBullet::Initialize(Vector3 velocity, Transform transform, uint32_t
 
 void PlayerAimBullet::Update()
 {
+	if (std::abs(worldTransform_.translation_.x) > 100.0f) {
+		isAlive_ = false;
+	}
+	if (std::abs(worldTransform_.translation_.y) > 50.0f) {
+		isAlive_ = false;
+	}
 	worldTransform_.translation_ = Add(velocity_, worldTransform_.translation_);
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
 	obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y / 2.0f ,worldTransform_.scale_.z / 2.0f };

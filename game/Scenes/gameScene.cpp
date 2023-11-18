@@ -105,6 +105,9 @@ void GameScene::Update()
 		if (ImGui::Selectable("Aimheight", type == kAimbulletheight)) {
 			type = kAimbulletheight;
 		}
+		if (ImGui::Selectable("AimWidth", type == kAimBulletWidth)) {
+			type = kAimBulletWidth;
+		}
 		ImGui::EndCombo();
 
 	}
@@ -178,6 +181,10 @@ void GameScene::Update()
 			if (IsCollision(bullet->GetOBB(), object->obb)) {
  				bullet->isCollision();
 			}
+			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
+				Initialize();
+				return;
+			}
 			
 		}
 
@@ -194,6 +201,7 @@ void GameScene::Update()
 			Initialize();
 			return;
 		}
+		
 		for (std::shared_ptr<MapManager::Map> object : floors) {
 			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
 				
@@ -305,6 +313,12 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kRaser:
 		break;
 	case kAimBulletWidth:
+		enemy = new AImBulletWidthEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->SetPlayer(player_.get());
+		enemy->SetGameScene(this);
+		enemys_.push_back(enemy);
 		break;
 	case kAimbulletheight:
 		enemy = new AimBulletEnemy();

@@ -20,6 +20,7 @@
 #include"game/Enemy/BulletEnemy.h"
 #include"game/Enemy/StageChangeEnemy.h"
 #include"game/Enemy/AimBulletEnemy.h"
+#include"game/Enemy/AimBulletWidthEnemy.h"
 #include"game/Enemy/PlayerAimBullet.h"
 #pragma endregion
 #include "Input.h"
