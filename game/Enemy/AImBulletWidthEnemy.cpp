@@ -25,7 +25,7 @@ void AImBulletWidthEnemy::Initialize(const Transform& transform, const Vector3& 
 	velocity_.z = std::clamp(velocity_.z, -1.0f, 1.0f);
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
-	type_ = kAimbulletheight;
+	type_ = kAimBulletWidth;
 	isAlive_ = true;
 	atackCount_ = 5;
 	coolTime_ = 60;

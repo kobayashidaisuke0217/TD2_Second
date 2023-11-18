@@ -109,6 +109,9 @@ void GameScene::Update()
 		if (ImGui::Selectable("AimWidth", type == kAimBulletWidth)) {
 			type = kAimBulletWidth;
 		}
+		if (ImGui::Selectable("Tire", type == kTire)) {
+			type = kTire;
+		}
 		ImGui::EndCombo();
 
 	}
@@ -308,6 +311,11 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		enemys_.push_back(enemy);
 		break;
 	case kTire:
+		enemy = new TireEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+
+		enemys_.push_back(enemy);
 		break;
 	case kSpear:
 		break;
