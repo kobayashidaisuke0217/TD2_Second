@@ -2,6 +2,7 @@
 #include "MapManager.h"
 #include "GameController.h"
 #include "WaveManager.h"
+#include <functional>
 GameScene::~GameScene()
 {
 	enemys_.remove_if([](IEnemy* enemy) {
@@ -59,6 +60,8 @@ void GameScene::Initialize()
 	WaveManager::GetInstance()->SetGameScene(this);
 	WaveManager::GetInstance()->SetPlayer(player_.get());
 	WaveManager::GetInstance()->LoadFile();
+
+	MapManager::GetInstance()->SetShakeCamera(std::bind(&FollowCamera::Shake, followCamera_.get()));
 }
 
 void GameScene::Update()

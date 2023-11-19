@@ -16,6 +16,7 @@ public:
 	inline const ViewProjection& GetViewProjection() { return viewProjection_; };
 	//void Reset();
 	void ApplyGlobalVariables();
+	void Shake();
 private:
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
@@ -29,5 +30,9 @@ private:
 	
 	//補間の強さ
 	//float cameraDelay_;
+	//カメラシェイク
+	bool isShake_;
+	float shakeForce_;
+	float kShakeForce_;
 };
 
