@@ -41,6 +41,26 @@ void Player::Initialize(){
 	isJumpReception_ = false;
 }
 
+void Player::Reset() {
+	worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransform_.translation_.x = 0.0f;
+	worldTransform_.translation_.y = 2.0f;
+	velocity_ = { 0,0,0 };
+	acceleration_ = { 0,0,0 };
+	//gravity_ = {0,-0.005f,0};
+	direction_ = 1.0f;
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0,0,0 });
+	obb_.size = { worldTransform_.scale_.x ,worldTransform_.scale_.y,worldTransform_.scale_.z };
+	obb_.center = worldTransform_.translation_;
+	GetOrientations(rotateMatrix, obb_.orientation);
+
+	obbFloatTrigger_.size = { worldTransform_.scale_.x ,worldTransform_.scale_.y * 2,worldTransform_.scale_.z };
+	obbFloatTrigger_.center = worldTransform_.translation_;
+	obbFloatTrigger_.center.y -= 2.5;
+	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
+	jumpAble_ = true;
+	isJumpReception_ = false;
+}
 
 void Player::Update() {
 		ApplyGlobalVariables();

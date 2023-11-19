@@ -28,7 +28,7 @@ public:
 
 	void LoadFile();
 	void SetWave(uint32_t waveNum) { waveNum_ = waveNum; currentFrame_ = 0; };
-
+	size_t GetWave() { return waveNum_; };
 	void Update();
 
 	void SetEnemyList(std::list<IEnemy*>* list) { enemyList_ = list; };

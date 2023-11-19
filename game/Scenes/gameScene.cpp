@@ -29,6 +29,12 @@ void GameScene::Initialize()
 	enemyTex_ = textureManager_->Load("resource/black.png");
 	viewProjection_.Initialize();
 
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "GameSetting";
+	globalVariables->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "fallingBorder", fallingBorder_);
+
+
 	MapManager::GetInstance()->Initialize();
 	//MapManager::GetInstance()->MapRead();
 	MapManager::GetInstance()->SetJoyState(&joyState_);
@@ -136,6 +142,9 @@ void GameScene::Update()
 	}
 	ImGui::End();
 	player_->Update();
+	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+		ReStartWave();
+	}
 	for (PlayerAimBullet* bullet : bullets_) {
 
 		bullet->Update();
@@ -182,7 +191,8 @@ void GameScene::Update()
 	}
 	for (IEnemy* enemy : enemys_) {
 		if (IsCollision(enemy->GetOBB(),player_->GetOBB())) {
-			Initialize();
+			//Initialize();
+			ReStartWave();
 			return;
 		}
 		for (std::shared_ptr<MapManager::Map> object : floors) {
@@ -259,8 +269,8 @@ void GameScene::Draw3D()
 void GameScene::ApplyGlobalVariables()
 {
 	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
-
-	const char* groupName = "Player";
+	const char* groupName = "GameSetting";
+	fallingBorder_ = globalVariables->GetFloatValue(groupName, "fallingBorder");
 
 }
 
@@ -353,3 +363,14 @@ void GameScene::AddEnemyBullet(PlayerAimBullet* enemyBullet)
 	bullets_.push_back(enemyBullet);
 }
 
+void GameScene::ReStartWave()
+{
+	for (IEnemy* enemy : enemys_) {
+		delete enemy;
+	}
+	enemys_.clear();
+	size_t num = WaveManager::GetInstance()->GetWave();
+	MapManager::GetInstance()->WaveRead(uint32_t(num));
+	WaveManager::GetInstance()->SetWave(uint32_t(num));
+	player_->Reset();
+}

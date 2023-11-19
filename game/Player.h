@@ -35,6 +35,8 @@ public:
 
 	void ApplyGlobalVariables();
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
+	//死んだときに位置をリセットする用
+	void Reset();
 private:
 	Input* input_ = nullptr;
 	XINPUT_STATE* joyState_;
