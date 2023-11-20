@@ -46,6 +46,8 @@ public:
 	virtual EnemyType GetType() { return type_; }
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	void SetPlayer(Player* player) { player_ = player; }
+	WorldTransform& GetWorldTransform() { return worldTransform_; };
+	void Deth() { isAlive_ = false; };
 protected:
 	Texturemanager* texManager_;
 	std::unique_ptr<Sphere> sphere_;

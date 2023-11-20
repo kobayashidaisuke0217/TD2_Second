@@ -33,6 +33,8 @@ void GameScene::Initialize()
 	const char* groupName = "GameSetting";
 	globalVariables->CreateGroup(groupName);
 	globalVariables->AddItem(groupName, "fallingBorder", fallingBorder_);
+	globalVariables->AddItem(groupName, "upperBorder", upperBorder_);
+	globalVariables->AddItem(groupName, "horizonBorder", horizonBorder_);
 
 
 	MapManager::GetInstance()->Initialize();
@@ -166,6 +168,11 @@ void GameScene::Update()
 	}*/
 	for (IEnemy* enemy : enemys_) {
 		enemy->Update();
+		if (std::abs(enemy->GetWorldTransform().GetWorldPos().x) > horizonBorder_ || 
+			enemy->GetWorldTransform().GetWorldPos().y > upperBorder_ || 
+			enemy->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+			enemy->Deth();
+		}
 	}
 	MapManager::GetInstance()->Update();
 	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
@@ -272,7 +279,8 @@ void GameScene::ApplyGlobalVariables()
 	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
 	const char* groupName = "GameSetting";
 	fallingBorder_ = globalVariables->GetFloatValue(groupName, "fallingBorder");
-
+	upperBorder_ = globalVariables->GetFloatValue(groupName, "upperBorder");
+	horizonBorder_ = globalVariables->GetFloatValue(groupName, "horizonBorder");
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
