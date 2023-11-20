@@ -72,6 +72,7 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	ApplyGlobalVariables();
 	//preJoyState_ = joyState_;
 	//Input::GetInstance()->GetJoystickState(0, joyState_);
 	GameController::GetInstance()->Update();
