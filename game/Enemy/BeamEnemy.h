@@ -18,5 +18,6 @@ public:
 	virtual void SetPartener(collisionPartner partner)override { collisionpartner_ = partner; }
 private:
 	Transform target_;
+	int count_;
 };
 

@@ -30,6 +30,7 @@ void BeamEnemy::Initialize(const Transform& transform, const Vector3& velocity, 
 
 void BeamEnemy::Update()
 {
+	count_++;
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
 	obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y  ,worldTransform_.scale_.z / 2.0f };
 	obb_.center = worldTransform_.translation_;
@@ -41,6 +42,9 @@ void BeamEnemy::Update()
 		worldTransform_.scale_ = Subtract(worldTransform_.translation_, target_.translate);
 	}
 	worldTransform_.UpdateMatrix();
+	if (count_ >= 60) {
+		isAlive_ = false;
+	}
 }
 
 void BeamEnemy::Draw(const ViewProjection& viewProjection)
