@@ -70,4 +70,31 @@ private:
 	float moveSpeed_;
 	float jumpDampingX_;
 	int32_t jumpReceptionLength_;
+
+	//
+	std::unique_ptr<Model> antena_;
+	std::unique_ptr<Model> code_;
+	std::unique_ptr<Model> head_;
+	std::unique_ptr<Model> body_;
+	std::unique_ptr<Model> back_;
+	std::unique_ptr<Model> leg_;
+	
+	WorldTransform worldTransformAntena_;
+	WorldTransform worldTransformCode_;
+	WorldTransform worldTransformHead_;
+	WorldTransform worldTransformbody_;
+	WorldTransform worldTransformback_;
+	WorldTransform worldTransformLeftLeg_;
+	WorldTransform worldTransformRightLeg_;
+
+	Vector3 antenaOffset_;
+	
+	Vector3 codeOffset_;
+	Vector3 headOffset_;
+	Vector3 bodyOffset_;
+	Vector3 backOffset_;
+	Vector3 leftOffset_;
+	Vector3 rightOffset_;
+
+
 };

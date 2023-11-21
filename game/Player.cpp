@@ -18,6 +18,15 @@ void Player::Initialize(){
 	globalVariables->AddItem(groupName, "jumpDampingX", jumpDampingX_);
 	globalVariables->AddItem(groupName, "jumpReceptionLength",jumpReceptionLength_);
 
+	const char* groupName2 = "PlayerModel";
+	globalVariables->AddItem(groupName2, "antena", antenaOffset_);
+	globalVariables->AddItem(groupName2, "code", codeOffset_);
+	globalVariables->AddItem(groupName2, "head", headOffset_);
+	globalVariables->AddItem(groupName2, "body", bodyOffset_);
+	globalVariables->AddItem(groupName2, "back", backOffset_);
+	globalVariables->AddItem(groupName2, "left", leftOffset_);
+	globalVariables->AddItem(groupName2, "right", rightOffset_);
+
 
 	worldTransform_.Initialize();
 	worldTransform_.scale_ = {1.0f,1.0f,1.0f};
@@ -39,6 +48,27 @@ void Player::Initialize(){
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 	jumpAble_ = true;
 	isJumpReception_ = false;
+
+	//model
+	antena_.reset(Model::CreateModelFromObj("Resource/player/antena", "PlayerBall.obj"));
+	code_.reset(Model::CreateModelFromObj("Resource/player/antena", "PlayerAntena.obj"));
+	body_.reset(Model::CreateModelFromObj("Resource/player/body", "PlayerBody.obj"));
+	back_.reset(Model::CreateModelFromObj("Resource/player/back", "PlayerBack.obj"));
+	head_.reset(Model::CreateModelFromObj("Resource/player/head", "PlayerHead.obj"));
+	leg_.reset(Model::CreateModelFromObj("Resource/player/leg", "PlayerLeg.obj"));
+
+	worldTransformAntena_.Initialize();
+	worldTransformbody_.Initialize();
+	worldTransformbody_.parent_ = &worldTransform_;
+	worldTransformback_.Initialize();
+	worldTransformback_.parent_ = &worldTransformbody_;
+	worldTransformCode_.Initialize();
+	worldTransformHead_.Initialize();
+	worldTransformHead_.parent_ = &worldTransformbody_;
+	worldTransformLeftLeg_.Initialize();
+	worldTransformLeftLeg_.parent_ = &worldTransform_;
+	worldTransformRightLeg_.Initialize();
+	worldTransformRightLeg_.parent_ = &worldTransform_;
 }
 
 void Player::Reset() {
@@ -104,14 +134,17 @@ void Player::Update() {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
 		velocity_.x = -1.0f * moveSpeed_;
+		direction_ = -1.0f;
 	}
 	if (GameController::GetInstance()->Right()) {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
 		velocity_.x = 1.0f * moveSpeed_;
+		direction_ = 1.0f;
 	}
 	velocity_.y = std::clamp(velocity_.y,-0.8f,0.8f);
 	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
+	worldTransform_.rotation_.y = 1.57f * direction_;
 	worldTransform_.UpdateMatrix();
 	obb_.center = worldTransform_.translation_;
 	obbFloatTrigger_.center = worldTransform_.translation_;
@@ -119,6 +152,25 @@ void Player::Update() {
 	isCollision_ = true;
 	isCollisionFloor_ = true;
 	isCollisionWall_ = true;
+
+	worldTransformbody_.translation_ = bodyOffset_;
+	worldTransformbody_.UpdateMatrix();
+	worldTransformback_.translation_ = backOffset_;
+	worldTransformback_.UpdateMatrix();
+	worldTransformHead_.translation_ = headOffset_;
+	worldTransformHead_.UpdateMatrix();
+	worldTransformLeftLeg_.translation_ = leftOffset_;
+	worldTransformLeftLeg_.UpdateMatrix();
+	worldTransformRightLeg_.translation_ = rightOffset_;
+	worldTransformRightLeg_.UpdateMatrix();
+
+	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
+	worldTransformAntena_.translation_ =  Lerp(0.2f, worldTransformAntena_.translation_,antenaPos);
+	worldTransformAntena_.UpdateMatrix();
+	worldTransformCode_.translation_ = Lerp(0.5f,worldTransformAntena_.translation_,worldTransformHead_.GetWorldPos());
+	Matrix4x4 rotateCode = DirectionToDirection({0,0,1.0f},Normalise( worldTransformHead_.GetWorldPos() - worldTransformAntena_.translation_));
+	worldTransformCode_.matWorld_ = Multiply(Multiply(MakeScaleMatrix(worldTransformCode_.scale_) , rotateCode),MakeTranslateMatrix(worldTransformCode_.translation_));
+	worldTransformCode_.TransferMatrix();
 }
 
 void Player::OnCollision(OBB& partner) {
@@ -218,7 +270,17 @@ void Player::OnCollisionEnemy() {
 
 }
 
-void Player::Draw(const ViewProjection& viewProjection) { model_->Draw(worldTransform_,viewProjection); }
+void Player::Draw(const ViewProjection& viewProjection) {
+	//model_->Draw(worldTransform_,viewProjection);
+	body_->Draw(worldTransformbody_,viewProjection);
+	back_->Draw(worldTransformback_, viewProjection);
+	head_->Draw(worldTransformHead_, viewProjection);
+	leg_->Draw(worldTransformLeftLeg_, viewProjection);
+	leg_->Draw(worldTransformRightLeg_, viewProjection);
+
+	antena_->Draw(worldTransformAntena_,viewProjection);
+	code_->Draw(worldTransformCode_, viewProjection);
+}
 
 void Player::ApplyGlobalVariables()
 {
@@ -229,4 +291,14 @@ void Player::ApplyGlobalVariables()
 	moveSpeed_ = globalVariables->GetFloatValue(groupName, "speed");
 	jumpDampingX_ = globalVariables->GetFloatValue(groupName, "jumpDampingX");
 	jumpReceptionLength_ = globalVariables->GetIntValue(groupName, "jumpReceptionLength");
+
+	const char* groupName2 = "PlayerModel";
+	antenaOffset_ = globalVariables->GetVector3Value(groupName2, "antena");
+	codeOffset_ = globalVariables->GetVector3Value(groupName2, "code");
+	headOffset_ = globalVariables->GetVector3Value(groupName2, "head");
+	bodyOffset_ = globalVariables->GetVector3Value(groupName2, "body");
+	backOffset_ = globalVariables->GetVector3Value(groupName2, "back");
+	leftOffset_ = globalVariables->GetVector3Value(groupName2, "left");
+	rightOffset_ = globalVariables->GetVector3Value(groupName2, "right");
+
 }
