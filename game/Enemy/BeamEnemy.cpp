@@ -39,7 +39,7 @@ void BeamEnemy::Update()
 		worldTransform_.scale_ = Add(worldTransform_.scale_, velocity_);
 	}
 	else {
-		worldTransform_.scale_ = Subtract(worldTransform_.translation_, target_.translate);
+		worldTransform_.scale_.y = worldTransform_.translation_.y- target_.translate.y;
 	}
 	worldTransform_.UpdateMatrix();
 	if (count_ >= 60) {
