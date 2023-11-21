@@ -59,7 +59,7 @@ public:
 
 	void SetJoyState(XINPUT_STATE* joystate) { joyState_ = joystate; };
 	void SetPreJoyState(XINPUT_STATE* joystate) { preJoyState_ = joystate; };
-
+	void SetShakeCamera(std::function<void()> cameraShake) { cameraShake_ = cameraShake; };
 
 	//マップの読み込み最大幅
 	static const uint32_t kMapWidth = 30;
@@ -97,5 +97,6 @@ private:
 	MapState map[kMapHeight][kMapWidth];
 	uint32_t mapWidth_;
 	uint32_t mapHeight_;
+	std::function<void()> cameraShake_;
 };
 

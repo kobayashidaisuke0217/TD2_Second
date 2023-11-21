@@ -37,6 +37,7 @@ public:
 	void Draw()override;
 	void Finalize()override;
 	void AddEnemyBullet(PlayerAimBullet* enemyBullet);
+	void ReStartWave();
 private:
 
 	BlueMoon* blueMoon_;
@@ -65,6 +66,10 @@ private:
 	bool enemyPop_;
 	int32_t waveNum_;
 	std::list<PlayerAimBullet*> bullets_;
+	//設定群
+	float fallingBorder_ = -10.0f;
+	float upperBorder_ = 100.0f;
+	float horizonBorder_=100.0f;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

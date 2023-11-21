@@ -24,7 +24,7 @@ void MapManager::Initialize() {
 
 	MapRead();
 	modelBlock_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
-	
+	cameraShake_ = nullptr;
 }
 
 void MapManager::MapRead()
@@ -169,6 +169,7 @@ void MapManager::Update() {
 
 			object->Reverse();
 			object->delay_ = kReverseFloatAnimationDelay;
+			cameraShake_();
 		}
 	}
 	for (std::shared_ptr<Map> object : wall_) {

@@ -2,6 +2,7 @@
 #include "MapManager.h"
 #include "GameController.h"
 #include "WaveManager.h"
+#include <functional>
 GameScene::~GameScene()
 {
 	enemys_.remove_if([](IEnemy* enemy) {
@@ -27,6 +28,14 @@ void GameScene::Initialize()
 	textureManager_->Initialize();
 	enemyTex_ = textureManager_->Load("resource/black.png");
 	viewProjection_.Initialize();
+
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "GameSetting";
+	globalVariables->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "fallingBorder", fallingBorder_);
+	globalVariables->AddItem(groupName, "upperBorder", upperBorder_);
+	globalVariables->AddItem(groupName, "horizonBorder", horizonBorder_);
+
 
 	MapManager::GetInstance()->Initialize();
 	//MapManager::GetInstance()->MapRead();
@@ -57,11 +66,16 @@ void GameScene::Initialize()
 	waveNum_ = 0;
 	WaveManager::GetInstance()->SetEnemyList(&enemys_);
 	WaveManager::GetInstance()->SetWave(waveNum_);
+	WaveManager::GetInstance()->SetGameScene(this);
+	WaveManager::GetInstance()->SetPlayer(player_.get());
 	WaveManager::GetInstance()->LoadFile();
+
+	MapManager::GetInstance()->SetShakeCamera(std::bind(&FollowCamera::Shake, followCamera_.get()));
 }
 
 void GameScene::Update()
 {
+	ApplyGlobalVariables();
 	//preJoyState_ = joyState_;
 	//Input::GetInstance()->GetJoystickState(0, joyState_);
 	GameController::GetInstance()->Update();
@@ -141,6 +155,9 @@ void GameScene::Update()
 	}
 	ImGui::End();
 	player_->Update();
+	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+		ReStartWave();
+	}
 	for (PlayerAimBullet* bullet : bullets_) {
 
 		bullet->Update();
@@ -168,6 +185,11 @@ void GameScene::Update()
 	}*/
 	for (IEnemy* enemy : enemys_) {
 		enemy->Update();
+		if (std::abs(enemy->GetWorldTransform().GetWorldPos().x) > horizonBorder_ || 
+			enemy->GetWorldTransform().GetWorldPos().y > upperBorder_ || 
+			enemy->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+			enemy->Deth();
+		}
 	}
 	MapManager::GetInstance()->Update();
 	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
@@ -205,7 +227,8 @@ void GameScene::Update()
 	}
 	for (IEnemy* enemy : enemys_) {
 		if (IsCollision(enemy->GetOBB(),player_->GetOBB())) {
-			Initialize();
+			//Initialize();
+			ReStartWave();
 			return;
 		}
 		
@@ -283,9 +306,10 @@ void GameScene::Draw3D()
 void GameScene::ApplyGlobalVariables()
 {
 	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
-
-	const char* groupName = "Player";
-
+	const char* groupName = "GameSetting";
+	fallingBorder_ = globalVariables->GetFloatValue(groupName, "fallingBorder");
+	upperBorder_ = globalVariables->GetFloatValue(groupName, "upperBorder");
+	horizonBorder_ = globalVariables->GetFloatValue(groupName, "horizonBorder");
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
@@ -393,3 +417,14 @@ void GameScene::AddEnemyBullet(PlayerAimBullet* enemyBullet)
 	bullets_.push_back(enemyBullet);
 }
 
+void GameScene::ReStartWave()
+{
+	for (IEnemy* enemy : enemys_) {
+		delete enemy;
+	}
+	enemys_.clear();
+	size_t num = WaveManager::GetInstance()->GetWave();
+	MapManager::GetInstance()->WaveRead(uint32_t(num));
+	WaveManager::GetInstance()->SetWave(uint32_t(num));
+	player_->Reset();
+}
