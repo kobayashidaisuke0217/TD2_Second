@@ -96,5 +96,13 @@ private:
 	Vector3 leftOffset_;
 	Vector3 rightOffset_;
 
+	bool isMove_;
+	float theta_;
+	float floatAnimetion_;
+
+	//アニメーション用変数
+	float legRotate_;
+	float floatBodyIdle_;
+	float floatBodyMove_;
 
 };

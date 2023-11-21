@@ -26,6 +26,9 @@ void Player::Initialize(){
 	globalVariables->AddItem(groupName2, "back", backOffset_);
 	globalVariables->AddItem(groupName2, "left", leftOffset_);
 	globalVariables->AddItem(groupName2, "right", rightOffset_);
+	globalVariables->AddItem(groupName2, "legRotate", legRotate_);
+	globalVariables->AddItem(groupName2, "bodyIdle", floatBodyIdle_);
+	globalVariables->AddItem(groupName2, "bodyMove", floatBodyMove_);
 
 
 	worldTransform_.Initialize();
@@ -69,6 +72,15 @@ void Player::Initialize(){
 	worldTransformLeftLeg_.parent_ = &worldTransform_;
 	worldTransformRightLeg_.Initialize();
 	worldTransformRightLeg_.parent_ = &worldTransform_;
+	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
+	worldTransformAntena_.translation_ = Lerp(1.0f, worldTransformAntena_.translation_, antenaPos);
+	worldTransformAntena_.UpdateMatrix();
+	worldTransformCode_.translation_ = Lerp(0.5f, worldTransformAntena_.translation_, worldTransformHead_.GetWorldPos());
+	Matrix4x4 rotateCode = DirectionToDirection({ 0,0,1.0f }, Normalise(worldTransformHead_.GetWorldPos() - worldTransformAntena_.translation_));
+	worldTransformCode_.matWorld_ = Multiply(Multiply(MakeScaleMatrix(worldTransformCode_.scale_), rotateCode), MakeTranslateMatrix(worldTransformCode_.translation_));
+	worldTransformCode_.TransferMatrix();
+	isMove_ = false;
+	theta_ = 0;
 }
 
 void Player::Reset() {
@@ -90,6 +102,16 @@ void Player::Reset() {
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 	jumpAble_ = true;
 	isJumpReception_ = false;
+
+	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
+	worldTransformAntena_.translation_ = Lerp(1.0f, worldTransformAntena_.translation_, antenaPos);
+	worldTransformAntena_.UpdateMatrix();
+	worldTransformCode_.translation_ = Lerp(0.5f, worldTransformAntena_.translation_, worldTransformHead_.GetWorldPos());
+	Matrix4x4 rotateCode = DirectionToDirection({ 0,0,1.0f }, Normalise(worldTransformHead_.GetWorldPos() - worldTransformAntena_.translation_));
+	worldTransformCode_.matWorld_ = Multiply(Multiply(MakeScaleMatrix(worldTransformCode_.scale_), rotateCode), MakeTranslateMatrix(worldTransformCode_.translation_));
+	worldTransformCode_.TransferMatrix();
+	isMove_ = false;
+	theta_ = 0;
 }
 
 void Player::Update() {
@@ -130,17 +152,32 @@ void Player::Update() {
 			//velocity_.x = 0;
 		}
 	}
+	isMove_ = false;
 	if (GameController::GetInstance()->Left()) {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
 		velocity_.x = -1.0f * moveSpeed_;
 		direction_ = -1.0f;
+		isMove_ = true;
 	}
 	if (GameController::GetInstance()->Right()) {
 		//velocity_.y = 0.0f;
 		//acceleration_ = { 0 ,0.06f,0 };
 		velocity_.x = 1.0f * moveSpeed_;
 		direction_ = 1.0f;
+		isMove_ = true;
+	}
+	if (isMove_ && !isJumpReception_ && !isCollisionFloor_) {
+		theta_ += legRotate_;
+		floatAnimetion_ += floatBodyMove_;
+	}
+	else if(!isJumpReception_ && !isCollisionFloor_){
+		theta_ = 0;
+		floatAnimetion_ += floatBodyIdle_;
+	}
+	else {
+		//theta_ = 0;
+		floatAnimetion_ = 0;
 	}
 	velocity_.y = std::clamp(velocity_.y,-0.8f,0.8f);
 	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
@@ -154,18 +191,21 @@ void Player::Update() {
 	isCollisionWall_ = true;
 
 	worldTransformbody_.translation_ = bodyOffset_;
+	worldTransformbody_.translation_.y += std::sin(floatAnimetion_)*0.5f;
 	worldTransformbody_.UpdateMatrix();
 	worldTransformback_.translation_ = backOffset_;
 	worldTransformback_.UpdateMatrix();
 	worldTransformHead_.translation_ = headOffset_;
 	worldTransformHead_.UpdateMatrix();
+	worldTransformLeftLeg_.rotation_.x = std::sin(theta_);
 	worldTransformLeftLeg_.translation_ = leftOffset_;
 	worldTransformLeftLeg_.UpdateMatrix();
+	worldTransformRightLeg_.rotation_.x = -std::sin(theta_);
 	worldTransformRightLeg_.translation_ = rightOffset_;
 	worldTransformRightLeg_.UpdateMatrix();
 
 	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
-	worldTransformAntena_.translation_ =  Lerp(0.2f, worldTransformAntena_.translation_,antenaPos);
+	worldTransformAntena_.translation_ =  Lerp(0.1f, worldTransformAntena_.translation_,antenaPos);
 	worldTransformAntena_.UpdateMatrix();
 	worldTransformCode_.translation_ = Lerp(0.5f,worldTransformAntena_.translation_,worldTransformHead_.GetWorldPos());
 	Matrix4x4 rotateCode = DirectionToDirection({0,0,1.0f},Normalise( worldTransformHead_.GetWorldPos() - worldTransformAntena_.translation_));
@@ -300,5 +340,9 @@ void Player::ApplyGlobalVariables()
 	backOffset_ = globalVariables->GetVector3Value(groupName2, "back");
 	leftOffset_ = globalVariables->GetVector3Value(groupName2, "left");
 	rightOffset_ = globalVariables->GetVector3Value(groupName2, "right");
+
+	legRotate_ = globalVariables->GetFloatValue(groupName2, "legRotate");
+	floatBodyIdle_ = globalVariables->GetFloatValue(groupName2, "bodyIdle");
+	floatBodyMove_ = globalVariables->GetFloatValue(groupName2, "bodyMove");
 
 }
