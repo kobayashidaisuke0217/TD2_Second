@@ -113,7 +113,7 @@ void WaveManager::Update() {
 				break;
 			case kAimBulletWidth:
 				break;
-			case kAimbulletheight:
+			case kAimBulletHeight:
 				newEnemy = new AimBulletEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
