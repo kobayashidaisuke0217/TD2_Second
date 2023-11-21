@@ -112,6 +112,9 @@ void GameScene::Update()
 		if (ImGui::Selectable("Tire", type == kTire)) {
 			type = kTire;
 		}
+			if (ImGui::Selectable("Beam", type == kRaser)) {
+				type = kRaser;
+			}
 		ImGui::EndCombo();
 
 	}
@@ -320,6 +323,11 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kSpear:
 		break;
 	case kRaser:
+		enemy = new BeamEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+
+		enemys_.push_back(enemy);
 		break;
 	case kAimBulletWidth:
 		enemy = new AImBulletWidthEnemy();
