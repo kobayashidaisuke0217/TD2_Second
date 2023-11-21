@@ -44,6 +44,8 @@ private:
 	std::unique_ptr<Model> model_;
 	
 	WorldTransform worldTransform_;
+	WorldTransform worldTransformOBB_;
+
 
 	OBB obb_;
 	OBB obbFloatTrigger_;
@@ -79,6 +81,7 @@ private:
 	std::unique_ptr<Model> back_;
 	std::unique_ptr<Model> leg_;
 	
+	WorldTransform worldTransformModel_;
 	WorldTransform worldTransformAntena_;
 	WorldTransform worldTransformCode_;
 	WorldTransform worldTransformHead_;
@@ -86,6 +89,8 @@ private:
 	WorldTransform worldTransformback_;
 	WorldTransform worldTransformLeftLeg_;
 	WorldTransform worldTransformRightLeg_;
+
+	Vector3 charctorScale_ = {1.0f,1.0f,1.0f};
 
 	Vector3 antenaOffset_;
 	
