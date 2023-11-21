@@ -14,9 +14,6 @@ void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity,
 	sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();
 
-	/*worldTransform_.translation_.y = 10.0f;
-	worldTransform_.translation_.x = 10.0f;
-	worldTransform_.scale_ = { 1.0f,1.0f,1.0f };*/
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.scale_ = transform.scale;
 	worldTransform_.Initialize();

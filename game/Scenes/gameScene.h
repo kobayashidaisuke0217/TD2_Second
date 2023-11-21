@@ -24,6 +24,7 @@
 #include"game/Enemy/PlayerAimBullet.h"
 #include"game/Enemy/TireEnemy.h"
 #include"game/Enemy/BeamEnemy.h"
+#include"game/Enemy/PlayerAimBallEnemy.h"
 #pragma endregion
 #include "Input.h"
 #include "FollowCamera.h"

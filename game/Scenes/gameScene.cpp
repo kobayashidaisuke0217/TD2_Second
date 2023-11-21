@@ -126,9 +126,12 @@ void GameScene::Update()
 		if (ImGui::Selectable("Tire", type == kTire)) {
 			type = kTire;
 		}
-			if (ImGui::Selectable("Beam", type == kRaser)) {
+		if (ImGui::Selectable("Beam", type == kRaser)) {
 				type = kRaser;
-			}
+		}
+		if (ImGui::Selectable("AimBall", type == kAimBound)) {
+			type = kAimBound;
+		}
 		ImGui::EndCombo();
 
 	}
@@ -370,6 +373,12 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		enemys_.push_back(enemy);
 		break;
 	case kAimBound:
+		enemy = new PlayerAimBallEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->SetPlayer(player_.get());
+		enemy->SetGameScene(this);
+		enemys_.push_back(enemy);
 		break;
 	case kStageUp:
 		enemy = new StageChangeEnemy();
