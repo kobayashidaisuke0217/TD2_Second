@@ -58,6 +58,22 @@ struct DirectionalLightData {
 struct MaterialData {
 	std::string textureFilePath;
 };
+struct Emitter {
+	Transform transform;
+};
+struct ParticleData {
+	Transform transform;
+	Vector3 velocity;
+	Vector4 color;
+	Emitter emitter;
+	float lifeTime;
+	float currentTime;
+	bool isAlive;
+};
+struct ParticleForGPU {
+	Matrix4x4 World;
+	Vector4 Color;
+};
 struct ModelData {
 	std::vector<VertexData> vertices;
 	MaterialData material;
@@ -106,6 +122,7 @@ Matrix4x4 MakeRotateYMatrix(float theta);
 Matrix4x4 MakeRotateZMatrix(float theta);
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+Matrix4x4 MakeBillBoardMatrix(const Vector3& scale, Matrix4x4 billboard, const Vector3& translate);
 
 Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);

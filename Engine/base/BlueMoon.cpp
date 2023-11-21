@@ -5,34 +5,40 @@ void BlueMoon::Initialize(int32_t width, int32_t height) {
 	win_ = WinApp::GetInstance();
 	direct_ = DirectXCommon::GetInstance();
 	direct_->Initialize(win_, win_->kClientWidth, win_->kClientHeight);
-	
+
 
 	PSO2DCount_ = 0;
 	InitializeDxcCompiler();
-
-
 	CreateRootSignature3D();
-	CreateRootSignature2D();
-	CreateRootSignatureParticle();
 	CreateInputlayOut();
-	CreateInputlayOut2D();
-	CreateInputlayOutParticle();
 	SettingBlendState();
-
 	SettingRasterizerState3D();
-	SettingRasterizerState2D();
-	SettingRasterizerStateParticle();
 	SettingDepth();
 	InitializePSO3D();
 	InitializePSO3DWireFrame();
+
+	CreateRootSignature2D();
+	CreateInputlayOut2D();
+	SettingRasterizerState2D();
 	for (int i = 0; i < 5; i++) {
 
 		InitializePSO2D();
 	}
+	CreateRootSignatureParticle();
+	CreateInputlayOutParticle();
+	SettingRasterizerStateParticle();
 	InitializePSOParticle();
 	SettingViePort();
 
 	SettingScissor();
+
+
+
+
+
+
+
+
 
 }
 
@@ -137,7 +143,7 @@ void BlueMoon::CreateRootSignature3D() {
 	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptoraRange;//tableの中身の配列を指定
 	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptoraRange);
 
-rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//pixcelShaderを使う
 	rootParameters[3].Descriptor.ShaderRegister = 1;//レジスタ番号1
 
@@ -151,7 +157,7 @@ rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
 	staticSamplers[0].ShaderRegister = 0;
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-	
+
 
 
 	descriptionRootSignature.pParameters = rootParameters;//ルートパラメータ配列へのポインタ
@@ -169,7 +175,7 @@ rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
 		assert(false);
 	}
 	//バイナリを元に生成
-	
+
 	hr = direct_->GetDevice()->CreateRootSignature(0, signatureBlob3D_->GetBufferPointer(),
 		signatureBlob3D_->GetBufferSize(), IID_PPV_ARGS(&rootSignature3D_));
 	assert(SUCCEEDED(hr));
@@ -292,7 +298,7 @@ void BlueMoon::InitializePSO3D() {
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	//実際に生成
-	
+
 	HRESULT hr = direct_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState3D_));
 	assert(SUCCEEDED(hr));
@@ -348,6 +354,10 @@ void BlueMoon::SettingDepth()
 	depthStencilDesc.DepthEnable = true;
 	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	depthStencilDescParticle.DepthEnable = true;
+	depthStencilDescParticle.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDescParticle.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
 }
 BlueMoon* BlueMoon::GetInstance()
 {
@@ -356,37 +366,37 @@ BlueMoon* BlueMoon::GetInstance()
 }
 void BlueMoon::variableInitialize()
 {
-	
+
 }
 
 
 
 void BlueMoon::BeginFrame() {
 	//imguiManager_->Begin();
-	
-	
+
+
 	direct_->GetCommandList()->RSSetViewports(1, &viewport_);//viewportを設定
 	direct_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);//scirssorを設定
 	//RootSignatureを設定。PS0に設定しているけど別途設定が必要
-	
-	
+
+
 	direct_->PreDraw();
 	//direct_->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
 	//direct_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());//PS0を設定
 
 }
 void BlueMoon::EndFrame() {
-	
+
 	//imguiManager_->End();
-	
+
 	//imguiManager_->Draw();
 	direct_->PostDraw();
 }
 
 void BlueMoon::Finalize()
 {
-	
-	
+
+
 }
 //void BlueMoon::Update()
 //{
@@ -401,14 +411,14 @@ void BlueMoon::Finalize()
 BlueMoon::~BlueMoon()
 {
 	//imguiManager_->Finalize();
-	
+
 
 	pixelShaderBlob3D_->Release();
 	vertexShaderBlob3D_->Release();
 	pixelShaderBlob2D_->Release();
 	vertexShaderBlob2D_->Release();
 	direct_->Finalize();
-	
+
 
 }
 
@@ -416,7 +426,7 @@ void BlueMoon::ModelPreDraw()
 {
 	direct_->GetCommandList()->SetGraphicsRootSignature(rootSignature3D_.Get());
 	direct_->GetCommandList()->SetPipelineState(graphicsPipelineState3D_.Get());//PS0を設定
-	
+
 }
 
 void BlueMoon::ModelPreDrawWireFrame()
@@ -547,7 +557,7 @@ void BlueMoon::CreateRootSignature2D() {
 	hr = direct_->GetDevice()->CreateRootSignature(0, signatureBlob2D_->GetBufferPointer(),
 		signatureBlob2D_->GetBufferSize(), IID_PPV_ARGS(&rootSignature2D_));
 	assert(SUCCEEDED(hr));
-	}
+}
 void BlueMoon::CreateInputlayOut2D() {
 	//inputElementDescsをメンバ変数にすると治った
 	inputElementDescs2D_[0].SemanticName = "POSITION";
@@ -560,14 +570,14 @@ void BlueMoon::CreateInputlayOut2D() {
 	inputElementDescs2D_[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputElementDescs2D_[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-	
+
 
 	inputLayoutDesc2D_.pInputElementDescs = inputElementDescs2D_;
 	inputLayoutDesc2D_.NumElements = _countof(inputElementDescs2D_);
 }
 
 
-	
+
 #pragma endregion
 #pragma region Particle用のパイプライン
 void BlueMoon::CreateRootSignatureParticle()
@@ -576,17 +586,28 @@ void BlueMoon::CreateRootSignatureParticle()
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	//RootParameter作成。複数設定できるので配列。今回は結果1つだけなので長さ１の配列
-	D3D12_ROOT_PARAMETER rootParameters[4] = {};
+	//RootParameter作成。複数設定できるので配列。
+	D3D12_ROOT_PARAMETER rootParameters[5] = {};
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//pixelShaderを使う
 	rootParameters[0].Descriptor.ShaderRegister = 0;//レジスタ番号0とバインド
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+	//worldtransform
+	D3D12_DESCRIPTOR_RANGE descriptoraRangeParticle[1] = {};
+	descriptoraRangeParticle[0].BaseShaderRegister = 0;
+	descriptoraRangeParticle[0].NumDescriptors = 1;
+	descriptoraRangeParticle[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使用
+	descriptoraRangeParticle[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//CBVを使う
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderを使う
-	rootParameters[1].Descriptor.ShaderRegister = 0;//レジスタ番号0とバインド
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptoraRangeParticle;//レジスタ番号0とバインド
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptoraRangeParticle);
+	//viewProjection
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
+	rootParameters[4].Descriptor.ShaderRegister = 1;//レジスタ番号を1にバインド
 
 	D3D12_DESCRIPTOR_RANGE descriptoraRange[1] = {};
-	descriptoraRange[0].BaseShaderRegister = 0;
+	descriptoraRange[0].BaseShaderRegister = 1;
 	descriptoraRange[0].NumDescriptors = 1;
 	descriptoraRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使用
 	descriptoraRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
@@ -617,8 +638,7 @@ void BlueMoon::CreateRootSignatureParticle()
 	descriptionRootSignature.pStaticSamplers = staticSamplers;
 	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
 	//シリアライズしてバイナリにする
-	signatureBlobParticle_ = nullptr;
-	errorBlobParticle_ = nullptr;
+
 	HRESULT hr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlobParticle_, &errorBlobParticle_);
@@ -627,7 +647,7 @@ void BlueMoon::CreateRootSignatureParticle()
 		assert(false);
 	}
 	//バイナリを元に生成
-	rootSignatureParticle_ = nullptr;
+
 	hr = direct_->GetDevice()->CreateRootSignature(0, signatureBlobParticle_->GetBufferPointer(),
 		signatureBlobParticle_->GetBufferSize(), IID_PPV_ARGS(&rootSignatureParticle_));
 	assert(SUCCEEDED(hr));
@@ -636,7 +656,7 @@ void BlueMoon::CreateRootSignatureParticle()
 void BlueMoon::SettingRasterizerStateParticle()
 {
 	//裏面（時計回り）を表示しない
-	rasterizerDescParticle_.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDescParticle_.CullMode = D3D12_CULL_MODE_NONE;
 	//三角形の中を塗りつぶす
 	rasterizerDescParticle_.FillMode = D3D12_FILL_MODE_SOLID;
 
@@ -660,7 +680,7 @@ void BlueMoon::InitializePSOParticle()
 		vertexShaderBlobParticle_->GetBufferSize() };//vertexShader
 	graphicsPipelineStateDesc.PS = { pixelShaderBlobParticle_->GetBufferPointer(),
 		pixelShaderBlobParticle_->GetBufferSize() };//pixcelShader
-	graphicsPipelineStateDesc.BlendState = blendDesc_[0];//BlendState
+	graphicsPipelineStateDesc.BlendState = blendDesc_[kBlendModeAdd];//BlendState
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDescParticle_;//rasterizerState
 	//書き込むRTVの情報
 	graphicsPipelineStateDesc.NumRenderTargets = 1;
@@ -671,7 +691,7 @@ void BlueMoon::InitializePSOParticle()
 	//どのように画面に色を打ち込むのかの設定（気にしなく良い）
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDescParticle;
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	//実際に生成
 	graphicsPipelineStateParticle_ = nullptr;

@@ -148,7 +148,7 @@ void GameScene::Update()
 
 	ImGui::Begin("Scene");
 
-	ImGui::InputInt("blendCount", &directXCommon_->count);
+	
 	ImGui::InputInt("SceneNum", &sceneNum);
 	if (sceneNum > 1) {
 		sceneNum = 1;
