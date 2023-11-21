@@ -14,7 +14,9 @@ void BeamEnemy::Initialize(const Transform& transform, const Vector3& velocity, 
 	sphere_->Initialize();
 
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = transform.translate;
+	worldTransform_.translation_.x =(int) transform.translate.x*4.0f;
+	worldTransform_.translation_.y = (int)transform.translate.y * 4.0f;
+	worldTransform_.translation_.z = (int)transform.translate.z * 4.0f;
 	worldTransform_.scale_ = transform.scale;
 
 	MoveSpeed_ = moveSpeed;
@@ -30,6 +32,7 @@ void BeamEnemy::Initialize(const Transform& transform, const Vector3& velocity, 
 
 void BeamEnemy::Update()
 {
+	
 	count_++;
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
 	obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y  ,worldTransform_.scale_.z / 2.0f };
@@ -39,12 +42,13 @@ void BeamEnemy::Update()
 		worldTransform_.scale_ = Add(worldTransform_.scale_, velocity_);
 	}
 	else {
-		worldTransform_.scale_.y = worldTransform_.translation_.y- target_.translate.y;
+	worldTransform_.scale_.y  =	std::abs( worldTransform_.translation_.y - target_.translate.y);
 	}
 	worldTransform_.UpdateMatrix();
-	if (count_ >= 60) {
+	if (count_ >= 1000) {
 		isAlive_ = false;
 	}
+	ishit_ = false;
 }
 
 void BeamEnemy::Draw(const ViewProjection& viewProjection)

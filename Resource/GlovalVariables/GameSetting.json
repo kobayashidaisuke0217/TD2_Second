@@ -1,0 +1,7 @@
+{
+    "GameSetting": {
+        "fallingBorder": -100.0,
+        "horizonBorder": 100.0,
+        "upperBorder": 100.0
+    }
+}
