@@ -39,6 +39,10 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupName, "transitionAnimationLength", int32_t(transitionAnimationLength_));
 	globalVariables->AddItem(groupName, "transitionAnimationDelay", int32_t(transitionAnimationDelay_));
 
+	const char* groupName2 = "Title";
+	globalVariables->AddItem(groupName2, "lineScale", lineScale_);
+	globalVariables->AddItem(groupName2, "linePosition", linePosition_);
+
 
 	MapManager::GetInstance()->Initialize();
 	//MapManager::GetInstance()->MapRead();
@@ -77,7 +81,13 @@ void GameScene::Initialize()
 	transitionSprite_->Initialize({0.0f,0.0f,0.0f,0.0f}, {1280.0f,720.0f,0.0f,0.0f});
 	blackTextureHandle_ = textureManager_->Load("resource/black.png");
 	
-	isInGame_ = true;
+	titleLine_.reset(new Plane);
+	titleLine_->Initialize();
+	worldTransformLine_.Initialize();
+
+	isInGame_ = false;
+	isTitle_ = true;
+	isStartGame_ = false;
 }
 
 void GameScene::Update()
@@ -141,7 +151,10 @@ void GameScene::Update()
 		enemyPop_ = false;
 	}
 	
-	if (isInGame_) {
+	if (isTitle_) {
+		Title();
+	}
+	else if (isInGame_) {
 		InGame();
 	}
 	else {
@@ -155,6 +168,60 @@ void GameScene::Update()
 	viewProjection_.matView = followCamera_->GetViewProjection().matView;
 	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 	viewProjection_.TransferMatrix();
+}
+
+
+void GameScene::Title() {
+	
+	player_->Update();
+	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+		ReStart();
+	}
+
+	if (player_->GetWorldTransform().GetWorldPos().y > linePosition_.y) {
+		isStartGame_ = true;
+		isInGame_ = true;
+		isTitle_ = false;
+		//WaveManager::GetInstance()->SetWave(0);
+	}
+
+	worldTransformLine_.translation_ = linePosition_;
+	worldTransformLine_.scale_ = lineScale_;
+	worldTransformLine_.UpdateMatrix();
+	MapManager::GetInstance()->Update();
+	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
+	for (std::shared_ptr<MapManager::Map> object : floors) {
+		if (IsCollision(player_->GetOBB(), object->obb)) {
+			object->isFrameCollision_ = player_->OnCollisionFloorVertical(object->obb);
+			object->OnCollision();
+		}
+		if (IsCollision(player_->GetFloatTrigger(), object->obb)) {
+			object->Touch();
+		}
+	}
+	for (std::shared_ptr<MapManager::Map> object : floors) {
+		if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
+			player_->OnCollisionFloorHorizon(object->obb);
+		}
+	}
+
+	std::vector<std::shared_ptr<MapManager::Map>>& walls = MapManager::GetInstance()->GetWall();
+	for (std::shared_ptr<MapManager::Map> object : walls) {
+		if (IsCollision(player_->GetOBB(), object->obb)) {
+			player_->OnCollisionWall(object->obb);
+		}
+	}
+	
+	followCamera_->Update();
+	if (isRunAnimation_) {
+		resetT_ = frameCount_ / float(transitionAnimationLength_);
+		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
+
+		if (frameCount_ >= transitionAnimationLength_) {
+			isRunAnimation_ = false;
+		}
+		frameCount_++;
+	}
 }
 
 void GameScene::InGame() {
@@ -297,6 +364,9 @@ void GameScene::Draw3D()
 
 		bullet->Draw(viewProjection_);
 	}
+	if (!isStartGame_) {
+		titleLine_->Draw(worldTransformLine_, viewProjection_, { 1.0f,1.0f ,1.0f ,1.0f }, blackTextureHandle_);
+	}
 	blueMoon_->PariclePreDraw();
 
 	blueMoon_->ModelPreDrawWireFrame();
@@ -313,6 +383,11 @@ void GameScene::ApplyGlobalVariables()
 	horizonBorder_ = globalVariables->GetFloatValue(groupName, "horizonBorder");
 	transitionAnimationLength_ = globalVariables->GetIntValue(groupName, "transitionAnimationLength");
 	transitionAnimationDelay_ = globalVariables->GetIntValue(groupName, "transitionAnimationDelay");
+
+
+	const char* groupName2 = "Title";
+	lineScale_ = globalVariables->GetVector3Value(groupName2, "lineScale");
+	linePosition_ = globalVariables->GetVector3Value(groupName2, "linePosition");
 
 }
 
@@ -429,6 +504,7 @@ void GameScene::ReStart()
 	enemys_.clear();
 	player_->DethAnimation();
 	isInGame_ = false;
+	isTitle_ = false;
 	frameCount_ = 0;
 	isRunAnimation_ = false;
 }
@@ -444,7 +520,12 @@ void GameScene::ReStartAnimation() {
 		
 		if (frameCount_ == transitionAnimationLength_/2) {
 			ReStartWave();
-			isInGame_ = true;
+			if (isStartGame_) {
+				isInGame_ = true;
+			}
+			else {
+				isTitle_ = true;
+			}
 		}
 
 		if (frameCount_ >= transitionAnimationLength_) {

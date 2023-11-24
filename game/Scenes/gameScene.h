@@ -11,6 +11,7 @@
 #include "Texturemanager.h"
 #include "GlobalVariables.h"
 #include "Particle.h"
+#include "Plane.h"
 #include "game/Player.h"
 #include <list>
 #pragma region エネミー
@@ -37,6 +38,8 @@ public:
 	void ReStartWave();
 	void ReStart();
 	void InGame();
+	void Title();
+
 	void ReStartAnimation();
 	void TransitionAnimation();
 private:
@@ -87,6 +90,16 @@ private:
 	Vector4 transitionEndPosition_ = {0.0f,0.0f,0.0f,0.0f};
 	Vector4 transitionSpritePosition_;
 	uint32_t blackTextureHandle_;
+	bool isTitle_;
+	bool isStartGame_;
+	std::unique_ptr<Plane> titleLine_;
+	std::unique_ptr<Plane> titleChar_;
+	WorldTransform worldTransformLine_;
+
+	Vector3 lineScale_ = {1.0f,1.0f,1.0f};
+	Vector3 linePosition_ = {0,0,0};
+
+
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };
