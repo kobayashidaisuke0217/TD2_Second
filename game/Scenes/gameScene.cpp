@@ -141,6 +141,10 @@ void GameScene::Update()
 	}
 	else {
 		player_->Update();
+		ReStartAnimation();
+	}
+	if (isRunAnimation_) {
+		TransitionAnimation();
 	}
 
 	viewProjection_.matView = followCamera_->GetViewProjection().matView;
@@ -405,4 +409,35 @@ void GameScene::ReStart()
 	enemys_.clear();
 	player_->DethAnimation();
 	isInGame_ = false;
+	frameCount_ = 0;
+	isRunAnimation_ = false;
+}
+
+void GameScene::ReStartAnimation() {
+	if (!isRunAnimation_ && frameCount_ >= transitionAnimationDelay_){
+		isRunAnimation_ = true;
+		frameCount_ = 0;
+	}
+	if (isRunAnimation_) {
+		resetT_ = frameCount_ / float(transitionAnimationLength_);
+		resetT_ = std::powf(resetT_, 2)*-1.0f + 1.0f;
+		
+		if (frameCount_ == transitionAnimationLength_/2) {
+			ReStartWave();
+			isInGame_ = true;
+		}
+
+		if (frameCount_ >= transitionAnimationLength_) {
+			isRunAnimation_ = false;
+			isInGame_ = true;
+		}
+	}
+	frameCount_++;
+}
+
+void GameScene::TransitionAnimation() {
+
+	transitionSpritePosition_.x = (1.0f - resetT_) * transitionStartPosition_.x + resetT_ * transitionEndPosition_.x;
+	transitionSpritePosition_.y = (1.0f - resetT_) * transitionStartPosition_.y + resetT_ * transitionEndPosition_.y;
+	transitionSpritePosition_.z = (1.0f - resetT_) * transitionStartPosition_.z + resetT_ * transitionEndPosition_.z;
 }

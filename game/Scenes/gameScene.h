@@ -37,6 +37,8 @@ public:
 	void ReStartWave();
 	void ReStart();
 	void InGame();
+	void ReStartAnimation();
+	void TransitionAnimation();
 private:
 
 	BlueMoon* blueMoon_;
@@ -70,8 +72,21 @@ private:
 	float upperBorder_ = 100.0f;
 	float horizonBorder_=100.0f;
 
+	//リスポーン用
 	std::unique_ptr<Sprite> transitionSprite_;
 	bool isInGame_;
+	//遷移アニメーションの補間用
+	float resetT_;
+	//遷移アニメーションの長さ
+	uint32_t transitionAnimationLength_ = 60;
+	//遷移アニメーションの開始までの長さ
+	uint32_t transitionAnimationDelay_ = 60;
+	uint32_t frameCount_;
+	bool isRunAnimation_;
+	Vector4 transitionStartPosition_;
+	Vector4 transitionEndPosition_;
+	Vector4 transitionSpritePosition_;
+
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

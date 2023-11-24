@@ -121,6 +121,7 @@ void Player::Reset() {
 	worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 	worldTransform_.translation_.x = 0.0f;
 	worldTransform_.translation_.y = 2.0f;
+	worldTransform_.UpdateMatrix();
 	velocity_ = { 0,0,0 };
 	acceleration_ = { 0,0,0 };
 	//gravity_ = {0,-0.005f,0};
@@ -137,6 +138,30 @@ void Player::Reset() {
 	jumpAble_ = true;
 	isJumpReception_ = false;
 
+	worldTransformModel_.parent_ = &worldTransform_;
+	worldTransformModel_.translation_ = { 0,0,0 };
+	worldTransformModel_.rotation_ = { 0,0,0 };
+	worldTransformModel_.UpdateMatrix();
+	worldTransformbody_.parent_ = &worldTransformModel_;
+	worldTransformbody_.scale_ = {1.0f,1.0f,1.0f};
+	worldTransformbody_.rotation_ = {0,0,0};
+	worldTransformbody_.translation_ = bodyOffset_;
+	worldTransformbody_.UpdateMatrix();
+	worldTransformback_.parent_ = &worldTransformbody_;
+	worldTransformback_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformback_.rotation_ = { 0,0,0 };
+	worldTransformHead_.parent_ = &worldTransformbody_;
+	worldTransformHead_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformHead_.rotation_ = { 0,0,0 };
+	worldTransformHead_.translation_ = headOffset_;
+	worldTransformHead_.UpdateMatrix();
+	worldTransformLeftLeg_.parent_ = &worldTransformModel_;
+	worldTransformLeftLeg_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformLeftLeg_.rotation_ = { 0,0,0 };
+	worldTransformRightLeg_.parent_ = &worldTransformModel_;
+	worldTransformRightLeg_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformRightLeg_.rotation_ = { 0,0,0 };
+
 	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
 	worldTransformAntena_.translation_ = Lerp(1.0f, worldTransformAntena_.translation_, antenaPos);
 	worldTransformAntena_.UpdateMatrix();
@@ -146,18 +171,6 @@ void Player::Reset() {
 	worldTransformCode_.TransferMatrix();
 	isMove_ = false;
 	theta_ = 0;
-
-	worldTransformModel_.parent_ = &worldTransform_;
-	worldTransformbody_.parent_ = &worldTransformModel_;
-	worldTransformbody_.scale_ = {1.0f,1.0f,1.0f};
-	worldTransformback_.parent_ = &worldTransformbody_;
-	worldTransformback_.scale_ = { 1.0f,1.0f,1.0f };
-	worldTransformHead_.parent_ = &worldTransformbody_;
-	worldTransformHead_.scale_ = { 1.0f,1.0f,1.0f };
-	worldTransformLeftLeg_.parent_ = &worldTransformModel_;
-	worldTransformLeftLeg_.scale_ = { 1.0f,1.0f,1.0f };
-	worldTransformRightLeg_.parent_ = &worldTransformModel_;
-	worldTransformRightLeg_.scale_ = { 1.0f,1.0f,1.0f };
 
 	isDead_ = false;
 }
