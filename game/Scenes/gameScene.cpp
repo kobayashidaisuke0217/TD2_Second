@@ -70,6 +70,9 @@ void GameScene::Initialize()
 	WaveManager::GetInstance()->LoadFile();
 
 	MapManager::GetInstance()->SetShakeCamera(std::bind(&FollowCamera::Shake, followCamera_.get()));
+	//transitionSprite_.reset(new Sprite);
+	//transitionSprite_->Initialize();
+	isInGame_ = true;
 }
 
 void GameScene::Update()
@@ -132,6 +135,20 @@ void GameScene::Update()
 		EnemySpawn(player_->GetWorldTransform(), type);
 		enemyPop_ = false;
 	}
+	
+	if (isInGame_) {
+		InGame();
+	}
+	else {
+		player_->Update();
+	}
+
+	viewProjection_.matView = followCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
+}
+
+void GameScene::InGame() {
 	WaveManager::GetInstance()->Update();
 	//viewProjection_.UpdateMatrix();
 	//viewProjection_.TransferMatrix();
@@ -146,7 +163,7 @@ void GameScene::Update()
 	ImGui::End();
 	player_->Update();
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
-		ReStartWave();
+		ReStart();
 	}
 	for (PlayerAimBullet* bullet : bullets_) {
 
@@ -159,7 +176,7 @@ void GameScene::Update()
 		}
 		return false;
 		});
-	
+
 	/*std::vector<MapManager::Map>& mapObjects = MapManager::GetInstance()->GetMapObject();
 	for (MapManager::Map & object : mapObjects) {
 		if (IsCollision(player_->GetOBB(), object.obb)) {
@@ -168,8 +185,8 @@ void GameScene::Update()
 	}*/
 	for (IEnemy* enemy : enemys_) {
 		enemy->Update();
-		if (std::abs(enemy->GetWorldTransform().GetWorldPos().x) > horizonBorder_ || 
-			enemy->GetWorldTransform().GetWorldPos().y > upperBorder_ || 
+		if (std::abs(enemy->GetWorldTransform().GetWorldPos().x) > horizonBorder_ ||
+			enemy->GetWorldTransform().GetWorldPos().y > upperBorder_ ||
 			enemy->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
 			enemy->Deth();
 		}
@@ -198,30 +215,30 @@ void GameScene::Update()
 		}
 	}
 	for (IEnemy* enemy : enemys_) {
-		if (IsCollision(enemy->GetOBB(),player_->GetOBB())) {
+		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
-			ReStartWave();
+			ReStart();
 			return;
 		}
 		for (std::shared_ptr<MapManager::Map> object : floors) {
 			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
-				
-					if (enemy->GetType() == kStageUp) {
-						if (object->worldTransform.translation_.y == 0.0f) {
-							object->OnCollision();
-							object->Touch();
-						}
+
+				if (enemy->GetType() == kStageUp) {
+					if (object->worldTransform.translation_.y == 0.0f) {
+						object->OnCollision();
+						object->Touch();
 					}
-					if (enemy->GetType() == kStageDown) {
-						if (object->worldTransform.translation_.y == 4.0f) {
-							object->OnCollision();
-							object->Touch();
-						}
+				}
+				if (enemy->GetType() == kStageDown) {
+					if (object->worldTransform.translation_.y == 4.0f) {
+						object->OnCollision();
+						object->Touch();
 					}
-				
+				}
+
 				enemy->SetPartener(kflore);
 				enemy->isCollision(object->obb);
-				
+
 			}
 		}
 		if (enemy->GetType() == kReflect) {
@@ -237,11 +254,7 @@ void GameScene::Update()
 	}
 	followCamera_->Update();
 
-	viewProjection_.matView = followCamera_->GetViewProjection().matView;
-	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
-	viewProjection_.TransferMatrix();
 }
-
 
 void GameScene::Draw()
 {
@@ -382,4 +395,14 @@ void GameScene::ReStartWave()
 	MapManager::GetInstance()->WaveRead(uint32_t(num));
 	WaveManager::GetInstance()->SetWave(uint32_t(num));
 	player_->Reset();
+}
+
+void GameScene::ReStart()
+{
+	for (IEnemy* enemy : enemys_) {
+		delete enemy;
+	}
+	enemys_.clear();
+	player_->DethAnimation();
+	isInGame_ = false;
 }

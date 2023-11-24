@@ -5,6 +5,7 @@
 #include "Mymath.h"
 #include "Globalvariables.h"
 #include "GameController.h"
+#include "RandomEngine.h"
 void Player::Initialize(){
 
 	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
@@ -67,22 +68,43 @@ void Player::Initialize(){
 	head_.reset(Model::CreateModelFromObj("Resource/player/head", "PlayerHead.obj"));
 	leg_.reset(Model::CreateModelFromObj("Resource/player/leg", "PlayerLeg.obj"));
 
+
+	
+	worldTransformModels_.clear();
+	DethAnimationParamator paramator;
 	worldTransformModel_.Initialize();
 	worldTransformModel_.scale_ = charctorScale_;
 	worldTransformModel_.parent_ = &worldTransform_;
+	paramator = { &worldTransformModel_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator);
 
 	worldTransformAntena_.Initialize();
+	paramator = { &worldTransformAntena_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator); 
 	worldTransformbody_.Initialize();
 	worldTransformbody_.parent_ = &worldTransformModel_;
+	paramator = { &worldTransformbody_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator);
 	worldTransformback_.Initialize();
 	worldTransformback_.parent_ = &worldTransformbody_;
+	paramator = { &worldTransformback_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator);
 	worldTransformCode_.Initialize();
+	paramator = { &worldTransformCode_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator);
 	worldTransformHead_.Initialize();
 	worldTransformHead_.parent_ = &worldTransformbody_;
+	paramator = { &worldTransformHead_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator);
 	worldTransformLeftLeg_.Initialize();
 	worldTransformLeftLeg_.parent_ = &worldTransformModel_;
+	paramator = { &worldTransformLeftLeg_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator);
 	worldTransformRightLeg_.Initialize();
 	worldTransformRightLeg_.parent_ = &worldTransformModel_;
+	paramator = { &worldTransformRightLeg_ ,{0,0,0}, {0,0,0} };
+	worldTransformModels_.push_back(paramator);
+
 	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
 	worldTransformAntena_.translation_ = Lerp(1.0f, worldTransformAntena_.translation_, antenaPos);
 	worldTransformAntena_.UpdateMatrix();
@@ -92,7 +114,7 @@ void Player::Initialize(){
 	worldTransformCode_.TransferMatrix();
 	isMove_ = false;
 	theta_ = 0;
-	
+	isDead_ = false;
 }
 
 void Player::Reset() {
@@ -124,124 +146,147 @@ void Player::Reset() {
 	worldTransformCode_.TransferMatrix();
 	isMove_ = false;
 	theta_ = 0;
+
+	worldTransformModel_.parent_ = &worldTransform_;
+	worldTransformbody_.parent_ = &worldTransformModel_;
+	worldTransformbody_.scale_ = {1.0f,1.0f,1.0f};
+	worldTransformback_.parent_ = &worldTransformbody_;
+	worldTransformback_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformHead_.parent_ = &worldTransformbody_;
+	worldTransformHead_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformLeftLeg_.parent_ = &worldTransformModel_;
+	worldTransformLeftLeg_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformRightLeg_.parent_ = &worldTransformModel_;
+	worldTransformRightLeg_.scale_ = { 1.0f,1.0f,1.0f };
+
+	isDead_ = false;
 }
 
 void Player::Update() {
 		ApplyGlobalVariables();
-	prePosition_ = worldTransform_.translation_;
-	if (GameController::GetInstance()->Jump() && jumpAble_) {
-		velocity_.y = 0.0f;
-		velocity_.y = jumpAccerelation_.y;
-		jumpAble_ = false;
-		isJumpReception_ = true;
-		jumpReceptionRest_ = jumpReceptionLength_;
-	}
-	if ((!GameController::GetInstance()->ContinueJump()) && isJumpReception_) {
-		velocity_.y *= 0.6f;
-		isJumpReception_ = false;
-		//velocity_.y = jumpAccerelation_.y;
-		jumpReceptionRest_--;
-		if (jumpReceptionRest_<0) {
+	if (!isDead_) {
+		prePosition_ = worldTransform_.translation_;
+		if (GameController::GetInstance()->Jump() && jumpAble_) {
+			velocity_.y = 0.0f;
+			velocity_.y = jumpAccerelation_.y;
+			jumpAble_ = false;
+			isJumpReception_ = true;
+			jumpReceptionRest_ = jumpReceptionLength_;
+		}
+		if ((!GameController::GetInstance()->ContinueJump()) && isJumpReception_) {
+			velocity_.y *= 0.6f;
 			isJumpReception_ = false;
-		}
-	}
-	else {
-		jumpReceptionRest_--;
-		if (jumpReceptionRest_ < 0) {
-			isJumpReception_ = false;
-		}
-		//velocity_.y = 0.0f;
-		//isJumpReception_ = false;
-	}
-
-	float kSpeed = 0.1f;
-	acceleration_=  gravity_;
-	velocity_ = velocity_+ acceleration_ ;
-	//velocity_.x = direction_ * kSpeed;
-	if (isCollisionFloor_) {
-		velocity_.x *= jumpDampingX_;
-		if (std::abs(velocity_.x) <= 0.01f) {
-			//velocity_.x = 0;
-		}
-	}
-	isMove_ = false;
-	if (GameController::GetInstance()->Left()) {
-		//velocity_.y = 0.0f;
-		//acceleration_ = { 0 ,0.06f,0 };
-		velocity_.x = -1.0f * moveSpeed_;
-		direction_ = -1.0f;
-		isMove_ = true;
-	}
-	if (GameController::GetInstance()->Right()) {
-		//velocity_.y = 0.0f;
-		//acceleration_ = { 0 ,0.06f,0 };
-		velocity_.x = 1.0f * moveSpeed_;
-		direction_ = 1.0f;
-		isMove_ = true;
-	}
-	if (isMove_ && !isJumpReception_ && !isCollisionFloor_) {
-		theta_ += legRotate_;
-		worldTransformLeftLeg_.rotation_.x = std::sin(theta_);
-		worldTransformRightLeg_.rotation_.x = -std::sin(theta_);
-		floatAnimetion_ += floatBodyMove_;
-	}
-	else if(!isJumpReception_ && !isCollisionFloor_){
-		theta_ = 0;
-		floatAnimetion_ += floatBodyIdle_;
-		worldTransformLeftLeg_.rotation_.x = 0;
-		worldTransformRightLeg_.rotation_.x = 0;
-	}
-	else {
-		//theta_ = 0;
-		floatAnimetion_ = 0;
-		if (velocity_.y > 0.0f) {
-			worldTransformLeftLeg_.rotation_.x = worldTransformLeftLeg_.rotation_.x + (0.3f - worldTransformLeftLeg_.rotation_.x)*0.1f;
-			worldTransformRightLeg_.rotation_.x = worldTransformRightLeg_.rotation_.x + (0.3f - worldTransformRightLeg_.rotation_.x) * 0.1f;
+			//velocity_.y = jumpAccerelation_.y;
+			jumpReceptionRest_--;
+			if (jumpReceptionRest_ < 0) {
+				isJumpReception_ = false;
+			}
 		}
 		else {
-			worldTransformLeftLeg_.rotation_.x = worldTransformLeftLeg_.rotation_.x + (-0.3f - worldTransformLeftLeg_.rotation_.x) * 0.1f;
-			worldTransformRightLeg_.rotation_.x = worldTransformRightLeg_.rotation_.x + (-0.3f - worldTransformRightLeg_.rotation_.x) * 0.1f;
+			jumpReceptionRest_--;
+			if (jumpReceptionRest_ < 0) {
+				isJumpReception_ = false;
+			}
+			//velocity_.y = 0.0f;
+			//isJumpReception_ = false;
 		}
 
+		float kSpeed = 0.1f;
+		acceleration_ = gravity_;
+		velocity_ = velocity_ + acceleration_;
+		//velocity_.x = direction_ * kSpeed;
+		if (isCollisionFloor_) {
+			velocity_.x *= jumpDampingX_;
+			if (std::abs(velocity_.x) <= 0.01f) {
+				//velocity_.x = 0;
+			}
+		}
+		isMove_ = false;
+		if (GameController::GetInstance()->Left()) {
+			//velocity_.y = 0.0f;
+			//acceleration_ = { 0 ,0.06f,0 };
+			velocity_.x = -1.0f * moveSpeed_;
+			direction_ = -1.0f;
+			isMove_ = true;
+		}
+		if (GameController::GetInstance()->Right()) {
+			//velocity_.y = 0.0f;
+			//acceleration_ = { 0 ,0.06f,0 };
+			velocity_.x = 1.0f * moveSpeed_;
+			direction_ = 1.0f;
+			isMove_ = true;
+		}
+		if (isMove_ && !isJumpReception_ && !isCollisionFloor_) {
+			theta_ += legRotate_;
+			worldTransformLeftLeg_.rotation_.x = std::sin(theta_);
+			worldTransformRightLeg_.rotation_.x = -std::sin(theta_);
+			floatAnimetion_ += floatBodyMove_;
+		}
+		else if (!isJumpReception_ && !isCollisionFloor_) {
+			theta_ = 0;
+			floatAnimetion_ += floatBodyIdle_;
+			worldTransformLeftLeg_.rotation_.x = 0;
+			worldTransformRightLeg_.rotation_.x = 0;
+		}
+		else {
+			//theta_ = 0;
+			floatAnimetion_ = 0;
+			if (velocity_.y > 0.0f) {
+				worldTransformLeftLeg_.rotation_.x = worldTransformLeftLeg_.rotation_.x + (0.3f - worldTransformLeftLeg_.rotation_.x) * 0.1f;
+				worldTransformRightLeg_.rotation_.x = worldTransformRightLeg_.rotation_.x + (0.3f - worldTransformRightLeg_.rotation_.x) * 0.1f;
+			}
+			else {
+				worldTransformLeftLeg_.rotation_.x = worldTransformLeftLeg_.rotation_.x + (-0.3f - worldTransformLeftLeg_.rotation_.x) * 0.1f;
+				worldTransformRightLeg_.rotation_.x = worldTransformRightLeg_.rotation_.x + (-0.3f - worldTransformRightLeg_.rotation_.x) * 0.1f;
+			}
+
+		}
+		velocity_.y = std::clamp(velocity_.y, -0.8f, 0.8f);
+		worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
+		worldTransform_.rotation_.y = 1.57f * direction_;
+		worldTransform_.UpdateMatrix();
+		worldTransformOBB_.UpdateMatrix();
+		obb_.center = worldTransformOBB_.GetWorldPos();
+		obbFloatTrigger_.center = worldTransformOBB_.GetWorldPos();
+		obbFloatTrigger_.center.y -= 2.5;
+		isCollision_ = true;
+		isCollisionFloor_ = true;
+		isCollisionWall_ = true;
+
+		worldTransformModel_.scale_ = charctorScale_;
+		worldTransformModel_.UpdateMatrix();
+
+		worldTransformbody_.translation_ = bodyOffset_;
+		worldTransformbody_.translation_.y += std::sin(floatAnimetion_) * 0.5f;
+		worldTransformbody_.UpdateMatrix();
+		worldTransformback_.translation_ = backOffset_;
+		worldTransformback_.UpdateMatrix();
+		worldTransformHead_.translation_ = headOffset_;
+		worldTransformHead_.UpdateMatrix();
+		//worldTransformLeftLeg_.rotation_.x = std::sin(theta_);
+		worldTransformLeftLeg_.translation_ = leftOffset_;
+		worldTransformLeftLeg_.UpdateMatrix();
+		//worldTransformRightLeg_.rotation_.x = -std::sin(theta_);
+		worldTransformRightLeg_.translation_ = rightOffset_;
+		worldTransformRightLeg_.UpdateMatrix();
+
+		Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
+		worldTransformAntena_.translation_ = Lerp(0.1f, worldTransformAntena_.translation_, antenaPos);
+		worldTransformAntena_.scale_ = { 0.7f,0.7f,0.7f };
+		worldTransformAntena_.UpdateMatrix();
+		worldTransformCode_.scale_ = { 0.5f,0.5f,0.7f };
+		worldTransformCode_.translation_ = Lerp(0.5f, worldTransformAntena_.translation_, worldTransformHead_.GetWorldPos());
+		Matrix4x4 rotateCode = DirectionToDirection({ 0,0,1.0f }, Normalise(worldTransformHead_.GetWorldPos() - worldTransformAntena_.translation_));
+		worldTransformCode_.matWorld_ = Multiply(Multiply(MakeScaleMatrix(worldTransformCode_.scale_), rotateCode), MakeTranslateMatrix(worldTransformCode_.translation_));
+		worldTransformCode_.TransferMatrix();
+		}
+	else {
+		for (DethAnimationParamator& worldTransform : worldTransformModels_) {
+			worldTransform.velocity = worldTransform.velocity + worldTransform.acceleration;
+			worldTransform.worldTransform->translation_ = worldTransform.worldTransform->translation_ + worldTransform.velocity;
+			worldTransform.worldTransform->UpdateMatrix();
+		}
 	}
-	velocity_.y = std::clamp(velocity_.y,-0.8f,0.8f);
-	worldTransform_.translation_ = worldTransform_.translation_ + velocity_;
-	worldTransform_.rotation_.y = 1.57f * direction_;
-	worldTransform_.UpdateMatrix();
-	worldTransformOBB_.UpdateMatrix();
-	obb_.center = worldTransformOBB_.GetWorldPos();
-	obbFloatTrigger_.center = worldTransformOBB_.GetWorldPos();
-	obbFloatTrigger_.center.y -= 2.5;
-	isCollision_ = true;
-	isCollisionFloor_ = true;
-	isCollisionWall_ = true;
-
-	worldTransformModel_.scale_ = charctorScale_;
-	worldTransformModel_.UpdateMatrix();
-
-	worldTransformbody_.translation_ = bodyOffset_;
-	worldTransformbody_.translation_.y += std::sin(floatAnimetion_)*0.5f;
-	worldTransformbody_.UpdateMatrix();
-	worldTransformback_.translation_ = backOffset_;
-	worldTransformback_.UpdateMatrix();
-	worldTransformHead_.translation_ = headOffset_;
-	worldTransformHead_.UpdateMatrix();
-	//worldTransformLeftLeg_.rotation_.x = std::sin(theta_);
-	worldTransformLeftLeg_.translation_ = leftOffset_;
-	worldTransformLeftLeg_.UpdateMatrix();
-	//worldTransformRightLeg_.rotation_.x = -std::sin(theta_);
-	worldTransformRightLeg_.translation_ = rightOffset_;
-	worldTransformRightLeg_.UpdateMatrix();
-
-	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
-	worldTransformAntena_.translation_ =  Lerp(0.1f, worldTransformAntena_.translation_,antenaPos);
-	worldTransformAntena_.scale_ = {0.7f,0.7f,0.7f};
-	worldTransformAntena_.UpdateMatrix();
-	worldTransformCode_.scale_ = {0.5f,0.5f,0.7f};
-	worldTransformCode_.translation_ = Lerp(0.5f,worldTransformAntena_.translation_,worldTransformHead_.GetWorldPos());
-	Matrix4x4 rotateCode = DirectionToDirection({0,0,1.0f},Normalise( worldTransformHead_.GetWorldPos() - worldTransformAntena_.translation_));
-	worldTransformCode_.matWorld_ = Multiply(Multiply(MakeScaleMatrix(worldTransformCode_.scale_) , rotateCode),MakeTranslateMatrix(worldTransformCode_.translation_));
-	worldTransformCode_.TransferMatrix();
 }
 
 void Player::OnCollision(OBB& partner) {
@@ -378,4 +423,24 @@ void Player::ApplyGlobalVariables()
 	floatBodyIdle_ = globalVariables->GetFloatValue(groupName2, "bodyIdle");
 	floatBodyMove_ = globalVariables->GetFloatValue(groupName2, "bodyMove");
 	charctorScale_ = globalVariables->GetVector3Value(groupName2, "charactorScale");
+}
+
+void Player::DethAnimation() {
+	isDead_ = true;
+	
+	for (DethAnimationParamator& worldTransform : worldTransformModels_) {
+		if (worldTransform.worldTransform->parent_) {
+			worldTransform.worldTransform->rotation_ = worldTransform.worldTransform->rotation_ + worldTransform.worldTransform->parent_->rotation_;
+		}
+		worldTransform.worldTransform->translation_.x = worldTransform.worldTransform->matWorld_.m[3][0];
+		worldTransform.worldTransform->translation_.y = worldTransform.worldTransform->matWorld_.m[3][1];
+		worldTransform.worldTransform->translation_.z = worldTransform.worldTransform->matWorld_.m[3][2];
+		worldTransform.worldTransform->scale_ = charctorScale_;
+		worldTransform.worldTransform->parent_ = nullptr;
+		worldTransform.velocity.x = RandomEngine::GetRandom(-1.0f,1.0f);
+		worldTransform.velocity.y = RandomEngine::GetRandom(0.0f, 2.0f);
+		worldTransform.velocity.z = RandomEngine::GetRandom(-1.0f, 1.0f);
+		worldTransform.acceleration = {0.0f,-0.08f,0.0f};
+	}
+	//worldTransform_.translation_ = {2.0f,0.0f,0.0f};
 }

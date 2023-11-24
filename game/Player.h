@@ -16,6 +16,13 @@ public:
 		Break,
 	};
 
+	struct DethAnimationParamator
+	{
+		WorldTransform* worldTransform;
+		Vector3 velocity;
+		Vector3 acceleration;
+	};
+
 	void Initialize();
 
 	
@@ -37,6 +44,8 @@ public:
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	//死んだときに位置をリセットする用
 	void Reset();
+	//死亡時のアニメーション
+	void DethAnimation();
 private:
 	Input* input_ = nullptr;
 	XINPUT_STATE* joyState_;
@@ -110,4 +119,6 @@ private:
 	float floatBodyIdle_;
 	float floatBodyMove_;
 
+	bool isDead_;
+	std::list<DethAnimationParamator> worldTransformModels_;
 };

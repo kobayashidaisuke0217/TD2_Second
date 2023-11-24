@@ -35,6 +35,8 @@ public:
 	void Finalize()override;
 	void AddEnemyBullet(PlayerAimBullet* enemyBullet);
 	void ReStartWave();
+	void ReStart();
+	void InGame();
 private:
 
 	BlueMoon* blueMoon_;
@@ -67,6 +69,9 @@ private:
 	float fallingBorder_ = -10.0f;
 	float upperBorder_ = 100.0f;
 	float horizonBorder_=100.0f;
+
+	std::unique_ptr<Sprite> transitionSprite_;
+	bool isInGame_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };
