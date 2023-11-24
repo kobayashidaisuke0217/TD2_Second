@@ -78,15 +78,15 @@ private:
 	//遷移アニメーションの補間用
 	float resetT_;
 	//遷移アニメーションの長さ
-	uint32_t transitionAnimationLength_ = 60;
+	uint32_t transitionAnimationLength_ = 30;
 	//遷移アニメーションの開始までの長さ
 	uint32_t transitionAnimationDelay_ = 60;
 	uint32_t frameCount_;
 	bool isRunAnimation_;
-	Vector4 transitionStartPosition_;
-	Vector4 transitionEndPosition_;
+	Vector4 transitionStartPosition_ = {0.0f,-720.0f,0.0f,0.0f};
+	Vector4 transitionEndPosition_ = {0.0f,0.0f,0.0f,0.0f};
 	Vector4 transitionSpritePosition_;
-
+	uint32_t blackTextureHandle_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

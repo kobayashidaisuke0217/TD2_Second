@@ -36,6 +36,9 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupName, "upperBorder", upperBorder_);
 	globalVariables->AddItem(groupName, "horizonBorder", horizonBorder_);
 
+	globalVariables->AddItem(groupName, "transitionAnimationLength", int32_t(transitionAnimationLength_));
+	globalVariables->AddItem(groupName, "transitionAnimationDelay", int32_t(transitionAnimationDelay_));
+
 
 	MapManager::GetInstance()->Initialize();
 	//MapManager::GetInstance()->MapRead();
@@ -70,8 +73,10 @@ void GameScene::Initialize()
 	WaveManager::GetInstance()->LoadFile();
 
 	MapManager::GetInstance()->SetShakeCamera(std::bind(&FollowCamera::Shake, followCamera_.get()));
-	//transitionSprite_.reset(new Sprite);
-	//transitionSprite_->Initialize();
+	transitionSprite_.reset(new Sprite);
+	transitionSprite_->Initialize({0.0f,0.0f,0.0f,0.0f}, {1280.0f,720.0f,0.0f,0.0f});
+	blackTextureHandle_ = textureManager_->Load("resource/black.png");
+	
 	isInGame_ = true;
 }
 
@@ -257,7 +262,15 @@ void GameScene::InGame() {
 
 	}
 	followCamera_->Update();
+	if (isRunAnimation_) {
+		resetT_ = frameCount_ / float(transitionAnimationLength_);
+		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
 
+		if (frameCount_ >= transitionAnimationLength_) {
+			isRunAnimation_ = false;
+		}
+		frameCount_++;
+	}
 }
 
 void GameScene::Draw()
@@ -298,6 +311,9 @@ void GameScene::ApplyGlobalVariables()
 	fallingBorder_ = globalVariables->GetFloatValue(groupName, "fallingBorder");
 	upperBorder_ = globalVariables->GetFloatValue(groupName, "upperBorder");
 	horizonBorder_ = globalVariables->GetFloatValue(groupName, "horizonBorder");
+	transitionAnimationLength_ = globalVariables->GetIntValue(groupName, "transitionAnimationLength");
+	transitionAnimationDelay_ = globalVariables->GetIntValue(groupName, "transitionAnimationDelay");
+
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
@@ -371,7 +387,11 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 void GameScene::Draw2D() {
 	blueMoon_->SetBlendMode(blendCount_);
 
-
+	if (isRunAnimation_) {
+		Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{transitionSpritePosition_.x,transitionSpritePosition_.y,transitionSpritePosition_.z} };
+		Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+		transitionSprite_->Draw(pos, uv,{ 0.0f,0.0f,0.0f,1.0f } ,blackTextureHandle_);
+	}
 }
 void GameScene::Finalize()
 {
@@ -420,7 +440,7 @@ void GameScene::ReStartAnimation() {
 	}
 	if (isRunAnimation_) {
 		resetT_ = frameCount_ / float(transitionAnimationLength_);
-		resetT_ = std::powf(resetT_, 2)*-1.0f + 1.0f;
+		resetT_ = std::powf(resetT_*2.0f-1.0f, 2)*-1.0f + 1.0f;
 		
 		if (frameCount_ == transitionAnimationLength_/2) {
 			ReStartWave();
