@@ -2,7 +2,7 @@
     "Map": {
         "FloatAnimationDelay": 4,
         "FloatAnimationLength": 20,
-        "FloatForce": 12,
+        "FloatForce": 20,
         "ReverseAnimationDelay": 2
     }
 }
