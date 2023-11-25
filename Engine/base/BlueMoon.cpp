@@ -467,15 +467,15 @@ void BlueMoon::InitializePSO2D() {
 	//どのように画面に色を打ち込むのかの設定（気にしなく良い）
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
-	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	//graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	//実際に生成
 	graphicsPipelineState2D_[PSO2DCount_] = nullptr;
 	HRESULT hr = direct_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState2D_[PSO2DCount_]));
 	assert(SUCCEEDED(hr));
 	PSO2DCount_++;
-
+	//graphicsPipelineStateDesc.DepthStencilState = depthStencilDescParticle;
 }
 void BlueMoon::SettingRasterizerState2D() {
 

@@ -514,9 +514,9 @@ void GameScene::Draw2D() {
 
 void GameScene::DrawBackGround() {
 	blueMoon_->SetBlendMode(blendCount_);
-	//Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
-	//Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0,0,0} };
-	//transitionSprite_->Draw(pos, uv, { 1.0f,1.0f,1.0f,1.0f }, backTextureHandle_);
+	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+	Transform pos = { {1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0} };
+	backGroundSprite_->Draw(pos, uv, { 1.0f,1.0f,1.0f,1.0f }, backTextureHandle_);
 }
 
 void GameScene::Finalize()
