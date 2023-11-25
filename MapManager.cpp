@@ -23,7 +23,7 @@ void MapManager::Initialize() {
 	globalVariables->AddItem(groupName, "ReverseAnimationDelay", 2);
 
 	MapRead();
-	modelBlock_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
+	modelBlock_.reset(Model::CreateModelFromObj("Resource/block", "block.obj"));
 	cameraShake_ = nullptr;
 }
 
