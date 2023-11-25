@@ -42,6 +42,8 @@ void GameScene::Initialize()
 	const char* groupName2 = "Title";
 	globalVariables->AddItem(groupName2, "lineScale", lineScale_);
 	globalVariables->AddItem(groupName2, "linePosition", linePosition_);
+	globalVariables->AddItem(groupName2, "startScale", lineScale_);
+	globalVariables->AddItem(groupName2, "startPosition", linePosition_);
 
 
 	MapManager::GetInstance()->Initialize();
@@ -79,11 +81,17 @@ void GameScene::Initialize()
 	MapManager::GetInstance()->SetShakeCamera(std::bind(&FollowCamera::Shake, followCamera_.get()));
 	transitionSprite_.reset(new Sprite);
 	transitionSprite_->Initialize({0.0f,0.0f,0.0f,0.0f}, {1280.0f,720.0f,0.0f,0.0f});
-	blackTextureHandle_ = textureManager_->Load("resource/black.png");
+	blackTextureHandle_ = textureManager_->Load("resource/startLine.png");
 	
 	titleLine_.reset(new Plane);
 	titleLine_->Initialize();
 	worldTransformLine_.Initialize();
+	
+	titleChar_.reset(new Plane);
+	titleChar_->Initialize();
+	worldTransformStart_.Initialize();
+
+
 
 	titleTransform_.scale = {0.5f,0.5f,0.5f};
 	titleTransform_.rotate = {0,0,0};
@@ -92,7 +100,11 @@ void GameScene::Initialize()
 	titleSprite_.reset(new Sprite);
 	titleSprite_->Initialize({-960,-540,0,0}, { 960,540,0,0 });
 
+	backGroundSprite_.reset(new Sprite);
+	backGroundSprite_->Initialize({ 0,0,0,0 }, {1280,720,0,0});
 	titleTextureHandle_ = textureManager_->Load("resource/title.png");
+	backTextureHandle_ = textureManager_->Load("resource/back.png");
+	startTextureHandle_ = textureManager_->Load("resource/gameStart.png");
 
 	globalVariables->AddItem(groupName2, "TitleScale", titleTransform_.scale);
 	globalVariables->AddItem(groupName2, "TitleTransform", titleTransform_.translate);
@@ -177,9 +189,18 @@ void GameScene::Update()
 		TransitionAnimation();
 	}
 
+	followCamera_->Update();
+
 	viewProjection_.matView = followCamera_->GetViewProjection().matView;
 	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 	viewProjection_.TransferMatrix();
+	Matrix4x4 toCameraRotate = Inverse(viewProjection_.matView);
+	toCameraRotate.m[3][0] = 0;
+	toCameraRotate.m[3][1] = 0;
+	toCameraRotate.m[3][2] = 0;
+
+	worldTransformStart_.matWorld_ = Multiply(Multiply( MakeScaleMatrix(worldTransformStart_.scale_) , toCameraRotate),MakeTranslateMatrix(worldTransformStart_.translation_));
+	worldTransformStart_.TransferMatrix();
 }
 
 
@@ -187,6 +208,7 @@ void GameScene::Title() {
 	
 	player_->Update();
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+		followCamera_->Shake();
 		ReStart();
 	}
 
@@ -224,7 +246,6 @@ void GameScene::Title() {
 		}
 	}
 	
-	followCamera_->Update();
 	if (isRunAnimation_) {
 		resetT_ = frameCount_ / float(transitionAnimationLength_);
 		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
@@ -251,6 +272,7 @@ void GameScene::InGame() {
 	ImGui::End();
 	player_->Update();
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+		followCamera_->Shake();
 		ReStart();
 	}
 	for (PlayerAimBullet* bullet : bullets_) {
@@ -306,6 +328,7 @@ void GameScene::InGame() {
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
 			ReStart();
+			followCamera_->Shake();
 			return;
 		}
 		for (std::shared_ptr<MapManager::Map> object : floors) {
@@ -340,7 +363,6 @@ void GameScene::InGame() {
 		}
 
 	}
-	followCamera_->Update();
 	if (isRunAnimation_) {
 		resetT_ = frameCount_ / float(transitionAnimationLength_);
 		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
@@ -354,7 +376,9 @@ void GameScene::InGame() {
 
 void GameScene::Draw()
 {
-
+	//2D描画準備
+	blueMoon_->SpritePreDraw();
+	DrawBackGround();
 	//3D描画準備
 	blueMoon_->ModelPreDraw();
 	Draw3D();
@@ -378,6 +402,7 @@ void GameScene::Draw3D()
 	}
 	if (!isStartGame_) {
 		titleLine_->Draw(worldTransformLine_, viewProjection_, { 1.0f,1.0f ,1.0f ,1.0f }, blackTextureHandle_);
+		titleChar_->Draw(worldTransformStart_, viewProjection_,{1.0f,1.0f,1.0f,1.0f},startTextureHandle_);
 	}
 	blueMoon_->PariclePreDraw();
 
@@ -403,7 +428,8 @@ void GameScene::ApplyGlobalVariables()
 
 	titleTransform_.scale = globalVariables->GetVector3Value(groupName2, "TitleScale");
 	titleTransform_.translate = globalVariables->GetVector3Value(groupName2, "TitleTransform");
-
+	worldTransformStart_.scale_ = globalVariables->GetVector3Value(groupName2, "startScale");
+	worldTransformStart_.translation_ = globalVariables->GetVector3Value(groupName2, "startPosition");
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
@@ -485,6 +511,14 @@ void GameScene::Draw2D() {
 		transitionSprite_->Draw(pos, uv,{ 0.0f,0.0f,0.0f,1.0f } ,blackTextureHandle_);
 	}
 }
+
+void GameScene::DrawBackGround() {
+	blueMoon_->SetBlendMode(blendCount_);
+	//Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+	//Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0,0,0} };
+	//transitionSprite_->Draw(pos, uv, { 1.0f,1.0f,1.0f,1.0f }, backTextureHandle_);
+}
+
 void GameScene::Finalize()
 {
 	enemys_.remove_if([](IEnemy* enemy) {

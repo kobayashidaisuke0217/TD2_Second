@@ -42,6 +42,7 @@ public:
 
 	void ReStartAnimation();
 	void TransitionAnimation();
+	void DrawBackGround();
 private:
 
 	BlueMoon* blueMoon_;
@@ -95,6 +96,8 @@ private:
 	std::unique_ptr<Plane> titleLine_;
 	std::unique_ptr<Plane> titleChar_;
 	WorldTransform worldTransformLine_;
+	WorldTransform worldTransformStart_;
+
 
 	Vector3 lineScale_ = {1.0f,1.0f,1.0f};
 	Vector3 linePosition_ = {0,0,0};
@@ -103,6 +106,10 @@ private:
 
 	Transform titleTransform_;
 	uint32_t titleTextureHandle_;
+	uint32_t backTextureHandle_;
+	uint32_t startTextureHandle_;
+
+	std::unique_ptr<Sprite> backGroundSprite_;
 
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
