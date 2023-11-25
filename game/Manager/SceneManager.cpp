@@ -75,7 +75,7 @@ void SceneManager::Initialize()
 	directionallight_->Initialize();
 	sceneArr_[TITLE_SCENE] = std::make_unique <TitleScene>();
 	sceneArr_[GAME_SCENE] = std::make_unique <GameScene>();
-	sceneNum_ = TITLE_SCENE;
+	sceneNum_ = GAME_SCENE;
 	sceneArr_[sceneNum_]->Initialize();
 
 	audio_ = Audio::GetInstance();
