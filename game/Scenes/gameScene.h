@@ -99,6 +99,10 @@ private:
 	Vector3 lineScale_ = {1.0f,1.0f,1.0f};
 	Vector3 linePosition_ = {0,0,0};
 
+	std::unique_ptr<Sprite> titleSprite_;
+
+	Transform titleTransform_;
+	uint32_t titleTextureHandle_;
 
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);

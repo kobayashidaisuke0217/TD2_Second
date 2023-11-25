@@ -85,6 +85,18 @@ void GameScene::Initialize()
 	titleLine_->Initialize();
 	worldTransformLine_.Initialize();
 
+	titleTransform_.scale = {0.5f,0.5f,0.5f};
+	titleTransform_.rotate = {0,0,0};
+	titleTransform_.translate = {640,360,0};
+
+	titleSprite_.reset(new Sprite);
+	titleSprite_->Initialize({-960,-540,0,0}, { 960,540,0,0 });
+
+	titleTextureHandle_ = textureManager_->Load("resource/title.png");
+
+	globalVariables->AddItem(groupName2, "TitleScale", titleTransform_.scale);
+	globalVariables->AddItem(groupName2, "TitleTransform", titleTransform_.translate);
+
 	isInGame_ = false;
 	isTitle_ = true;
 	isStartGame_ = false;
@@ -389,6 +401,9 @@ void GameScene::ApplyGlobalVariables()
 	lineScale_ = globalVariables->GetVector3Value(groupName2, "lineScale");
 	linePosition_ = globalVariables->GetVector3Value(groupName2, "linePosition");
 
+	titleTransform_.scale = globalVariables->GetVector3Value(groupName2, "TitleScale");
+	titleTransform_.translate = globalVariables->GetVector3Value(groupName2, "TitleTransform");
+
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
@@ -461,10 +476,12 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 
 void GameScene::Draw2D() {
 	blueMoon_->SetBlendMode(blendCount_);
-
+	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+	if (isTitle_){
+		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
+	}
 	if (isRunAnimation_) {
 		Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{transitionSpritePosition_.x,transitionSpritePosition_.y,transitionSpritePosition_.z} };
-		Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 		transitionSprite_->Draw(pos, uv,{ 0.0f,0.0f,0.0f,1.0f } ,blackTextureHandle_);
 	}
 }
