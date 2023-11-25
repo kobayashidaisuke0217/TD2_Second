@@ -21,7 +21,11 @@
 #include"game/Enemy/BulletEnemy.h"
 #include"game/Enemy/StageChangeEnemy.h"
 #include"game/Enemy/AimBulletEnemy.h"
+#include"game/Enemy/AimBulletWidthEnemy.h"
 #include"game/Enemy/PlayerAimBullet.h"
+#include"game/Enemy/TireEnemy.h"
+#include"game/Enemy/BeamEnemy.h"
+#include"game/Enemy/PlayerAimBallEnemy.h"
 #pragma endregion
 #include "Input.h"
 #include "FollowCamera.h"

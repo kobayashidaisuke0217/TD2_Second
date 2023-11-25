@@ -1,13 +1,11 @@
 #pragma once
 #include "IEnemy.h"
 #include "PlayerAimBullet.h"
-#include <list>
-
-class AimBulletEnemy:public IEnemy
+class AImBulletWidthEnemy:public IEnemy
 {
 public:
-	AimBulletEnemy();
-	~AimBulletEnemy();
+	AImBulletWidthEnemy();
+	~AImBulletWidthEnemy();
 	virtual void Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture) override;
 	virtual void Update() override;
 	virtual void Draw(const ViewProjection& viewProjection) override;
@@ -17,7 +15,7 @@ public:
 	virtual OBB& GetOBB()override { return obb_; };
 
 
-	
+
 	virtual bool GetIsHit()override { return ishit_; }
 	virtual void SetPartener(collisionPartner partner)override { collisionpartner_ = partner; }
 private:
@@ -26,7 +24,7 @@ private:
 	int currentCollTime_;
 	int atackCount_;
 	int currentAtackCount_;
-	void Atack();
 	Vector3 BulletScale_;
+	void Atack();
 };
 

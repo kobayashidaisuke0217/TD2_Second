@@ -71,6 +71,7 @@ void GameScene::Initialize()
 		delete enemy;
 	}
 	enemys_.clear();
+	bullets_.clear();
 	waveNum_ = 0;
 	WaveManager::GetInstance()->SetEnemyList(&enemys_);
 	WaveManager::GetInstance()->SetWave(waveNum_);
@@ -158,8 +159,20 @@ void GameScene::Update()
 		if (ImGui::Selectable("StageUp", type == kStageUp)) {
 			type = kStageUp;
 		}
-		if (ImGui::Selectable("Aimheight", type == kAimbulletheight)) {
-			type = kAimbulletheight;
+		if (ImGui::Selectable("Aimheight", type == kAimBulletHeight)) {
+			type = kAimBulletHeight;
+		}
+		if (ImGui::Selectable("AimWidth", type == kAimBulletWidth)) {
+			type = kAimBulletWidth;
+		}
+		if (ImGui::Selectable("Tire", type == kTire)) {
+			type = kTire;
+		}
+		if (ImGui::Selectable("Beam", type == kRaser)) {
+				type = kRaser;
+		}
+		if (ImGui::Selectable("AimBall", type == kAimBound)) {
+			type = kAimBound;
 		}
 		ImGui::EndCombo();
 
@@ -264,7 +277,7 @@ void GameScene::InGame() {
 
 	ImGui::Begin("Scene");
 
-	ImGui::InputInt("blendCount", &directXCommon_->count);
+	
 	ImGui::InputInt("SceneNum", &sceneNum);
 	if (sceneNum > 1) {
 		sceneNum = 1;
@@ -279,6 +292,13 @@ void GameScene::InGame() {
 
 		bullet->Update();
 	}
+	bullets_.remove_if([](PlayerAimBullet* bullet) {
+		if (!bullet->GetIsAlive()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
 	enemys_.remove_if([](IEnemy* enemy) {
 		if (!enemy->GetIsAlive()) {
 			delete enemy;
@@ -316,6 +336,17 @@ void GameScene::InGame() {
 		if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
 			player_->OnCollisionFloorHorizon(object->obb);
 		}
+		for (PlayerAimBullet* bullet : bullets_) {
+			if (IsCollision(bullet->GetOBB(), object->obb)) {
+ 				bullet->isCollision();
+			}
+			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
+				Initialize();
+				return;
+			}
+			
+		}
+
 	}
 
 	std::vector<std::shared_ptr<MapManager::Map>>& walls = MapManager::GetInstance()->GetWall();
@@ -331,6 +362,7 @@ void GameScene::InGame() {
 			followCamera_->Shake();
 			return;
 		}
+		
 		for (std::shared_ptr<MapManager::Map> object : floors) {
 			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
 
@@ -458,14 +490,30 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		enemys_.push_back(enemy);
 		break;
 	case kTire:
+		enemy = new TireEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+
+		enemys_.push_back(enemy);
 		break;
 	case kSpear:
 		break;
 	case kRaser:
+		enemy = new BeamEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+
+		enemys_.push_back(enemy);
 		break;
 	case kAimBulletWidth:
+		enemy = new AImBulletWidthEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->SetPlayer(player_.get());
+		enemy->SetGameScene(this);
+		enemys_.push_back(enemy);
 		break;
-	case kAimbulletheight:
+	case kAimBulletHeight:
 		enemy = new AimBulletEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
 		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
@@ -474,6 +522,12 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		enemys_.push_back(enemy);
 		break;
 	case kAimBound:
+		enemy = new PlayerAimBallEnemy();
+		//{ 0.3f, -1.0f, 0.0f }
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->SetPlayer(player_.get());
+		enemy->SetGameScene(this);
+		enemys_.push_back(enemy);
 		break;
 	case kStageUp:
 		enemy = new StageChangeEnemy();

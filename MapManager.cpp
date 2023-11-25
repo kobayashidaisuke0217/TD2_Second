@@ -3,7 +3,7 @@
 #include "Easing.h"
 #include "GameController.h"
 //#include "Input.h"
-uint32_t MapManager::kBlockFloatForce = 4;
+uint32_t MapManager::kBlockFloatForce = 10;//4;
 uint32_t MapManager::kBlocckFloatAnimationLength = 60;
 uint32_t MapManager::kBlocckFloatAnimationDelay = 2;
 uint32_t MapManager::kReverseFloatAnimationDelay = 2;

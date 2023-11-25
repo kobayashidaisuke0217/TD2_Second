@@ -100,7 +100,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Easing.cpp" />
-    <ClCompile Include="Engine\2d\particle.cpp" />
     <ClCompile Include="Engine\2d\Sprite.cpp" />
     <ClCompile Include="Engine\2d\Triangle.cpp" />
     <ClCompile Include="Engine\3d\Model.cpp" />
@@ -111,12 +110,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\base\BlueMoon.cpp" />
     <ClCompile Include="Engine\base\DirectXCommon.cpp" />
     <ClCompile Include="Engine\base\ImGuiManger.cpp" />
+    <ClCompile Include="Engine\base\SrvDescriptorHeap.cpp" />
     <ClCompile Include="Engine\base\WinApp.cpp" />
     <ClCompile Include="Engine\Manager\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Manager\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\Manager\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="Engine\Manager\Input\Input.cpp" />
     <ClCompile Include="Engine\Manager\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="Engine\Manager\particle.cpp" />
     <ClCompile Include="Engine\Manager\Texture\Texturemanager.cpp" />
     <ClCompile Include="Engine\Math\Mymath.cpp" />
     <ClCompile Include="Engine\MyUtility\combert.cpp" />
@@ -151,12 +152,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="FollowCamera.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="game\Enemy\AimBulletEnemy.cpp" />
+    <ClCompile Include="game\Enemy\AImBulletWidthEnemy.cpp" />
+    <ClCompile Include="game\Enemy\BeamEnemy.cpp" />
     <ClCompile Include="game\Enemy\BoundEnemy.cpp" />
     <ClCompile Include="game\Enemy\BulletEnemy.cpp" />
     <ClCompile Include="game\Enemy\IENEMY.CPP" />
+    <ClCompile Include="game\Enemy\PlayerAimBallEnemy.cpp" />
     <ClCompile Include="game\Enemy\PlayerAimBullet.cpp" />
     <ClCompile Include="game\Enemy\ReflectEnemy.cpp" />
     <ClCompile Include="game\Enemy\StageChangeEnemy.cpp" />
+    <ClCompile Include="game\Enemy\TireEnemy.cpp" />
     <ClCompile Include="game\Manager\SceneManager.cpp" />
     <ClCompile Include="game\Player.cpp" />
     <ClCompile Include="game\Scenes\gameScene.cpp" />
@@ -169,7 +174,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Easing.h" />
-    <ClInclude Include="Engine\2d\particle.h" />
     <ClInclude Include="Engine\2d\Sprite.h" />
     <ClInclude Include="Engine\2d\Triangle.h" />
     <ClInclude Include="Engine\3d\Model.h" />
@@ -180,6 +184,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\base\BlueMoon.h" />
     <ClInclude Include="Engine\base\DirectXCommon.h" />
     <ClInclude Include="Engine\base\ImGuiManger.h" />
+    <ClInclude Include="Engine\base\SrvDescriptorHeap.h" />
     <ClInclude Include="Engine\base\WinApp.h" />
     <ClInclude Include="Engine\Manager\Audio\Audio.h" />
     <ClInclude Include="Engine\Manager\Collision\Collider.h" />
@@ -188,6 +193,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Manager\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="Engine\Manager\Input\Input.h" />
     <ClInclude Include="Engine\Manager\Lights\DirectionalLight.h" />
+    <ClInclude Include="Engine\Manager\particle.h" />
     <ClInclude Include="Engine\Manager\Texture\Texturemanager.h" />
     <ClInclude Include="Engine\Math\MyMath.h" />
     <ClInclude Include="Engine\MyUtility\combert.h" />
@@ -202,12 +208,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="FollowCamera.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="game\Enemy\AimBulletEnemy.h" />
+    <ClInclude Include="game\Enemy\AImBulletWidthEnemy.h" />
+    <ClInclude Include="game\Enemy\BeamEnemy.h" />
     <ClInclude Include="game\Enemy\BoundEnemy.h" />
     <ClInclude Include="game\Enemy\BulletEnemy.h" />
     <ClInclude Include="game\Enemy\IEnemy.h" />
+    <ClInclude Include="game\Enemy\PlayerAimBallEnemy.h" />
     <ClInclude Include="game\Enemy\PlayerAimBullet.h" />
     <ClInclude Include="game\Enemy\ReflectEnemy.h" />
     <ClInclude Include="game\Enemy\StageChangeEnemy.h" />
+    <ClInclude Include="game\Enemy\TireEnemy.h" />
     <ClInclude Include="game\Manager\SceneManager.h" />
     <ClInclude Include="game\Player.h" />
     <ClInclude Include="game\Scenes\gameScene.h" />

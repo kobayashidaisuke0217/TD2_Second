@@ -87,6 +87,15 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	result.m[3][3] = 1;
 	return result;
 }
+Matrix4x4 MakeBillBoardMatrix(const Vector3& scale, Matrix4x4 billboard, const Vector3& translate)
+{
+
+	Matrix4x4 scaleMat = MakeScaleMatrix(scale);
+	Matrix4x4 transmat = MakeTranslateMatrix(translate);
+
+	return Multiply(scaleMat, Multiply(billboard, transmat));
+}
+
 
 Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 result;
