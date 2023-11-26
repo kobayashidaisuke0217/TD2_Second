@@ -115,6 +115,19 @@ private:
 
 	std::unique_ptr<Sprite> backGroundSprite_;
 
+	std::unique_ptr<Sprite> moveSprite_;
+	std::unique_ptr<Sprite> jumpSprite_;
+	std::unique_ptr<Sprite> reverseSprite_;
+
+	Transform move_;
+	Transform jump_;
+	Transform reverse_;
+
+
+	uint32_t moveTextureHandle_;
+	uint32_t jumpTextureHandle_;
+	uint32_t reverseTextureHandle_;
+
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

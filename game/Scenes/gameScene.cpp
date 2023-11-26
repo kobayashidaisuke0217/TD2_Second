@@ -111,6 +111,26 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupName2, "TitleScale", titleTransform_.scale);
 	globalVariables->AddItem(groupName2, "TitleTransform", titleTransform_.translate);
 
+	moveSprite_.reset(new Sprite);
+	moveSprite_->Initialize({ -800.0f,-200.0f,0,0 }, { 800.0f,200.0f,0,0 });
+	jumpSprite_.reset(new Sprite);
+	jumpSprite_->Initialize({ -800.0f,-200.0f,0,0 }, { 800.0f,200.0f,0,0 });
+	reverseSprite_.reset(new Sprite);
+	reverseSprite_->Initialize({ -800.0f,-200.0f,0,0 }, { 800.0f,200.0f,0,0 });
+
+	moveTextureHandle_ = textureManager_->Load("Resource/UI/moveUI.png");
+	jumpTextureHandle_ = textureManager_->Load("Resource/UI/jumpUI.png");
+	reverseTextureHandle_ = textureManager_->Load("Resource/UI/reversUI.png");
+
+	const char* groupName3 = "UI";
+	globalVariables->AddItem(groupName3, "moveScale", move_.scale);
+	globalVariables->AddItem(groupName3, "movePosition", move_.translate);
+	globalVariables->AddItem(groupName3, "jumpScale", jump_.scale);
+	globalVariables->AddItem(groupName3, "jumpPosition", jump_.translate);
+	globalVariables->AddItem(groupName3, "reverseScale", reverse_.scale);
+	globalVariables->AddItem(groupName3, "reversePosition", reverse_.translate);
+
+
 	isInGame_ = false;
 	isTitle_ = true;
 	isStartGame_ = false;
@@ -463,6 +483,15 @@ void GameScene::ApplyGlobalVariables()
 	titleTransform_.translate = globalVariables->GetVector3Value(groupName2, "TitleTransform");
 	worldTransformStart_.scale_ = globalVariables->GetVector3Value(groupName2, "startScale");
 	worldTransformStart_.translation_ = globalVariables->GetVector3Value(groupName2, "startPosition");
+
+	const char* groupName3 = "UI";
+	move_.scale = globalVariables->GetVector3Value(groupName3, "moveScale");
+	move_.translate = globalVariables->GetVector3Value(groupName3, "movePosition");
+	jump_.scale = globalVariables->GetVector3Value(groupName3, "jumpScale");
+	jump_.translate = globalVariables->GetVector3Value(groupName3, "jumpPosition");
+	reverse_.scale = globalVariables->GetVector3Value(groupName3, "reverseScale");
+	reverse_.translate = globalVariables->GetVector3Value(groupName3, "reversePosition");
+
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
@@ -558,6 +587,10 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 void GameScene::Draw2D() {
 	blueMoon_->SetBlendMode(blendCount_);
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+
+	moveSprite_->Draw(move_, uv, {1.0f,1.0f,1.0f,1.0f},moveTextureHandle_);
+	jumpSprite_->Draw(jump_, uv, { 1.0f,1.0f,1.0f,1.0f }, jumpTextureHandle_);
+	reverseSprite_->Draw(reverse_, uv, { 1.0f,1.0f,1.0f,1.0f }, reverseTextureHandle_);
 	if (isTitle_){
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
 	}
