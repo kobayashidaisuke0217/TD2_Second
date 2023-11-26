@@ -78,7 +78,7 @@ void GameScene::Initialize()
 	WaveManager::GetInstance()->SetWave(waveNum_);
 	WaveManager::GetInstance()->SetGameScene(this);
 	WaveManager::GetInstance()->SetPlayer(player_.get());
-	WaveManager::GetInstance()->LoadFile();
+	WaveManager::GetInstance()->LoadAllFiles();
 
 	MapManager::GetInstance()->SetShakeCamera(std::bind(&FollowCamera::Shake, followCamera_.get()));
 	transitionSprite_.reset(new Sprite);

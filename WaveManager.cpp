@@ -16,14 +16,22 @@ WaveManager* WaveManager::GetInstance() {
 	return &instance;
 }
 
-void WaveManager::LoadFile() {
-	std::string line;
-	std::ifstream file("Resource/Wave/waveData.wave");
-	assert(file.is_open());
-	EnemyData* newEnemyData = nullptr;
-	Wave* newWave = nullptr;
+void WaveManager::LoadAllFiles() {
 	waves_.clear();
 	waves_.shrink_to_fit();
+	LoadFile("Resource/Wave/waveData.wave");
+	LoadFile("Resource/Wave/waveData.wave");
+}
+
+void WaveManager::LoadFile(const char filename[]) {
+	std::string line;
+	std::ifstream file(filename);
+	//assert(file.is_open());
+	if (!file.is_open()) {
+		return;
+	}
+	EnemyData* newEnemyData = nullptr;
+	Wave* newWave = nullptr;
 	while (std::getline(file, line)) {
 		std::string identifilter;
 		std::istringstream s(line);
@@ -32,7 +40,9 @@ void WaveManager::LoadFile() {
 			newWave=&waves_.emplace_back();
 		}
 		else if (identifilter == "enemy") {
-			 newEnemyData = &newWave->enemyDatas.emplace_back();
+			if (newWave) {
+				newEnemyData = &newWave->enemyDatas.emplace_back();
+			}
 		}
 		else if (identifilter == "position") {
 			Vector3 position;
