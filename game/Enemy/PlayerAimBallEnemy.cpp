@@ -24,7 +24,7 @@ void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& v
 	velocity_.z = std::clamp(velocity_.z, -1.0f, 1.0f);
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
-	
+
 
 	isAlive_ = true;
 	ishit_ = false;
@@ -89,16 +89,16 @@ void PlayerAimBallEnemy::isCollision(OBB pertner)
 void PlayerAimBallEnemy::BehaviorStandbyUpdate()
 {
 
-	
+
 	if (BehaviorChangeCount >= 30) {
 		standBycount++;
 		worldTransform_.rotation_.z = standBycount / 5.0f;
 		if (standBycount >= 120) {
 			behaviorRequest_ = Behavior::kAtack;
-	   }
+		}
 	}
 	else {
-       BehaviorChangeCount++;
+		BehaviorChangeCount++;
 	}
 }
 
@@ -114,12 +114,12 @@ void PlayerAimBallEnemy::BehaviorAtackUpdate()
 
 void PlayerAimBallEnemy::BehaviorLeaveUpdate()
 {
-	
-		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
-		if (worldTransform_.translation_.y >= 30.0f) {
-			behaviorRequest_ = Behavior::kstandBy;
-		}
-	
+
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	if (worldTransform_.translation_.y >= 50.0f) {
+		behaviorRequest_ = Behavior::kstandBy;
+	}
+
 }
 
 void PlayerAimBallEnemy::BehaviorStandbyInitialize()
@@ -131,8 +131,8 @@ void PlayerAimBallEnemy::BehaviorStandbyInitialize()
 void PlayerAimBallEnemy::BehaviorLeaveInitialize()
 {
 	Vector3 target = player_->GetWorldTransform().translation_;
-	target.y = 20.0f;
-	velocity_ = Subtract( target, worldTransform_.translation_);
+	target.y = 60.0f;
+	velocity_ = Subtract(target, worldTransform_.translation_);
 	velocity_ = Normalise(velocity_);
 	float leaveSpeed;
 	leaveSpeed = MoveSpeed_ * 2.0f / 3.0f;
@@ -143,7 +143,7 @@ void PlayerAimBallEnemy::BehaviorLeaveInitialize()
 void PlayerAimBallEnemy::BehaviorAtackInitialize()
 {
 	BehaviorChangeCount = 0;
-	velocity_ = Subtract( player_->GetWorldTransform().translation_, worldTransform_.translation_);
+	velocity_ = Subtract(player_->GetWorldTransform().translation_, worldTransform_.translation_);
 	velocity_ = Normalise(velocity_);
-	velocity_ = Multiply( MoveSpeed_,velocity_);
+	velocity_ = Multiply(MoveSpeed_, velocity_);
 }
