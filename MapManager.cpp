@@ -21,6 +21,8 @@ void MapManager::Initialize() {
 	globalVariables->AddItem(groupName, "FloatAnimationLength", 60);
 	globalVariables->AddItem(groupName, "FloatAnimationDelay", 2);
 	globalVariables->AddItem(groupName, "ReverseAnimationDelay", 2);
+	globalVariables->AddItem(groupName, "ReverseCoolTime", 60);
+
 
 	MapRead();
 	modelBlock_.reset(Model::CreateModelFromObj("Resource/block", "block.obj"));
@@ -161,21 +163,22 @@ void MapManager::WaveRead(uint32_t wave) {
 void MapManager::Update() {
 	ApplyGlobalVariables();
 	if ((*mapObject_.begin()) == (*wall_.begin())) {
-
-	
-	for (std::shared_ptr<Map> object : floor_) {
-		object->Update();
-		if (GameController::GetInstance()->Reverse()) {
-
-			object->Reverse();
-			object->delay_ = kReverseFloatAnimationDelay;
-			cameraShake_();
+		for (std::shared_ptr<Map> object : floor_) {
+			object->Update();
+		}
+		if (GameController::GetInstance()->Reverse() && reverseCoolTime_ <= 0) {
+			for (std::shared_ptr<Map> object : floor_) {
+				object->Reverse();
+				object->delay_ = kReverseFloatAnimationDelay;
+				cameraShake_();
+			}
+			reverseCoolTime_ = kReverseCoolTime_;
+		}
+		for (std::shared_ptr<Map> object : wall_) {
+			//object->Update();
 		}
 	}
-	for (std::shared_ptr<Map> object : wall_) {
-		//object->Update();
-	}
-}
+	reverseCoolTime_--;
 }
 
 void MapManager::Draw(const ViewProjection& viewProjection) {
@@ -266,4 +269,5 @@ void MapManager::ApplyGlobalVariables()
 	kBlocckFloatAnimationLength = globalVariables->GetIntValue(groupName, "FloatAnimationLength");
 	kBlocckFloatAnimationDelay = globalVariables->GetIntValue(groupName, "FloatAnimationDelay");
 	kReverseFloatAnimationDelay = globalVariables->GetIntValue(groupName, "ReverseAnimationDelay");
+	kReverseCoolTime_ = globalVariables->GetIntValue(groupName, "ReverseCoolTime");
 }

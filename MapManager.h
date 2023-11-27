@@ -98,5 +98,7 @@ private:
 	uint32_t mapWidth_;
 	uint32_t mapHeight_;
 	std::function<void()> cameraShake_;
+	int32_t reverseCoolTime_;
+	int32_t kReverseCoolTime_;
 };
 
