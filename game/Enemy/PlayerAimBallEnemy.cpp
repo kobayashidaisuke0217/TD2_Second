@@ -116,7 +116,7 @@ void PlayerAimBallEnemy::BehaviorLeaveUpdate()
 {
 	
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
-		if (worldTransform_.translation_.y >= 30.0f) {
+		if (worldTransform_.translation_.y >= 50.0f) {
 			behaviorRequest_ = Behavior::kstandBy;
 		}
 	
@@ -131,7 +131,7 @@ void PlayerAimBallEnemy::BehaviorStandbyInitialize()
 void PlayerAimBallEnemy::BehaviorLeaveInitialize()
 {
 	Vector3 target = player_->GetWorldTransform().translation_;
-	target.y = 20.0f;
+	target.y = 60.0f;
 	velocity_ = Subtract( target, worldTransform_.translation_);
 	velocity_ = Normalise(velocity_);
 	float leaveSpeed;
