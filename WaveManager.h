@@ -88,5 +88,6 @@ private:
 	bool isChange10;
 	int32_t changeAnimationLength_ = 30;
 	int32_t changeAnimationCount_;
+	int32_t waveInterval_ = 60;
 };
 
