@@ -125,8 +125,19 @@ void WaveManager::Update() {
 			case kSpear:
 				break;
 			case kRaser:
+				newEnemy = new BeamEnemy();
+				//{ 0.3f, -1.0f, 0.0f }
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->SetStartCount(gameScene_->BulletStartCount);
+				enemyList_->push_back(newEnemy);
 				break;
 			case kAimBulletWidth:
+				newEnemy = new AImBulletWidthEnemy();
+				//{ 0.3f, -1.0f, 0.0f }
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->SetPlayer(player_);
+				newEnemy->SetGameScene(gameScene_);
+				enemyList_->push_back(newEnemy);
 				break;
 			case kAimBulletHeight:
 				newEnemy = new AimBulletEnemy();
@@ -138,6 +149,12 @@ void WaveManager::Update() {
 				enemyList_->push_back(newEnemy);
 				break;
 			case kAimBound:
+				newEnemy = new PlayerAimBallEnemy();
+				//{ 0.3f, -1.0f, 0.0f }
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->SetPlayer(player_);
+				newEnemy->SetGameScene(gameScene_);
+				enemyList_->push_back(newEnemy);
 				break;
 			case kStageUp:
 				newEnemy = new StageChangeEnemy();
