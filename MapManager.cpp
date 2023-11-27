@@ -26,6 +26,7 @@ void MapManager::Initialize() {
 
 	MapRead();
 	modelBlock_.reset(Model::CreateModelFromObj("Resource/block", "block.obj"));
+	modelArie_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
 	cameraShake_ = nullptr;
 }
 
@@ -189,7 +190,7 @@ void MapManager::Draw(const ViewProjection& viewProjection) {
 		modelBlock_->Draw(object->worldTransform, viewProjection);
 	}
 	for (std::shared_ptr<Map> object : wall_) {
-		modelBlock_->Draw(object->worldTransform,viewProjection);
+		modelArie_->Draw(object->worldTransform,viewProjection);
 	}
 }
 

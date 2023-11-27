@@ -87,6 +87,7 @@ private:
 	XINPUT_STATE* preJoyState_;
 
 	std::unique_ptr<Model> modelBlock_;
+	std::unique_ptr<Model> modelArie_;
 
 	std::vector <std::shared_ptr<Map>> mapObject_;
 
