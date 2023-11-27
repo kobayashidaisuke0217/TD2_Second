@@ -612,7 +612,7 @@ void GameScene::Draw2D() {
 	moveSprite_->Draw(move_, uv, {1.0f,1.0f,1.0f,1.0f},moveTextureHandle_);
 	jumpSprite_->Draw(jump_, uv, { 1.0f,1.0f,1.0f,1.0f }, jumpTextureHandle_);
 	reverseSprite_->Draw(reverse_, uv, { 1.0f,1.0f,1.0f,1.0f }, reverseTextureHandle_);
-	if (isTitle_){
+	if (!isStartGame_){
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
 	}
 	else {
@@ -636,7 +636,7 @@ void GameScene::DrawBackGround() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 	Transform pos = { {1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0} };
 	backGroundSprite_->Draw(pos, uv, { 1.0f,1.0f,1.0f,1.0f }, backTextureHandle_);
-	if (!isTitle_) {
+	if (isStartGame_) {
 		WaveManager::GetInstance()->Draw();
 	}
 }
