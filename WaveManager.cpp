@@ -7,7 +7,7 @@
 #include"game/Enemy/StageChangeEnemy.h"
 #include"game/Enemy/AimBulletEnemy.h"
 #include"game/Enemy/PlayerAimBullet.h"
-
+#include "game/Scenes/gameScene.h"
 
 #include <fstream>
 #include <sstream>
@@ -100,7 +100,7 @@ void WaveManager::Update() {
 			{
 			case kBullet:
 				newEnemy = new BulletEnemy();
-				
+				newEnemy->SetStartCount(gameScene_->BulletStartCount);
 				newEnemy->Initialize(transform, enemy.velocity,enemy.speed, 2);
 
 				enemyList_->push_back(newEnemy);
@@ -116,6 +116,11 @@ void WaveManager::Update() {
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
 				enemyList_->push_back(newEnemy); break;
 			case kTire:
+				newEnemy = new TireEnemy();
+				//{ 0.3f, -1.0f, 0.0f }
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				
+				enemyList_->push_back(newEnemy);
 				break;
 			case kSpear:
 				break;

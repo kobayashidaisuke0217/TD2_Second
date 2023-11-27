@@ -26,22 +26,22 @@ void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	type_ = kBullet;
 	isAlive_ = true;
+	currentCount = 0;
+	worldTransform_.UpdateMatrix();
 }
 
 void BulletEnemy::Update()
 {
-	
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
-	worldTransform_.UpdateMatrix();
-	ImGui::Begin("enemy");
-	ImGui::DragFloat3("velocity", &velocity_.x);
-	ImGui::DragFloat3("translate", &worldTransform_.translation_.x);
+	currentCount++;
+	if (currentCount >= startCount_) {
+		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 
-	ImGui::End();
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
-	obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y / 2.0f ,worldTransform_.scale_.z / 2.0f };
-	obb_.center = worldTransform_.translation_;
-	GetOrientations(rotateMatrix, obb_.orientation);
+		Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
+		obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y / 2.0f ,worldTransform_.scale_.z / 2.0f };
+		obb_.center = worldTransform_.translation_;
+		GetOrientations(rotateMatrix, obb_.orientation);
+	}
+		worldTransform_.UpdateMatrix();
 }
 
 void BulletEnemy::Draw(const ViewProjection& viewProjection)

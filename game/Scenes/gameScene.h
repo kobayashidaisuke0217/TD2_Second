@@ -47,6 +47,7 @@ public:
 	void ReStartAnimation();
 	void TransitionAnimation();
 	void DrawBackGround();
+	int BulletStartCount;
 private:
 
 	BlueMoon* blueMoon_;

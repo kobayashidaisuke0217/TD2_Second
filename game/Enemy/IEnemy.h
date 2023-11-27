@@ -39,7 +39,7 @@ public:
 	virtual void isCollision(OBB pertner)=0;
 	virtual bool GetIsAlive() { return isAlive_; }
 	virtual OBB& GetOBB() { return obb_; };
-	
+	virtual void SetStartCount(int count) { startCount_ = count; }
 	virtual void SetType(EnemyType a) { type_ = a; }
 	virtual bool GetIsHit() { return ishit_; }
 	virtual void SetPartener(collisionPartner partner) { collisionpartner_ = partner; }
@@ -68,5 +68,6 @@ protected:
 	WorldTransform worldTransform_;
 	GameScene* gameScene_;
 	Player* player_;
+	int startCount_;
 };
 

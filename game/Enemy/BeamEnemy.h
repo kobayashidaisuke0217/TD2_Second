@@ -19,5 +19,6 @@ public:
 private:
 	Transform target_;
 	int count_;
+	int currentCount;
 };
 

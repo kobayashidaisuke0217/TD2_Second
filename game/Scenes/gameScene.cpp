@@ -133,7 +133,8 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupName3, "lifePosition0", lifeTranslates_[0]);
 	globalVariables->AddItem(groupName3, "lifePosition1", lifeTranslates_[1]);
 	globalVariables->AddItem(groupName3, "lifePosition2", lifeTranslates_[2]);
-
+	const char* groupNameEnemy = "EnemyData";
+	globalVariables->AddItem(groupNameEnemy, "time", BulletStartCount);
 	isInGame_ = false;
 	isTitle_ = true;
 	isStartGame_ = false;
@@ -213,6 +214,7 @@ void GameScene::Update()
 	ImGui::DragFloat3("velocity", &enemyVelocity_.x, 0.05f);
 	ImGui::DragFloat3("translate", &enemyTransform.translate.x, 0.05f);
 	ImGui::DragFloat3("scale", &enemyTransform.scale.x, 0.05f);
+	ImGui::DragInt("timeCount", &BulletStartCount);
 	ImGui::Checkbox("POP", &enemyPop_);
 	ImGui::End();
 	if (Input::GetInstance()->PushKey(DIK_E) || enemyPop_) {
@@ -507,6 +509,9 @@ void GameScene::ApplyGlobalVariables()
 	lifeTranslates_[0] = globalVariables->GetVector3Value(groupName3, "lifePosition0");
 	lifeTranslates_[1] = globalVariables->GetVector3Value(groupName3, "lifePosition1");
 	lifeTranslates_[2] = globalVariables->GetVector3Value(groupName3, "lifePosition2");
+	const char* groupNameEnemy = "EnemyData";
+	
+	BulletStartCount = globalVariables->GetIntValue(groupNameEnemy, "time");
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
@@ -518,7 +523,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kBullet:
 		enemy = new BulletEnemy();
 		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
-
+		enemy->SetStartCount(BulletStartCount);
 		enemys_.push_back(enemy);
 		break;
 	case kReflect:
@@ -538,7 +543,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		enemy = new TireEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
 		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
-
+	
 		enemys_.push_back(enemy);
 		break;
 	case kSpear:
@@ -547,7 +552,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		enemy = new BeamEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
 		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
-
+	    enemy->SetStartCount(BulletStartCount);
 		enemys_.push_back(enemy);
 		break;
 	case kAimBulletWidth:
