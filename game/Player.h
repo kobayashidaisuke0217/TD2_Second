@@ -121,4 +121,6 @@ private:
 
 	bool isDead_;
 	std::list<DethAnimationParamator> worldTransformModels_;
+	int32_t jumpCoolTime_;
+	int32_t kJumpCoolTime_;
 };

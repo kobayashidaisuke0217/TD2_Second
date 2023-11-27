@@ -15,6 +15,8 @@ void Player::Initialize(){
 	globalVariables->CreateGroup(groupName);
 	globalVariables->AddItem(groupName, "gravity", gravity_);
 	globalVariables->AddItem(groupName, "jump", jumpAccerelation_);
+	globalVariables->AddItem(groupName, "jumpCoolTime", kJumpCoolTime_);
+
 	globalVariables->AddItem(groupName, "speed", moveSpeed_);
 	globalVariables->AddItem(groupName, "jumpDampingX", jumpDampingX_);
 	globalVariables->AddItem(groupName, "jumpReceptionLength",jumpReceptionLength_);
@@ -179,12 +181,13 @@ void Player::Update() {
 		ApplyGlobalVariables();
 	if (!isDead_) {
 		prePosition_ = worldTransform_.translation_;
-		if (GameController::GetInstance()->Jump() && jumpAble_) {
+		if (GameController::GetInstance()->Jump() && jumpAble_ && jumpCoolTime_ <= 0) {
 			velocity_.y = 0.0f;
 			velocity_.y = jumpAccerelation_.y;
 			jumpAble_ = false;
 			isJumpReception_ = true;
 			jumpReceptionRest_ = jumpReceptionLength_;
+			jumpCoolTime_ = kJumpCoolTime_;
 		}
 		if ((!GameController::GetInstance()->ContinueJump()) && isJumpReception_) {
 			velocity_.y *= 0.6f;
@@ -300,6 +303,7 @@ void Player::Update() {
 			worldTransform.worldTransform->UpdateMatrix();
 		}
 	}
+	jumpCoolTime_--;
 }
 
 void Player::OnCollision(OBB& partner) {
@@ -422,6 +426,7 @@ void Player::ApplyGlobalVariables()
 	moveSpeed_ = globalVariables->GetFloatValue(groupName, "speed");
 	jumpDampingX_ = globalVariables->GetFloatValue(groupName, "jumpDampingX");
 	jumpReceptionLength_ = globalVariables->GetIntValue(groupName, "jumpReceptionLength");
+	kJumpCoolTime_ = globalVariables->GetIntValue(groupName, "jumpCoolTime");
 
 	const char* groupName2 = "PlayerModel";
 	antenaOffset_ = globalVariables->GetVector3Value(groupName2, "antena");
