@@ -129,11 +129,22 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupName3, "jumpPosition", jump_.translate);
 	globalVariables->AddItem(groupName3, "reverseScale", reverse_.scale);
 	globalVariables->AddItem(groupName3, "reversePosition", reverse_.translate);
-
+	globalVariables->AddItem(groupName3, "lifeScale", lifeScale_);
+	globalVariables->AddItem(groupName3, "lifePosition0", lifeTranslates_[0]);
+	globalVariables->AddItem(groupName3, "lifePosition1", lifeTranslates_[1]);
+	globalVariables->AddItem(groupName3, "lifePosition2", lifeTranslates_[2]);
 
 	isInGame_ = false;
 	isTitle_ = true;
 	isStartGame_ = false;
+
+	player_->SetLife(3);
+	for (int index = 0; index < 3;index++) {
+		std::unique_ptr<Sprite> newSprite = std::make_unique<Sprite>();
+		newSprite->Initialize({-250.0f,-172.0f,0,0} ,{ 250.0f,172.0f,0,0 });
+		lifeSprites_.push_back(move(newSprite));
+	}
+	lifeTextureHandle_ = textureManager_->Load("Resource/UI/lifeUI.png");
 }
 
 void GameScene::Update()
@@ -492,6 +503,10 @@ void GameScene::ApplyGlobalVariables()
 	reverse_.scale = globalVariables->GetVector3Value(groupName3, "reverseScale");
 	reverse_.translate = globalVariables->GetVector3Value(groupName3, "reversePosition");
 
+	lifeScale_ = globalVariables->GetVector3Value(groupName3, "lifeScale");
+	lifeTranslates_[0] = globalVariables->GetVector3Value(groupName3, "lifePosition0");
+	lifeTranslates_[1] = globalVariables->GetVector3Value(groupName3, "lifePosition1");
+	lifeTranslates_[2] = globalVariables->GetVector3Value(groupName3, "lifePosition2");
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
@@ -594,6 +609,16 @@ void GameScene::Draw2D() {
 	if (isTitle_){
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
 	}
+	else {
+		Transform lifeTransform;
+		lifeTransform.scale = lifeScale_;
+		lifeTransform.rotate = {0,0,0};
+		int life = std::clamp(player_->GetLife(),0,3);
+		for (int index = 0; index < life; index++) {
+			lifeTransform.translate = lifeTranslates_[index];
+			lifeSprites_[size_t(index)]->Draw(lifeTransform, uv, {1.0f,1.0f,1.0f,1.0f}, lifeTextureHandle_);
+		}
+	}
 	if (isRunAnimation_) {
 		Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{transitionSpritePosition_.x,transitionSpritePosition_.y,transitionSpritePosition_.z} };
 		transitionSprite_->Draw(pos, uv,{ 0.0f,0.0f,0.0f,1.0f } ,blackTextureHandle_);
@@ -642,6 +667,10 @@ void GameScene::ReStart()
 	}
 	enemys_.clear();
 	player_->DethAnimation();
+	if (isInGame_) {
+		int life = player_->GetLife();
+		player_->SetLife(life - 1);
+	}
 	isInGame_ = false;
 	isTitle_ = false;
 	frameCount_ = 0;

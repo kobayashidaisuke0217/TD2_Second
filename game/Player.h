@@ -46,6 +46,8 @@ public:
 	void Reset();
 	//死亡時のアニメーション
 	void DethAnimation();
+	void SetLife(int32_t life) { life_ = life; };
+	int32_t GetLife() { return life_; };
 private:
 	Input* input_ = nullptr;
 	XINPUT_STATE* joyState_;
@@ -123,4 +125,6 @@ private:
 	std::list<DethAnimationParamator> worldTransformModels_;
 	int32_t jumpCoolTime_;
 	int32_t kJumpCoolTime_;
+
+	int32_t life_;
 };
