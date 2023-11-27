@@ -85,6 +85,47 @@ void WaveManager::LoadFile(const char filename[]) {
 
 }
 
+void WaveManager::Initialize() {
+	lowNum0.reset(new Sprite);
+	lowNum0->Initialize({-500.0f,-500.0f,0,0}, {500.0f,500.0f,0,0});
+	lowNum1.reset(new Sprite);
+	lowNum1->Initialize({ -500.0f,-500.0f,0,0 }, { 500.0f,500.0f,0,0 });
+	highNum0.reset(new Sprite);
+	highNum0->Initialize({ -500.0f,-500.0f,0,0 }, { 500.0f,500.0f,0,0 });
+	highNum1.reset(new Sprite);
+	highNum1->Initialize({ -500.0f,-500.0f,0,0 }, { 500.0f,500.0f,0,0 });
+	numberTextureHandle_[0] = Texturemanager::GetInstance()->Load("Resource/nums/0.png");
+	numberTextureHandle_[1] = Texturemanager::GetInstance()->Load("Resource/nums/1.png");
+	numberTextureHandle_[2] = Texturemanager::GetInstance()->Load("Resource/nums/2.png");
+	numberTextureHandle_[3] = Texturemanager::GetInstance()->Load("Resource/nums/3.png");
+	numberTextureHandle_[4] = Texturemanager::GetInstance()->Load("Resource/nums/4.png");
+	numberTextureHandle_[5] = Texturemanager::GetInstance()->Load("Resource/nums/5.png");
+	numberTextureHandle_[6] = Texturemanager::GetInstance()->Load("Resource/nums/6.png");
+	numberTextureHandle_[7] = Texturemanager::GetInstance()->Load("Resource/nums/7.png");
+	numberTextureHandle_[8] = Texturemanager::GetInstance()->Load("Resource/nums/8.png");
+	numberTextureHandle_[9] = Texturemanager::GetInstance()->Load("Resource/nums/9.png");
+
+	drawerWaveNum_ = 0;
+	centerPos0_ = right_;
+	topPos0_ = right_;
+	topPos0_.y -= 500;
+	downPos0_ = right_;
+	downPos0_.y += 500;
+	centerPos1_ = left_;
+	topPos1_ = left_;
+	topPos1_.y -= 500;
+	downPos1_ = left_;
+	downPos1_.y += 500;
+	s0 = centerPos0_;
+	s1 = topPos0_;
+	s2 = centerPos1_;
+	s3 = topPos1_;
+	num0 = 1;
+	num1 = 2;
+	num2 = 0;
+	num3 = 0;
+}
+
 void WaveManager::Update() {
 	for (EnemyData& enemy : waves_[size_t(waveNum_)].enemyDatas) {
 		if (currentFrame_ == enemy.frame) {
@@ -191,4 +232,56 @@ void WaveManager::Update() {
 		}
 		currentFrame_ = 0;
 	}
+	if (waveNum_ > drawerWaveNum_ && !isChangeNum_) {
+		num0 = drawerWaveNum_ % 10 + 1;
+		num1 = num0 + 1;
+		if (num1 >= 10) {
+			num1 = 0;
+			num3 += 1;
+			isChange10 = true;
+		}
+		isChangeNum_ = true;
+		changeAnimationCount_ = 0;
+		drawerWaveNum_++;
+	}
+	if (isChangeNum_) {
+		ChangeNumAnimation();
+	}
+}
+
+void WaveManager::Draw() {
+	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+	Transform transform = { { 0.1f,0.1f,0.1f },{0,0,0},{0,0,0}};
+	transform.translate = s0;
+	lowNum0->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num0]);
+	transform.translate = s1;
+	highNum0->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num1]);
+	transform.translate = s2;
+	lowNum1->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num2]);
+	transform.translate = s3;
+	highNum1->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num3]);
+
+}
+
+void WaveManager::ChangeNumAnimation() {
+	float t = float(changeAnimationCount_) / float(changeAnimationLength_);
+	s0 = Lerp(t,centerPos0_,downPos0_);
+	s1 = Lerp(t, topPos0_, centerPos0_);
+	if (isChange10) {
+		s2 = Lerp(t, centerPos1_, downPos1_);
+		s3 = Lerp(t, topPos1_, centerPos1_);
+	}
+	if (changeAnimationCount_ == changeAnimationLength_) {
+		s0 = centerPos0_;
+		s1 = topPos0_;
+		num0 = num1;
+		if (isChange10) {
+			s2 = centerPos1_;
+			s3 = topPos1_;
+			num2 = num3;
+		}
+		isChangeNum_ = false;
+		isChange10 = false;
+	}
+	changeAnimationCount_++;
 }

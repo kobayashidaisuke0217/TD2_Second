@@ -74,6 +74,7 @@ void GameScene::Initialize()
 	enemys_.clear();
 	bullets_.clear();
 	waveNum_ = 0;
+	WaveManager::GetInstance()->Initialize();
 	WaveManager::GetInstance()->SetEnemyList(&enemys_);
 	WaveManager::GetInstance()->SetWave(waveNum_);
 	WaveManager::GetInstance()->SetGameScene(this);
@@ -635,6 +636,9 @@ void GameScene::DrawBackGround() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 	Transform pos = { {1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0} };
 	backGroundSprite_->Draw(pos, uv, { 1.0f,1.0f,1.0f,1.0f }, backTextureHandle_);
+	if (!isTitle_) {
+		WaveManager::GetInstance()->Draw();
+	}
 }
 
 void GameScene::Finalize()
