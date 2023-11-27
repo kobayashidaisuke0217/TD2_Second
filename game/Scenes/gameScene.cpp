@@ -394,7 +394,7 @@ void GameScene::InGame() {
 					}
 				}
 				if (enemy->GetType() == kStageDown) {
-					if (object->worldTransform.translation_.y == 4.0f) {
+					if (object->worldTransform.translation_.y != 0.0f) {
 						object->OnCollision();
 						object->Touch();
 					}
