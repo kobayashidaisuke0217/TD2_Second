@@ -20,7 +20,7 @@ void WaveManager::LoadAllFiles() {
 	waves_.clear();
 	waves_.shrink_to_fit();
 	LoadFile("Resource/Wave/waveData.wave");
-	LoadFile("Resource/Wave/waveData.wave");
+	//LoadFile("Resource/Wave/waveData.wave");
 }
 
 void WaveManager::LoadFile(const char filename[]) {
