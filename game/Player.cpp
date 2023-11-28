@@ -55,9 +55,9 @@ void Player::Initialize(){
 	obb_.center = worldTransformOBB_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
 
-	obbFloatTrigger_.size = { worldTransformOBB_.scale_.x ,worldTransform_.scale_.y*2,worldTransformOBB_.scale_.z };
+	obbFloatTrigger_.size = { worldTransformOBB_.scale_.x ,worldTransform_.scale_.y*15,worldTransformOBB_.scale_.z };
 	obbFloatTrigger_.center = worldTransform_.translation_;
-	obbFloatTrigger_.center.y -= 2.5;
+	obbFloatTrigger_.center.y -= 15.5;
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 	jumpAble_ = true;
 	isJumpReception_ = false;
@@ -133,9 +133,9 @@ void Player::Reset() {
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
 
-	obbFloatTrigger_.size = { worldTransformOBB_.scale_.x ,worldTransform_.scale_.y * 2,worldTransformOBB_.scale_.z };
+	obbFloatTrigger_.size = { worldTransformOBB_.scale_.x ,worldTransform_.scale_.y * 15,worldTransformOBB_.scale_.z };
 	obbFloatTrigger_.center = worldTransform_.translation_;
-	obbFloatTrigger_.center.y -= 2.5;
+	obbFloatTrigger_.center.y -= 15.5;
 	GetOrientations(rotateMatrix, obbFloatTrigger_.orientation);
 	jumpAble_ = true;
 	isJumpReception_ = false;
@@ -264,7 +264,7 @@ void Player::Update() {
 		worldTransformOBB_.UpdateMatrix();
 		obb_.center = worldTransformOBB_.GetWorldPos();
 		obbFloatTrigger_.center = worldTransformOBB_.GetWorldPos();
-		obbFloatTrigger_.center.y -= 2.5;
+		obbFloatTrigger_.center.y -= 15.5;
 		isCollision_ = true;
 		isCollisionFloor_ = true;
 		isCollisionWall_ = true;

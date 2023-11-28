@@ -198,7 +198,7 @@ void MapManager::Map::Update() {
 	isFrameCollision_ = false;
 	if (moveFlag_ && !isTouch_) {
 		//移動開始
-		if (isCollision_) {
+		if (!isCollision_) {
 		
 			Reverse();
 			delay_ = kBlocckFloatAnimationDelay;
