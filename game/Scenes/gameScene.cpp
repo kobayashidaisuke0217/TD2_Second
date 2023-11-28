@@ -391,12 +391,7 @@ void GameScene::InGame() {
 		}
 	}
 	for (IEnemy* enemy : enemys_) {
-		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
-			//Initialize();
-			//ReStart();
-			followCamera_->Shake();
-			return;
-		}
+		
 		
 		for (std::shared_ptr<MapManager::Map> object : floors) {
 			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
@@ -427,6 +422,12 @@ void GameScene::InGame() {
 
 				}
 			}
+		}
+		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
+			//Initialize();
+			ReStart();
+			followCamera_->Shake();
+			return;
 		}
 
 	}

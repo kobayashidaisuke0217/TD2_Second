@@ -28,7 +28,7 @@ void Sphere::Draw(const Vector4& material, const WorldTransform& transform, uint
 
 
 
-	*materialData_ = { material,true };
+	*materialData_ = {material,materialData_->enableLighting };
 	materialData_->uvTransform = uvtransformMtrix;
 
 
