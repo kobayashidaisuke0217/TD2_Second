@@ -98,6 +98,7 @@ private:
 	uint32_t blackTextureHandle_;
 	bool isTitle_;
 	bool isStartGame_;
+	bool isEndGame_;
 	std::unique_ptr<Plane> titleLine_;
 	std::unique_ptr<Plane> titleChar_;
 	WorldTransform worldTransformLine_;

@@ -139,7 +139,7 @@ void GameScene::Initialize()
 	isInGame_ = false;
 	isTitle_ = true;
 	isStartGame_ = false;
-
+	isEndGame_ = false;
 	player_->SetLife(3);
 	for (int index = 0; index < 3;index++) {
 		std::unique_ptr<Sprite> newSprite = std::make_unique<Sprite>();
@@ -230,7 +230,9 @@ void GameScene::Update()
 		InGame();
 	}
 	else {
-		player_->Update();
+		if (!isEndGame_) {
+			player_->Update();
+		}
 		ReStartAnimation();
 	}
 	if (isRunAnimation_) {
@@ -438,6 +440,8 @@ void GameScene::InGame() {
 			isTitle_ = false;
 			frameCount_ = 0;
 			isRunAnimation_ = false;
+			isStartGame_ = false;
+			isEndGame_ = true;
 		}
 	}
 	if (isRunAnimation_) {
@@ -477,7 +481,7 @@ void GameScene::Draw3D()
 
 		bullet->Draw(viewProjection_);
 	}
-	if (!isStartGame_) {
+	if (!isStartGame_ && !isEndGame_) {
 		titleLine_->Draw(worldTransformLine_, viewProjection_, { 1.0f,1.0f ,1.0f ,1.0f }, blackTextureHandle_);
 		titleChar_->Draw(worldTransformStart_, viewProjection_,{1.0f,1.0f,1.0f,1.0f},startTextureHandle_);
 	}
@@ -622,7 +626,7 @@ void GameScene::Draw2D() {
 	moveSprite_->Draw(move_, uv, {1.0f,1.0f,1.0f,1.0f},moveTextureHandle_);
 	jumpSprite_->Draw(jump_, uv, { 1.0f,1.0f,1.0f,1.0f }, jumpTextureHandle_);
 	reverseSprite_->Draw(reverse_, uv, { 1.0f,1.0f,1.0f,1.0f }, reverseTextureHandle_);
-	if (!isStartGame_){
+	if (!isStartGame_ && !isEndGame_){
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
 	}
 	else {
@@ -646,7 +650,7 @@ void GameScene::DrawBackGround() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 	Transform pos = { {1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0} };
 	backGroundSprite_->Draw(pos, uv, { 1.0f,1.0f,1.0f,1.0f }, backTextureHandle_);
-	if (isStartGame_) {
+	if (isStartGame_ || isEndGame_) {
 		WaveManager::GetInstance()->Draw();
 	}
 }
