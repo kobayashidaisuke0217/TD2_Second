@@ -21,7 +21,7 @@ void WaveManager::LoadAllFiles() {
 	waves_.clear();
 	waves_.shrink_to_fit();
 	LoadFile("Resource/Wave/waveData.wave");
-	//LoadFile("Resource/Wave/waveData.wave");
+	//LoadFile("Resource/Wave/protoWave.wave");
 }
 
 void WaveManager::LoadFile(const char filename[]) {
@@ -154,17 +154,20 @@ void WaveManager::Update() {
 				break;
 			case kReflect://1
 				newEnemy = new ReflectEnemy();
+				transform.scale = { 2, 2, 2 };
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
 			case kBound://2
 				newEnemy = new BoundEnemy();
-				//{ 0.3f, -1.0f, 0.0f }
+				transform.scale = { 3, 3, 3 };
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
-				enemyList_->push_back(newEnemy); break;
+				enemyList_->push_back(newEnemy); 
+				break;
 			case kTire://3
 				newEnemy = new TireEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
+				transform.scale = { 1.8f, 1.8f, 1.8f };
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->wheelEnemyModel_.get());
 
 				enemyList_->push_back(newEnemy);
@@ -181,6 +184,7 @@ void WaveManager::Update() {
 			case kAimBulletWidth://6
 				newEnemy = new AImBulletWidthEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
+				transform.scale = { 2, 2, 2 };
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
@@ -190,6 +194,7 @@ void WaveManager::Update() {
 				newEnemy = new AimBulletEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+				transform.scale = { 2, 2, 2 };
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
@@ -198,6 +203,7 @@ void WaveManager::Update() {
 			case kAimBound://8
 				newEnemy = new PlayerAimBallEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
+				transform.scale = { 3, 3, 3 };
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);

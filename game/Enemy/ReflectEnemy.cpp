@@ -32,7 +32,7 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	reflectCount_ = 0;
 	isDown_ = false;
 	type_ = kReflect;
-	model_->setIsLighting(false);
+	model_=model;
 	model_->setIsLighting(false);
 }
 
