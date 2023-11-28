@@ -126,6 +126,9 @@ void WaveManager::Initialize() {
 	num1 = 2;
 	num2 = 0;
 	num3 = 0;
+
+	isChangeNum_ = false;
+	isChange10 = false;
 }
 
 void WaveManager::Update() {
