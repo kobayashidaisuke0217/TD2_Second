@@ -166,6 +166,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="game\Player.cpp" />
     <ClCompile Include="game\Scenes\gameScene.cpp" />
     <ClCompile Include="game\Scenes\Iscene.cpp" />
+    <ClCompile Include="game\Scenes\ResultScene.cpp" />
     <ClCompile Include="game\Scenes\TitleScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapManager.cpp" />
@@ -222,6 +223,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="game\Player.h" />
     <ClInclude Include="game\Scenes\gameScene.h" />
     <ClInclude Include="game\Scenes\Iscene.h" />
+    <ClInclude Include="game\Scenes\ResultScene.h" />
     <ClInclude Include="game\Scenes\TitleScene.h" />
     <ClInclude Include="MapManager.h" />
     <ClInclude Include="RandomEngine.h" />
