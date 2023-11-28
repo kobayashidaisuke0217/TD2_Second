@@ -1,0 +1,114 @@
+{
+    "ResultSetting": {
+        "Best10Scale": [
+            5.0,
+            5.0,
+            1.0
+        ],
+        "Best10Translate": [
+            4.5,
+            0.0,
+            0.0
+        ],
+        "Best1Scale": [
+            5.0,
+            5.0,
+            1.0
+        ],
+        "Best1Translate": [
+            8.699999809265137,
+            0.0,
+            0.0
+        ],
+        "BestCharScale": [
+            10.0,
+            10.0,
+            1.0
+        ],
+        "BestCharTranslate": [
+            -12.600000381469727,
+            0.0,
+            0.0
+        ],
+        "BestRotate": [
+            0.0,
+            0.800000011920929,
+            0.0
+        ],
+        "BestTranslate": [
+            0.0,
+            11.600000381469727,
+            0.0
+        ],
+        "BestWaveScale": [
+            10.0,
+            10.0,
+            1.0
+        ],
+        "BestWaveTranslate": [
+            -2.4000000953674316,
+            0.0,
+            0.0
+        ],
+        "cameraRotate": [
+            0.0,
+            0.5,
+            0.0
+        ],
+        "cameraTranslate": [
+            -32.79999923706055,
+            7.5,
+            -34.20000076293945
+        ],
+        "reach10Scale": [
+            5.0,
+            5.0,
+            1.0
+        ],
+        "reach10Translate": [
+            4.5,
+            0.0,
+            0.0
+        ],
+        "reach1Scale": [
+            5.0,
+            5.0,
+            1.0
+        ],
+        "reach1Translate": [
+            8.699999809265137,
+            0.0,
+            0.0
+        ],
+        "reachCharScale": [
+            10.0,
+            10.0,
+            1.0
+        ],
+        "reachCharTranslate": [
+            -11.300000190734863,
+            0.0,
+            0.0
+        ],
+        "reachRotate": [
+            0.0,
+            0.800000011920929,
+            0.0
+        ],
+        "reachTranslate": [
+            0.0,
+            18.899999618530273,
+            0.0
+        ],
+        "reachWaveScale": [
+            10.0,
+            10.0,
+            1.0
+        ],
+        "reachWaveTranslate": [
+            -2.4000000953674316,
+            0.0,
+            0.0
+        ]
+    }
+}

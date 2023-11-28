@@ -663,6 +663,9 @@ void GameScene::ReStartWave()
 		delete enemy;
 	}
 	enemys_.clear();
+	if (player_->GetLife() <= 0) {
+		sceneNum = 2;
+	}
 	size_t num = WaveManager::GetInstance()->GetWave();
 	MapManager::GetInstance()->WaveRead(uint32_t(num));
 	WaveManager::GetInstance()->SetWave(uint32_t(num));

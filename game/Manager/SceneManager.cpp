@@ -77,7 +77,7 @@ void SceneManager::Initialize()
 	sceneArr_[GAME_SCENE] = std::make_unique <GameScene>();
 	sceneArr_[RESULT_SCENE] = std::make_unique <ResultScene>();
 
-	sceneNum_ = RESULT_SCENE;
+	sceneNum_ = GAME_SCENE;
 	sceneArr_[sceneNum_]->Initialize();
 
 	audio_ = Audio::GetInstance();

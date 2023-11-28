@@ -66,8 +66,31 @@ private:
 	Vector4 transitionSpritePosition_;
 	uint32_t blackTextureHandle_;
 
-
 	uint32_t backTextureHandle_;
 	std::unique_ptr<Sprite> backGroundSprite_;
 
+	std::unique_ptr<Plane> plane_;
+
+	//到達wave表示
+	WorldTransform worldTransformReach_;
+	WorldTransform worldTransformReachChar_;
+	WorldTransform worldTransformReachWave_;
+	WorldTransform worldTransformReach10_;
+	WorldTransform worldTransformReach1_;
+
+	//最高到達wave表示
+	WorldTransform worldTransformBest_;
+	WorldTransform worldTransformBestChar_;
+	WorldTransform worldTransformBestWave_;
+	WorldTransform worldTransformBest10_;
+	WorldTransform worldTransformBest1_;
+
+	uint32_t numberTextureHandle_[10];
+	uint32_t reachTextureHandle_;
+	uint32_t bestTextureHandle_;
+	uint32_t waveTextureHandle_;
+
+	int drawerWaveNum_;
+	size_t bestWaveNum_;
+	uint32_t numChangeLength_ = 5;
 };

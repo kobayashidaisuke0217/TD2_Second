@@ -32,6 +32,9 @@ public:
 	void LoadAllFiles();
 	void SetWave(uint32_t waveNum) { waveNum_ = waveNum; currentFrame_ = 0; };
 	size_t GetWave() { return waveNum_; };
+	void SetBestWave(uint32_t waveNum) { bestWaveNum_ = waveNum; };
+	size_t GetBestWave() { return bestWaveNum_; };
+
 	void Initialize();
 	void Update();
 	void Draw();
@@ -84,6 +87,7 @@ private:
 	//Transform RightTransform_;
 	//表示用ウェーブ数
 	size_t drawerWaveNum_;
+	size_t bestWaveNum_=0;
 	bool isChangeNum_;
 	bool isChange10;
 	int32_t changeAnimationLength_ = 30;
