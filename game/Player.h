@@ -90,6 +90,7 @@ private:
 	std::unique_ptr<Model> head_;
 	std::unique_ptr<Model> body_;
 	std::unique_ptr<Model> back_;
+	std::unique_ptr<Model> back2_;
 	std::unique_ptr<Model> leg_;
 	
 	WorldTransform worldTransformModel_;

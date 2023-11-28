@@ -67,6 +67,7 @@ void Player::Initialize(){
 	code_.reset(Model::CreateModelFromObj("Resource/player/antena", "PlayerAntena.obj"));
 	body_.reset(Model::CreateModelFromObj("Resource/player/body", "PlayerBody.obj"));
 	back_.reset(Model::CreateModelFromObj("Resource/player/back", "PlayerBack.obj"));
+	back2_.reset(Model::CreateModelFromObj("Resource/player/back2", "PlayerBack.obj"));
 	head_.reset(Model::CreateModelFromObj("Resource/player/head", "PlayerHead.obj"));
 	leg_.reset(Model::CreateModelFromObj("Resource/player/leg", "PlayerLeg.obj"));
 
@@ -408,7 +409,12 @@ void Player::OnCollisionEnemy() {
 void Player::Draw(const ViewProjection& viewProjection) {
 	//model_->Draw(worldTransformOBB_,viewProjection);
 	body_->Draw(worldTransformbody_,viewProjection);
-	back_->Draw(worldTransformback_, viewProjection);
+	if (jumpAble_ && jumpCoolTime_ <= 0) {
+		back2_->Draw(worldTransformback_, viewProjection);
+	}
+	else {
+		back_->Draw(worldTransformback_, viewProjection);
+	}
 	head_->Draw(worldTransformHead_, viewProjection);
 	leg_->Draw(worldTransformLeftLeg_, viewProjection);
 	leg_->Draw(worldTransformRightLeg_, viewProjection);
