@@ -11,6 +11,7 @@ void PlayerAimBullet::Initialize(Vector3 velocity, Transform transform, uint32_t
 	texture_ = tex;
 	worldTransform_.Initialize();
 	isAlive_ = true;
+	
 }
 
 void PlayerAimBullet::Update()
@@ -32,6 +33,8 @@ void PlayerAimBullet::Update()
 void PlayerAimBullet::Draw(const ViewProjection& view)
 {
 	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texture_, view);
+	
+
 }
 
 void PlayerAimBullet::isCollision()

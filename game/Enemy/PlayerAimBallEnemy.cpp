@@ -9,10 +9,10 @@ PlayerAimBallEnemy::~PlayerAimBallEnemy()
 {
 }
 
-void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.scale_ = transform.scale;
@@ -28,6 +28,7 @@ void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& v
 	behavior_ = Behavior::kstandBy;
 	isAlive_ = true;
 	ishit_ = false;
+	model_ = model;
 }
 
 void PlayerAimBallEnemy::Update()
@@ -74,8 +75,9 @@ void PlayerAimBallEnemy::Update()
 
 void PlayerAimBallEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->setIsLighting(false);
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, 3, viewProjection);
+	/*sphere_->setIsLighting(false);
+	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, 3, viewProjection);*/
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void PlayerAimBallEnemy::isCollision(OBB pertner)

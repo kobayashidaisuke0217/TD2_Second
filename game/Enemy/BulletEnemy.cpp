@@ -8,10 +8,10 @@ BulletEnemy::~BulletEnemy()
 {
 }
 
-void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
     worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
@@ -31,6 +31,7 @@ void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity
 	isAlive_ = true;
 	currentCount = 0;
 	worldTransform_.UpdateMatrix();
+	model_ = model;
 }
 
 void BulletEnemy::Update()
@@ -49,7 +50,8 @@ void BulletEnemy::Update()
 
 void BulletEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void BulletEnemy::isCollision(OBB pertner)

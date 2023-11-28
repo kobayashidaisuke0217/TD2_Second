@@ -48,6 +48,13 @@ public:
 	void TransitionAnimation();
 	void DrawBackGround();
 	int BulletStartCount;
+
+	//Enemyのモデル
+	std::unique_ptr<Model>beamEnemyModel_;
+	std::unique_ptr<Model>bulletEnemyModel_;
+	std::unique_ptr<Model>wheelEnemyModel_;
+	std::unique_ptr<Model>ballEnemyModel_;
+	std::unique_ptr<Model>reverceEnemyModel_;
 private:
 
 	BlueMoon* blueMoon_;
@@ -133,7 +140,7 @@ private:
 	Vector3 lifeScale_;
 	Vector3 lifeTranslates_[3];
 	uint32_t lifeTextureHandle_;
-
+	
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

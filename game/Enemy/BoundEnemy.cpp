@@ -8,11 +8,11 @@ BoundEnemy::~BoundEnemy()
 {
 }
 
-void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
 	texManager_ = Texturemanager::GetInstance();
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.scale_ = transform.scale;
@@ -33,6 +33,7 @@ void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity,
 	reflectCount_ = 0;
 	isDown_ = false;
 	type_ = kBound;
+	model_ = model;
 }
 
 void BoundEnemy::Update()
@@ -81,7 +82,8 @@ void BoundEnemy::Update()
 
 void BoundEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void BoundEnemy::isCollision(OBB pertner)

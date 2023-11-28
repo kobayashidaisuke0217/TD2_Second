@@ -4,6 +4,7 @@
 #include "Sphere.h"
 #include <memory>
 #include "textureManager.h"
+#include "model.h"
 enum ReflectionCount {
 	ReflectInfinit,
 	reflect4,
@@ -33,7 +34,7 @@ class IEnemy
 public:
 	IEnemy();
 	~IEnemy();
-	virtual void Initialize(const Transform& transform, const Vector3& velocity,float moveSpeed,uint32_t texture)=0;
+	virtual void Initialize(const Transform& transform, const Vector3& velocity,float moveSpeed,uint32_t texture, Model* model)=0;
 	virtual void Update()=0;
 	virtual void Draw(const ViewProjection& viewProjection)=0;
 	virtual void isCollision(OBB pertner)=0;
@@ -50,7 +51,7 @@ public:
 	void Deth() { isAlive_ = false; };
 protected:
 	Texturemanager* texManager_;
-	std::unique_ptr<Sphere> sphere_;
+	//std::unique_ptr<Sphere> sphere_;
 	ReflectionCount reflectionCount_;
 	WorldTransform targetWordTransform_;
 	Vector3 velocity_;
@@ -69,5 +70,6 @@ protected:
 	GameScene* gameScene_;
 	Player* player_;
 	int startCount_;
+	 Model* model_;
 };
 

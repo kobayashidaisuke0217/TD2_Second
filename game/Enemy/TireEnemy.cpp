@@ -8,10 +8,10 @@ TireEnemy::~TireEnemy()
 {
 }
 
-void TireEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void TireEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
@@ -25,6 +25,7 @@ void TireEnemy::Initialize(const Transform& transform, const Vector3& velocity, 
 	type_ = kBullet;
 	isAlive_ = true;
 	ishit_ = false;
+	model_ = model;
 }
 
 void TireEnemy::Update()
@@ -49,7 +50,8 @@ void TireEnemy::Update()
 
 void TireEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void TireEnemy::isCollision(OBB pertner)

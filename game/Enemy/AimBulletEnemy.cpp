@@ -9,9 +9,9 @@ AimBulletEnemy::~AimBulletEnemy()
 {
 }
 
-void AimBulletEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture){
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+void AimBulletEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture,  Model* model){
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
@@ -28,6 +28,7 @@ void AimBulletEnemy::Initialize(const Transform& transform, const Vector3& veloc
 	isAlive_ = true;
 	atackCount_ = 5;
 	coolTime_ = 60;
+	model_ = model;
 }
 
 void AimBulletEnemy::Update()
@@ -50,7 +51,8 @@ void AimBulletEnemy::Update()
 
 void AimBulletEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 
