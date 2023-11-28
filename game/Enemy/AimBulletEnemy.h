@@ -21,7 +21,7 @@ public:
 	virtual bool GetIsHit()override { return ishit_; }
 	virtual void SetPartener(collisionPartner partner)override { collisionpartner_ = partner; }
 private:
-	static uint32_t textureIndex_;
+ std::unique_ptr<Model> mainmodel;
 	int coolTime_;
 	int currentCollTime_;
 	int atackCount_;

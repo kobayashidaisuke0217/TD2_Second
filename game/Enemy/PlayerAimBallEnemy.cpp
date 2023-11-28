@@ -29,6 +29,7 @@ void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& v
 	isAlive_ = true;
 	ishit_ = false;
 	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void PlayerAimBallEnemy::Update()

@@ -12,7 +12,7 @@ AimBulletEnemy::~AimBulletEnemy()
 void AimBulletEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture,  Model* model){
 	/*sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();*/
-
+	mainmodel.reset(Model::CreateModelFromObj("Resource/Enemy", "bulletMother.obj"));
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.scale_ = transform.scale;
@@ -29,6 +29,7 @@ void AimBulletEnemy::Initialize(const Transform& transform, const Vector3& veloc
 	atackCount_ = 5;
 	coolTime_ = 60;
 	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void AimBulletEnemy::Update()
@@ -52,7 +53,7 @@ void AimBulletEnemy::Update()
 void AimBulletEnemy::Draw(const ViewProjection& viewProjection)
 {
 	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
-	model_->Draw(worldTransform_, viewProjection);
+	mainmodel->Draw(worldTransform_, viewProjection);
 }
 
 
@@ -62,11 +63,14 @@ void AimBulletEnemy::isCollision(OBB pertner)
 
 void AimBulletEnemy::TextureInitialize()
 {
+	
+		
+	
 }
 
 void AimBulletEnemy::Atack()
 {
 	PlayerAimBullet* newBullet = new PlayerAimBullet();
-	newBullet->Initialize({ 0.0f,-1.0f,0.0f }, { worldTransform_.scale_,worldTransform_.rotation_,worldTransform_.translation_ }, texindex_);
+	newBullet->Initialize({ 0.0f,-1.0f,0.0f }, { {1.0f,1.0f,1.0f},worldTransform_.rotation_,worldTransform_.translation_}, texindex_, model_);
 	gameScene_->AddEnemyBullet(newBullet);
 }

@@ -25,6 +25,7 @@ void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& vel
 	isAlive_ = true;
 	count = 0;
 	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void StageChangeEnemy::Update()

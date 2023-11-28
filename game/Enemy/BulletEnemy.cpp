@@ -13,7 +13,7 @@ void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity
 	/*sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();*/
 
-    worldTransform_.Initialize();
+	worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.scale_ = transform.scale;
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
@@ -32,7 +32,21 @@ void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity
 	currentCount = 0;
 	worldTransform_.UpdateMatrix();
 	model_ = model;
+	model_->setIsLighting(false);
+	if (velocity_.x > 0.0f) {
+		worldTransform_.rotation_.y = 0.0f;
+	}
+	if (velocity_.x < 0.0f) {
+		worldTransform_.rotation_.y = 3.2f;
+	}
+	if (velocity_.y > 0.0f) {
+		worldTransform_.rotation_.z = 1.6f;
+	}
+	if (velocity_.y < 0.0f) {
+		worldTransform_.rotation_.z = 4.75f;
+	}
 }
+
 
 void BulletEnemy::Update()
 {
@@ -45,6 +59,7 @@ void BulletEnemy::Update()
 		obb_.center = worldTransform_.translation_;
 		GetOrientations(rotateMatrix, obb_.orientation);
 	}
+	
 		worldTransform_.UpdateMatrix();
 }
 

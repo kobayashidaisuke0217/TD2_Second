@@ -26,6 +26,7 @@ void TireEnemy::Initialize(const Transform& transform, const Vector3& velocity, 
 	isAlive_ = true;
 	ishit_ = false;
 	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void TireEnemy::Update()

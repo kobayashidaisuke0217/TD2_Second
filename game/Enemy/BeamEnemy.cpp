@@ -30,6 +30,7 @@ void BeamEnemy::Initialize(const Transform& transform, const Vector3& velocity, 
 	isAlive_ = true;
 	currentCount = 0;
 	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void BeamEnemy::Update()

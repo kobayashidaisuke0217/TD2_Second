@@ -31,9 +31,10 @@ void BoundEnemy::Initialize(const Transform& transform, const Vector3& velocity,
 	cooltime_ = 0;
 
 	reflectCount_ = 0;
-	isDown_ = false;
+	isDown_ = true;
 	type_ = kBound;
 	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void BoundEnemy::Update()
@@ -49,24 +50,25 @@ void BoundEnemy::Update()
 	if (ishit_ == true) {
 		cooltime_++;
 	}
-	if (cooltime_ >= 10) {
+	if (cooltime_ >= 15) {
 		ishit_ = false;
 		cooltime_ = 0;
 	}
 	
 	
-		if (worldTransform_.translation_.y >= 11.0f /*&& velocity_.y >= MoveSpeed_*/) {
+		if (velocity_.y >= 1.0f /*&& velocity_.y >= MoveSpeed_*/) {
 		
 			isDown_ = true;
 		}
 		if (isDown_) {
-			if (velocity_.y >= -MoveSpeed_) {
-				velocity_.y -= MoveSpeed_/5.0f;
-			}
-			else {
-				isDown_ = false;
-			}
-	}
+
+			velocity_.y -= MoveSpeed_ / 10.0f;
+		}else{
+			velocity_.y += MoveSpeed_ / 10.0f;
+			//else {
+			//	isDown_ = false;
+			//}
+	    }
 
 	ImGui::Begin("enemy");
 	ImGui::DragFloat3("velocity", &velocity_.x);
@@ -91,10 +93,20 @@ void BoundEnemy::isCollision(OBB pertner)
 	if (!ishit_) {
 
 		ishit_ = true;
-		isDown_ = false;
+		if (isDown_) {
+			isDown_ = false;
+		}
+		else {
+			isDown_ = true;
+		}
 		if (collisionpartner_ == kflore) {
 			if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
-				velocity_.y *= -1.0f;
+				if (!isDown_) {
+					velocity_.y = 0.2f;
+				}
+				else {
+					velocity_.y = -0.2f;
+				}
 				worldTransform_.translation_ = prePos_;
 
 			}

@@ -125,7 +125,7 @@ void GameScene::Initialize()
 	//モデルの初期化
 	ballEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy","targetBall.obj"));
 	beamEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "berm.obj"));
-	bulletEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "bulletMother.obj"));
+	bulletEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "bullet.obj"));
 	reverceEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "revese.obj"));
 	wheelEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "wheel.obj"));
 
@@ -330,10 +330,7 @@ void GameScene::InGame() {
 		followCamera_->Shake();
 		ReStart();
 	}
-	for (PlayerAimBullet* bullet : bullets_) {
-
-		bullet->Update();
-	}
+	
 	bullets_.remove_if([](PlayerAimBullet* bullet) {
 		if (!bullet->GetIsAlive()) {
 			delete bullet;
@@ -362,6 +359,10 @@ void GameScene::InGame() {
 			enemy->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
 			enemy->Deth();
 		}
+	}
+	for (PlayerAimBullet* bullet : bullets_) {
+
+		bullet->Update();
 	}
 	MapManager::GetInstance()->Update();
 	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
@@ -672,7 +673,11 @@ void GameScene::ReStartWave()
 	for (IEnemy* enemy : enemys_) {
 		delete enemy;
 	}
+	for (PlayerAimBullet* bullet : bullets_) {
+		delete bullet;
+	}
 	enemys_.clear();
+	bullets_.clear();
 	size_t num = WaveManager::GetInstance()->GetWave();
 	MapManager::GetInstance()->WaveRead(uint32_t(num));
 	WaveManager::GetInstance()->SetWave(uint32_t(num));
@@ -684,6 +689,10 @@ void GameScene::ReStart()
 	for (IEnemy* enemy : enemys_) {
 		delete enemy;
 	}
+	for (PlayerAimBullet* bullet : bullets_) {
+		delete bullet;
+	}
+	bullets_.clear();
 	enemys_.clear();
 	player_->DethAnimation();
 	if (isInGame_) {

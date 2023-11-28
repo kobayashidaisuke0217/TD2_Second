@@ -11,6 +11,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
     directionalLight_ = DirectionalLight::GetInstance();
     CreateVartexData();
     SetColor();
+    material_->enableLighting = true;
 
 }
 
