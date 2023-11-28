@@ -19,6 +19,6 @@
         "jumpCoolTime": 20,
         "jumpDampingX": 0.8999999761581421,
         "jumpReceptionLength": 30,
-        "speed": 0.20000000298023224
+        "speed": 0.25
     }
 }
