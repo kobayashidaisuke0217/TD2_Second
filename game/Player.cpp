@@ -90,6 +90,7 @@ void Player::Initialize(){
 	worldTransformModels_.push_back(paramator);
 	worldTransformback_.Initialize();
 	worldTransformback_.parent_ = &worldTransformbody_;
+	worldTransformback_.scale_ = { 2.0f,2.0f,1.5f };
 	paramator = { &worldTransformback_ ,{0,0,0}, {0,0,0} };
 	worldTransformModels_.push_back(paramator);
 	worldTransformCode_.Initialize();
@@ -151,7 +152,7 @@ void Player::Reset() {
 	worldTransformbody_.translation_ = bodyOffset_;
 	worldTransformbody_.UpdateMatrix();
 	worldTransformback_.parent_ = &worldTransformbody_;
-	worldTransformback_.scale_ = { 1.0f,1.0f,1.0f };
+	worldTransformback_.scale_ = { 2.0f,2.0f,1.5f };
 	worldTransformback_.rotation_ = { 0,0,0 };
 	worldTransformHead_.parent_ = &worldTransformbody_;
 	worldTransformHead_.scale_ = { 1.0f,1.0f,1.0f };
@@ -410,6 +411,7 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	//model_->Draw(worldTransformOBB_,viewProjection);
 	body_->Draw(worldTransformbody_,viewProjection);
 	if (jumpAble_ && jumpCoolTime_ <= 0) {
+		back2_->setIsLighting(false);
 		back2_->Draw(worldTransformback_, viewProjection);
 	}
 	else {

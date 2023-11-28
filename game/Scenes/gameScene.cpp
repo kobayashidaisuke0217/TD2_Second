@@ -635,7 +635,11 @@ void GameScene::Draw2D() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 
 	moveSprite_->Draw(move_, uv, {1.0f,1.0f,1.0f,1.0f},moveTextureHandle_);
-	jumpSprite_->Draw(jump_, uv, { 1.0f,1.0f,1.0f,1.0f }, jumpTextureHandle_);
+	Vector4 jumpmaterial= { 1.0f,1.0f,1.0f,1.0f };
+	if (!player_->IsJumpAble()) {
+		jumpmaterial.w = 0.5f;
+	}
+	jumpSprite_->Draw(jump_, uv, jumpmaterial, jumpTextureHandle_);
 	reverseSprite_->Draw(reverse_, uv, { 1.0f,1.0f,1.0f,1.0f }, reverseTextureHandle_);
 	if (!isStartGame_ && !isEndGame_){
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);

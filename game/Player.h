@@ -48,6 +48,7 @@ public:
 	void DethAnimation();
 	void SetLife(int32_t life) { life_ = life; };
 	int32_t GetLife() { return life_; };
+	bool IsJumpAble() { return (jumpAble_ && jumpCoolTime_ <= 0); };
 private:
 	Input* input_ = nullptr;
 	XINPUT_STATE* joyState_;
