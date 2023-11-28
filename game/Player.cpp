@@ -29,6 +29,8 @@ void Player::Initialize(){
 	globalVariables->AddItem(groupName2, "back", backOffset_);
 	globalVariables->AddItem(groupName2, "left", leftOffset_);
 	globalVariables->AddItem(groupName2, "right", rightOffset_);
+	globalVariables->AddItem(groupName2, "fire", fireOffset_);
+
 	globalVariables->AddItem(groupName2, "legRotate", legRotate_);
 	globalVariables->AddItem(groupName2, "bodyIdle", floatBodyIdle_);
 	globalVariables->AddItem(groupName2, "bodyMove", floatBodyMove_);
@@ -70,7 +72,7 @@ void Player::Initialize(){
 	back2_.reset(Model::CreateModelFromObj("Resource/player/back2", "PlayerBack.obj"));
 	head_.reset(Model::CreateModelFromObj("Resource/player/head", "PlayerHead.obj"));
 	leg_.reset(Model::CreateModelFromObj("Resource/player/leg", "PlayerLeg.obj"));
-
+	fire_.reset(Model::CreateModelFromObj("Resource/player/fire", "Fire.obj"));
 
 	
 	worldTransformModels_.clear();
@@ -108,6 +110,9 @@ void Player::Initialize(){
 	worldTransformRightLeg_.parent_ = &worldTransformModel_;
 	paramator = { &worldTransformRightLeg_ ,{0,0,0}, {0,0,0} };
 	worldTransformModels_.push_back(paramator);
+
+	worldTransformFire_.Initialize();
+	worldTransformFire_.parent_ = &worldTransformback_;
 
 	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
 	worldTransformAntena_.translation_ = Lerp(1.0f, worldTransformAntena_.translation_, antenaPos);
@@ -287,6 +292,10 @@ void Player::Update() {
 		//worldTransformRightLeg_.rotation_.x = -std::sin(theta_);
 		worldTransformRightLeg_.translation_ = rightOffset_;
 		worldTransformRightLeg_.UpdateMatrix();
+		worldTransformFire_.translation_ = fireOffset_;
+		worldTransformFire_.UpdateMatrix();
+
+
 
 		Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
 		worldTransformAntena_.translation_ = Lerp(0.1f, worldTransformAntena_.translation_, antenaPos);
@@ -417,6 +426,10 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	else {
 		back_->Draw(worldTransformback_, viewProjection);
 	}
+	if (!isDead_ && isJumpReception_) {
+		fire_->setIsLighting(false);
+		fire_->Draw(worldTransformFire_,viewProjection);
+	}
 	head_->Draw(worldTransformHead_, viewProjection);
 	leg_->Draw(worldTransformLeftLeg_, viewProjection);
 	leg_->Draw(worldTransformRightLeg_, viewProjection);
@@ -444,7 +457,9 @@ void Player::ApplyGlobalVariables()
 	backOffset_ = globalVariables->GetVector3Value(groupName2, "back");
 	leftOffset_ = globalVariables->GetVector3Value(groupName2, "left");
 	rightOffset_ = globalVariables->GetVector3Value(groupName2, "right");
+	fireOffset_ = globalVariables->GetVector3Value(groupName2, "fire");
 
+	
 	legRotate_ = globalVariables->GetFloatValue(groupName2, "legRotate");
 	floatBodyIdle_ = globalVariables->GetFloatValue(groupName2, "bodyIdle");
 	floatBodyMove_ = globalVariables->GetFloatValue(groupName2, "bodyMove");

@@ -93,6 +93,8 @@ private:
 	std::unique_ptr<Model> back_;
 	std::unique_ptr<Model> back2_;
 	std::unique_ptr<Model> leg_;
+	std::unique_ptr<Model> fire_;
+
 	
 	WorldTransform worldTransformModel_;
 	WorldTransform worldTransformAntena_;
@@ -102,6 +104,8 @@ private:
 	WorldTransform worldTransformback_;
 	WorldTransform worldTransformLeftLeg_;
 	WorldTransform worldTransformRightLeg_;
+	WorldTransform worldTransformFire_;
+
 
 	Vector3 charctorScale_ = {1.0f,1.0f,1.0f};
 
@@ -113,6 +117,8 @@ private:
 	Vector3 backOffset_;
 	Vector3 leftOffset_;
 	Vector3 rightOffset_;
+	Vector3 fireOffset_;
+
 
 	bool isMove_;
 	float theta_;
