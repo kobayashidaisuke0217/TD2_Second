@@ -93,4 +93,10 @@ private:
 	int drawerWaveNum_;
 	size_t bestWaveNum_;
 	uint32_t numChangeLength_ = 5;
+
+	std::unique_ptr<Sprite> returnTitleSprite_;
+	Transform titleTransform_;
+	uint32_t returnTextureHandle_;
+	float alpha_;
+	float theta_;
 };

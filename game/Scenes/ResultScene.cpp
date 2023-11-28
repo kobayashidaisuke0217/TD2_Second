@@ -105,7 +105,17 @@ void ResultScene::Initialize() {
 	plane_.reset(new Plane);
 	plane_->Initialize();
 
+	returnTitleSprite_.reset(new Sprite);
+	returnTitleSprite_->Initialize({-800.0f,-200.0f,0,0}, { 800.0f,200.0f,0,0 });
+
+	titleTransform_ = {{ 1.0f,1.0f,1.0f, },
+		{0,0,0},{0,0,0}};
+	globalVariables->AddItem(groupName, "TitleScale", titleTransform_.scale);
+	globalVariables->AddItem(groupName, "TitlePosition", titleTransform_.translate);
+
+	returnTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/UI/backUI.png");
 	
+
 	//単体テスト用
 #ifdef _DEBUG
 	//MapManager::GetInstance()->Initialize();
@@ -117,6 +127,8 @@ void ResultScene::Initialize() {
 
 	isRunAnimation_ = false;
 	phase_ = FROMGAME;
+	theta_ = 0;
+	alpha_ = 0;
 }
 
 void ResultScene::ApplyGlobalVariables()
@@ -147,6 +159,9 @@ void ResultScene::ApplyGlobalVariables()
 	worldTransformBest10_.translation_ = globalVariables->GetVector3Value(groupName, "Best10Translate");
 	worldTransformBest1_.scale_ = globalVariables->GetVector3Value(groupName, "Best1Scale");
 	worldTransformBest1_.translation_ = globalVariables->GetVector3Value(groupName, "Best1Translate");
+
+	titleTransform_.scale = globalVariables->GetVector3Value(groupName, "TitleScale");
+	titleTransform_.translate = globalVariables->GetVector3Value(groupName, "TitlePosition");
 
 }
 
@@ -209,6 +224,8 @@ void ResultScene::FromGame() {
 
 void ResultScene::Result() {
 	if (drawerWaveNum_ < WaveManager::GetInstance()->GetWave() + 1) {
+		theta_ = 0;
+		alpha_ = 0;
 		if (frameCount_ > numChangeLength_) {
 			drawerWaveNum_++;
 			if (bestWaveNum_ < drawerWaveNum_) {
@@ -223,6 +240,8 @@ void ResultScene::Result() {
 		if (GameController::GetInstance()->Enter()) {
 			phase_ = TOTITLE;
 		}
+		alpha_ = (std::sin(theta_) + 1.0f) * 0.5f;
+		theta_ += 0.05f;
 	}
 }
 
@@ -276,7 +295,9 @@ void ResultScene::Draw3D() {
 void ResultScene::Draw2D() {
 	blueMoon_->SetBlendMode(blendCount_);
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
-
+	if (phase_ != FROMGAME) {
+		returnTitleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,alpha_},returnTextureHandle_);
+	}
 	if (isRunAnimation_) {
 		Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{transitionSpritePosition_.x,transitionSpritePosition_.y,transitionSpritePosition_.z} };
 		transitionSprite_->Draw(pos, uv, { 0.0f,0.0f,0.0f,1.0f }, blackTextureHandle_);
