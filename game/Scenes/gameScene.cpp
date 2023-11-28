@@ -393,7 +393,7 @@ void GameScene::InGame() {
 	for (IEnemy* enemy : enemys_) {
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
-			ReStart();
+			//ReStart();
 			followCamera_->Shake();
 			return;
 		}
@@ -543,7 +543,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kTire:
 		enemy = new TireEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, 3);
 	
 		enemys_.push_back(enemy);
 		break;
