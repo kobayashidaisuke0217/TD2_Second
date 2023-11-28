@@ -38,7 +38,7 @@ void WaveManager::LoadFile(const char filename[]) {
 		std::istringstream s(line);
 		s >> identifilter;
 		if (identifilter == "wave") {
-			newWave=&waves_.emplace_back();
+			newWave = &waves_.emplace_back();
 			maxWaveNum_++;
 		}
 		else if (identifilter == "enemy") {
@@ -89,7 +89,7 @@ void WaveManager::LoadFile(const char filename[]) {
 
 void WaveManager::Initialize() {
 	lowNum0.reset(new Sprite);
-	lowNum0->Initialize({-500.0f,-500.0f,0,0}, {500.0f,500.0f,0,0});
+	lowNum0->Initialize({ -500.0f,-500.0f,0,0 }, { 500.0f,500.0f,0,0 });
 	lowNum1.reset(new Sprite);
 	lowNum1->Initialize({ -500.0f,-500.0f,0,0 }, { 500.0f,500.0f,0,0 });
 	highNum0.reset(new Sprite);
@@ -144,95 +144,96 @@ void WaveManager::Update() {
 
 			switch (enemy.type)
 			{
-			case kBullet:
+			case kBullet://0
 				newEnemy = new BulletEnemy();
 				newEnemy->SetStartCount(gameScene_->BulletStartCount);
-				newEnemy->Initialize(transform, enemy.velocity,enemy.speed, 2,gameScene_->bulletEnemyModel_.get());
+				transform.scale = { 1.5, 2, 2 };
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
 
 				enemyList_->push_back(newEnemy);
 				break;
-			case kReflect:
+			case kReflect://1
 				newEnemy = new ReflectEnemy();
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
-				enemyList_->push_back(newEnemy); 
-				break;
-			case kBound:
-				newEnemy = new BoundEnemy();
-				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
-				enemyList_->push_back(newEnemy); break;
-			case kTire:
-				newEnemy = new TireEnemy();
-				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->wheelEnemyModel_.get());
-				
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
-			case kSpear:
+			case kBound://2
+				newEnemy = new BoundEnemy();
+				//{ 0.3f, -1.0f, 0.0f }
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
+				enemyList_->push_back(newEnemy); break;
+			case kTire://3
+				newEnemy = new TireEnemy();
+				//{ 0.3f, -1.0f, 0.0f }
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->wheelEnemyModel_.get());
+
+				enemyList_->push_back(newEnemy);
 				break;
-			case kRaser:
+			case kSpear://4
+				break;
+			case kRaser://5
 				newEnemy = new BeamEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->reverceEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->reverceEnemyModel_.get());
 				newEnemy->SetStartCount(gameScene_->BulletStartCount);
 				enemyList_->push_back(newEnemy);
 				break;
-			case kAimBulletWidth:
+			case kAimBulletWidth://6
 				newEnemy = new AImBulletWidthEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->bulletEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
 				enemyList_->push_back(newEnemy);
 				break;
-			case kAimBulletHeight:
+			case kAimBulletHeight://7
 				newEnemy = new AimBulletEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->bulletEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
-			case kAimBound:
+			case kAimBound://8
 				newEnemy = new PlayerAimBallEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
 				enemyList_->push_back(newEnemy);
 				break;
-			case kStageUp:
+			case kStageUp://9
 				newEnemy = new StageChangeEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 				newEnemy->SetType(kStageUp);
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->reverceEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->reverceEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
-			case kStageDown:
+			case kStageDown://10
 				newEnemy = new StageChangeEnemy();
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 				newEnemy->SetType(kStageDown);
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->reverceEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
-			case kHoming:
+			case kHoming://11
 				break;
-			default:
+			default://else
 				newEnemy = new ReflectEnemy();
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
 			}
-			
+
 		}
 	}
 	currentFrame_++;
 	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_) {
-		if (waves_.size() -1> waveNum_) {
+		if (waves_.size() - 1 > waveNum_) {
 			waveNum_++;
 		}
 		currentFrame_ = 0;
@@ -256,7 +257,7 @@ void WaveManager::Update() {
 
 void WaveManager::Draw() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
-	Transform transform = { { 0.1f,0.1f,0.1f },{0,0,0},{0,0,0}};
+	Transform transform = { { 0.1f,0.1f,0.1f },{0,0,0},{0,0,0} };
 	transform.translate = s0;
 	lowNum0->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num0]);
 	transform.translate = s1;
@@ -270,7 +271,7 @@ void WaveManager::Draw() {
 
 void WaveManager::ChangeNumAnimation() {
 	float t = float(changeAnimationCount_) / float(changeAnimationLength_);
-	s0 = Lerp(t,centerPos0_,downPos0_);
+	s0 = Lerp(t, centerPos0_, downPos0_);
 	s1 = Lerp(t, topPos0_, centerPos0_);
 	if (isChange10) {
 		s2 = Lerp(t, centerPos1_, downPos1_);
