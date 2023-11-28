@@ -3,6 +3,7 @@
         "FloatAnimationDelay": 1,
         "FloatAnimationLength": 40,
         "FloatForce": 20,
-        "ReverseAnimationDelay": 10
+        "ReverseAnimationDelay": 5,
+        "ReverseCoolTime": 60
     }
 }

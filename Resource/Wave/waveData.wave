@@ -762,13 +762,3 @@ frame 270
 length 280
 
 wave 6
-
-enemy a
-position -13 13 0
-velocity 1.0 0.0 0.0
-speed 0.3
-type 2
-frame 60
-
-length 80
-
