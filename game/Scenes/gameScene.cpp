@@ -430,6 +430,16 @@ void GameScene::InGame() {
 		}
 
 	}
+	if (!isRunAnimation_) {
+		if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave()) {
+			//sceneNum = 2;
+			//isRunAnimation_;
+			isInGame_ = false;
+			isTitle_ = false;
+			frameCount_ = 0;
+			isRunAnimation_ = false;
+		}
+	}
 	if (isRunAnimation_) {
 		resetT_ = frameCount_ / float(transitionAnimationLength_);
 		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
@@ -664,6 +674,9 @@ void GameScene::ReStartWave()
 	}
 	enemys_.clear();
 	if (player_->GetLife() <= 0) {
+		sceneNum = 2;
+	}
+	if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave()) {
 		sceneNum = 2;
 	}
 	size_t num = WaveManager::GetInstance()->GetWave();

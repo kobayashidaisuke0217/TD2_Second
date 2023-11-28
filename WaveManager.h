@@ -34,6 +34,7 @@ public:
 	size_t GetWave() { return waveNum_; };
 	void SetBestWave(uint32_t waveNum) { bestWaveNum_ = waveNum; };
 	size_t GetBestWave() { return bestWaveNum_; };
+	size_t GetMaxWave() { return maxWaveNum_; };
 
 	void Initialize();
 	void Update();
@@ -52,7 +53,7 @@ private:
 
 	std::vector<Wave> waves_;
 	size_t waveNum_;
-
+	size_t maxWaveNum_;
 	std::list<IEnemy*> *enemyList_;
 	int32_t currentFrame_;
 

@@ -17,6 +17,7 @@ WaveManager* WaveManager::GetInstance() {
 }
 
 void WaveManager::LoadAllFiles() {
+	maxWaveNum_ = 0;
 	waves_.clear();
 	waves_.shrink_to_fit();
 	LoadFile("Resource/Wave/waveData.wave");
@@ -38,6 +39,7 @@ void WaveManager::LoadFile(const char filename[]) {
 		s >> identifilter;
 		if (identifilter == "wave") {
 			newWave=&waves_.emplace_back();
+			maxWaveNum_++;
 		}
 		else if (identifilter == "enemy") {
 			if (newWave) {
