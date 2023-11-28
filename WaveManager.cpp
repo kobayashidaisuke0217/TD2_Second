@@ -147,24 +147,24 @@ void WaveManager::Update() {
 			case kBullet:
 				newEnemy = new BulletEnemy();
 				newEnemy->SetStartCount(gameScene_->BulletStartCount);
-				newEnemy->Initialize(transform, enemy.velocity,enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity,enemy.speed, 2,gameScene_->bulletEnemyModel_.get());
 
 				enemyList_->push_back(newEnemy);
 				break;
 			case kReflect:
 				newEnemy = new ReflectEnemy();
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
 				enemyList_->push_back(newEnemy); 
 				break;
 			case kBound:
 				newEnemy = new BoundEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
 				enemyList_->push_back(newEnemy); break;
 			case kTire:
 				newEnemy = new TireEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->wheelEnemyModel_.get());
 				
 				enemyList_->push_back(newEnemy);
 				break;
@@ -173,14 +173,14 @@ void WaveManager::Update() {
 			case kRaser:
 				newEnemy = new BeamEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->reverceEnemyModel_.get());
 				newEnemy->SetStartCount(gameScene_->BulletStartCount);
 				enemyList_->push_back(newEnemy);
 				break;
 			case kAimBulletWidth:
 				newEnemy = new AImBulletWidthEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->bulletEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
 				enemyList_->push_back(newEnemy);
@@ -191,13 +191,13 @@ void WaveManager::Update() {
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->bulletEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
 			case kAimBound:
 				newEnemy = new PlayerAimBallEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
 				enemyList_->push_back(newEnemy);
@@ -207,14 +207,14 @@ void WaveManager::Update() {
 				//{ 0.3f, -1.0f, 0.0f }
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 				newEnemy->SetType(kStageUp);
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->reverceEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
 			case kStageDown:
 				newEnemy = new StageChangeEnemy();
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 				newEnemy->SetType(kStageDown);
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->reverceEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
 			case kHoming:
@@ -223,7 +223,7 @@ void WaveManager::Update() {
 				newEnemy = new ReflectEnemy();
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
 
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2);
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2,gameScene_->ballEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
 			}

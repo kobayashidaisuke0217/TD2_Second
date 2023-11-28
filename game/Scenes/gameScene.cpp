@@ -122,6 +122,13 @@ void GameScene::Initialize()
 	moveTextureHandle_ = textureManager_->Load("Resource/UI/moveUI.png");
 	jumpTextureHandle_ = textureManager_->Load("Resource/UI/jumpUI.png");
 	reverseTextureHandle_ = textureManager_->Load("Resource/UI/reversUI.png");
+	//モデルの初期化
+	ballEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy","targetBall.obj"));
+	beamEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "berm.obj"));
+	bulletEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "bullet.obj"));
+	reverceEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "revese.obj"));
+	wheelEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "wheel.obj"));
+
 
 	const char* groupName3 = "UI";
 	globalVariables->AddItem(groupName3, "moveScale", move_.scale);
@@ -325,10 +332,7 @@ void GameScene::InGame() {
 		followCamera_->Shake();
 		ReStart();
 	}
-	for (PlayerAimBullet* bullet : bullets_) {
-
-		bullet->Update();
-	}
+	
 	bullets_.remove_if([](PlayerAimBullet* bullet) {
 		if (!bullet->GetIsAlive()) {
 			delete bullet;
@@ -358,6 +362,10 @@ void GameScene::InGame() {
 			enemy->Deth();
 		}
 	}
+	for (PlayerAimBullet* bullet : bullets_) {
+
+		bullet->Update();
+	}
 	MapManager::GetInstance()->Update();
 	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
 	for (std::shared_ptr<MapManager::Map> object : floors) {
@@ -378,7 +386,9 @@ void GameScene::InGame() {
  				bullet->isCollision();
 			}
 			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
-				Initialize();
+				
+				ReStart();
+				followCamera_->Shake();
 				return;
 			}
 			
@@ -393,12 +403,7 @@ void GameScene::InGame() {
 		}
 	}
 	for (IEnemy* enemy : enemys_) {
-		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
-			//Initialize();
-			ReStart();
-			followCamera_->Shake();
-			return;
-		}
+		
 		
 		for (std::shared_ptr<MapManager::Map> object : floors) {
 			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
@@ -429,6 +434,12 @@ void GameScene::InGame() {
 
 				}
 			}
+		}
+		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
+			//Initialize();
+			ReStart();
+			followCamera_->Shake();
+			return;
 		}
 
 	}
@@ -537,27 +548,27 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	{
 	case kBullet:
 		enemy = new BulletEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,bulletEnemyModel_.get());
 		enemy->SetStartCount(BulletStartCount);
 		enemys_.push_back(enemy);
 		break;
 	case kReflect:
 		enemy = new ReflectEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,ballEnemyModel_.get());
 
 		enemys_.push_back(enemy);
 		break;
 	case kBound:
 		enemy = new BoundEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,ballEnemyModel_.get());
 
 		enemys_.push_back(enemy);
 		break;
 	case kTire:
 		enemy = new TireEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, 3,wheelEnemyModel_.get());
 	
 		enemys_.push_back(enemy);
 		break;
@@ -566,14 +577,14 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kRaser:
 		enemy = new BeamEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,beamEnemyModel_.get());
 	    enemy->SetStartCount(BulletStartCount);
 		enemys_.push_back(enemy);
 		break;
 	case kAimBulletWidth:
 		enemy = new AImBulletWidthEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,bulletEnemyModel_.get());
 		enemy->SetPlayer(player_.get());
 		enemy->SetGameScene(this);
 		enemys_.push_back(enemy);
@@ -581,7 +592,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kAimBulletHeight:
 		enemy = new AimBulletEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,bulletEnemyModel_.get());
 		enemy->SetPlayer(player_.get());
 		enemy->SetGameScene(this);
 		enemys_.push_back(enemy);
@@ -589,7 +600,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kAimBound:
 		enemy = new PlayerAimBallEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,ballEnemyModel_.get());
 		enemy->SetPlayer(player_.get());
 		enemy->SetGameScene(this);
 		enemys_.push_back(enemy);
@@ -597,13 +608,13 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kStageUp:
 		enemy = new StageChangeEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,reverceEnemyModel_.get());
 		enemy->SetType(kStageUp);
 		enemys_.push_back(enemy);
 		break;
 	case kStageDown:
 		enemy = new StageChangeEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,reverceEnemyModel_.get());
 		enemy->SetType(kStageDown);
 		enemys_.push_back(enemy);
 		break;
@@ -611,7 +622,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 		break;
 	default:
 		enemy = new ReflectEnemy();
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,ballEnemyModel_.get());
 
 		enemys_.push_back(enemy);
 		break;
@@ -676,7 +687,11 @@ void GameScene::ReStartWave()
 	for (IEnemy* enemy : enemys_) {
 		delete enemy;
 	}
+	for (PlayerAimBullet* bullet : bullets_) {
+		delete bullet;
+	}
 	enemys_.clear();
+	bullets_.clear();
 	if (player_->GetLife() <= 0) {
 		sceneNum = 2;
 	}
@@ -694,6 +709,10 @@ void GameScene::ReStart()
 	for (IEnemy* enemy : enemys_) {
 		delete enemy;
 	}
+	for (PlayerAimBullet* bullet : bullets_) {
+		delete bullet;
+	}
+	bullets_.clear();
 	enemys_.clear();
 	player_->DethAnimation();
 	if (isInGame_) {

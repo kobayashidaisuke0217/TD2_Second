@@ -8,10 +8,10 @@ StageChangeEnemy::~StageChangeEnemy()
 {
 }
 
-void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
@@ -24,6 +24,8 @@ void StageChangeEnemy::Initialize(const Transform& transform, const Vector3& vel
 	type_ = kBullet;
 	isAlive_ = true;
 	count = 0;
+	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void StageChangeEnemy::Update()
@@ -49,7 +51,8 @@ void StageChangeEnemy::Update()
 
 void StageChangeEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void StageChangeEnemy::isCollision(OBB pertner)

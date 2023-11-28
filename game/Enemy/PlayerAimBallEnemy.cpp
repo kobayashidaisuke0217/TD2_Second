@@ -9,10 +9,10 @@ PlayerAimBallEnemy::~PlayerAimBallEnemy()
 {
 }
 
-void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.scale_ = transform.scale;
@@ -25,16 +25,18 @@ void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& v
 	texindex_ = texture;
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 
-
+	behavior_ = Behavior::kstandBy;
 	isAlive_ = true;
 	ishit_ = false;
+	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void PlayerAimBallEnemy::Update()
 {
 	prePos_ = worldTransform_.translation_;
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
-	obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y / 2.0f ,worldTransform_.scale_.z / 2.0f };
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(worldTransform_.rotation_);
+	obb_.size = { worldTransform_.scale_.x / 2.0f  ,worldTransform_.scale_.y / 2.0f  ,worldTransform_.scale_.z / 2.0f };
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
 	if (behaviorRequest_) {
@@ -61,19 +63,22 @@ void PlayerAimBallEnemy::Update()
 	case Behavior::kAtack:
 
 		BehaviorAtackUpdate();
-
+		
 		break;
 	case Behavior::kLeave:
 		BehaviorLeaveUpdate();
 		break;
 	}
+	
 	worldTransform_.UpdateMatrix();
 }
 
 
 void PlayerAimBallEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, 2, viewProjection);
+	/*sphere_->setIsLighting(false);
+	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, 3, viewProjection);*/
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void PlayerAimBallEnemy::isCollision(OBB pertner)
@@ -130,6 +135,7 @@ void PlayerAimBallEnemy::BehaviorStandbyInitialize()
 
 void PlayerAimBallEnemy::BehaviorLeaveInitialize()
 {
+
 	Vector3 target = player_->GetWorldTransform().translation_;
 	target.y = 60.0f;
 	velocity_ = Subtract(target, worldTransform_.translation_);

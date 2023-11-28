@@ -8,7 +8,7 @@ class AimBulletEnemy:public IEnemy
 public:
 	AimBulletEnemy();
 	~AimBulletEnemy();
-	virtual void Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture) override;
+	virtual void Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model) override;
 	virtual void Update() override;
 	virtual void Draw(const ViewProjection& viewProjection) override;
 	virtual void isCollision(OBB pertner) override;
@@ -21,7 +21,7 @@ public:
 	virtual bool GetIsHit()override { return ishit_; }
 	virtual void SetPartener(collisionPartner partner)override { collisionpartner_ = partner; }
 private:
-	static uint32_t textureIndex_;
+ std::unique_ptr<Model> mainmodel;
 	int coolTime_;
 	int currentCollTime_;
 	int atackCount_;

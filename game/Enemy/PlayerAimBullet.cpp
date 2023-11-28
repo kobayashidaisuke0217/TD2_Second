@@ -1,16 +1,31 @@
 #include "PlayerAimBullet.h"
 
-void PlayerAimBullet::Initialize(Vector3 velocity, Transform transform, uint32_t tex)
+void PlayerAimBullet::Initialize(Vector3 velocity, Transform transform, uint32_t tex, Model* model)
 {
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	
 	velocity_ = velocity;
 	worldTransform_.translation_ = transform.translate;
 	worldTransform_.rotation_ = transform.rotate;
 	worldTransform_.scale_ = transform.scale;
 	texture_ = tex;
-	worldTransform_.Initialize();
+
 	isAlive_ = true;
+	model_ = model;
+	//// Y軸回り
+	if (velocity_.x > 0.0f) {
+		worldTransform_.rotation_.y = 0.0f;
+	}
+	if (velocity_.x < 0.0f) {
+		worldTransform_.rotation_.y = 3.2f;
+	}
+	if (velocity_.y > 0.0f) {
+		worldTransform_.rotation_.z = 1.6f;
+	}
+	if (velocity_.y < 0.0f) {
+		worldTransform_.rotation_.z = 4.75f;
+	}
+	worldTransform_.Initialize();
+	
 }
 
 void PlayerAimBullet::Update()
@@ -18,7 +33,7 @@ void PlayerAimBullet::Update()
 	if (std::abs(worldTransform_.translation_.x) > 100.0f) {
 		isAlive_ = false;
 	}
-	if (std::abs(worldTransform_.translation_.y) > 50.0f) {
+	if (std::abs(worldTransform_.translation_.y) > 100.0f) {
 		isAlive_ = false;
 	}
 	worldTransform_.translation_ = Add(velocity_, worldTransform_.translation_);
@@ -31,7 +46,9 @@ void PlayerAimBullet::Update()
 
 void PlayerAimBullet::Draw(const ViewProjection& view)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texture_, view);
+	
+	model_->Draw(worldTransform_, view);
+
 }
 
 void PlayerAimBullet::isCollision()

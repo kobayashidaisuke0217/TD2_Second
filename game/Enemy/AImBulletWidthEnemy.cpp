@@ -9,10 +9,11 @@ AImBulletWidthEnemy::~AImBulletWidthEnemy()
 {
 }
 
-void AImBulletWidthEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void AImBulletWidthEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
+	mainmodel.reset(Model::CreateModelFromObj("Resource/Enemy", "bulletMother.obj"));
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = transform.translate;
@@ -29,13 +30,19 @@ void AImBulletWidthEnemy::Initialize(const Transform& transform, const Vector3& 
 	isAlive_ = true;
 	atackCount_ = 5;
 	coolTime_ = 60;
+	model_ = model;
+	model_->setIsLighting(false);
 }
 
 void AImBulletWidthEnemy::Update()
 {
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
+	obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y / 2.0f ,worldTransform_.scale_.z / 2.0f };
+	obb_.center = worldTransform_.translation_;
+	GetOrientations(rotateMatrix, obb_.orientation);
 	currentCollTime_++;
 	if (player_) {
-		worldTransform_.translation_.y = player_->GetWorldTransform().translation_.y;
+		worldTransform_.translation_.y = player_->GetWorldTransform().translation_.y+1.0f;
 	}
 	if (currentAtackCount_ <= atackCount_)
 		if (currentCollTime_ >= coolTime_) {
@@ -51,7 +58,8 @@ void AImBulletWidthEnemy::Update()
 
 void AImBulletWidthEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	mainmodel->Draw(worldTransform_, viewProjection);
 }
 
 void AImBulletWidthEnemy::isCollision(OBB pertner)
@@ -60,6 +68,8 @@ void AImBulletWidthEnemy::isCollision(OBB pertner)
 
 void AImBulletWidthEnemy::TextureInitialize()
 {
+	
+		
 }
 
 void AImBulletWidthEnemy::Atack()
@@ -72,6 +82,6 @@ void AImBulletWidthEnemy::Atack()
 	else {
 		bulletvel = { 1.0f,0.0f,0.0f };
 	}
-	newBullet->Initialize(bulletvel, { BulletScale_,worldTransform_.rotation_,worldTransform_.translation_ }, texindex_);
+	newBullet->Initialize(bulletvel, { BulletScale_,worldTransform_.rotation_,worldTransform_.translation_ }, texindex_,model_);
 	gameScene_->AddEnemyBullet(newBullet);
 }

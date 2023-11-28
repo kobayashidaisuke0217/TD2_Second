@@ -15,6 +15,7 @@ public:
 	//void Draw(const Vector4& material, const Transform& transform, uint32_t texIndex, const Transform& cameraTransform, const DirectionalLight& light);
 	void Draw(const Vector4& material, const WorldTransform& transform, uint32_t texIndex, const ViewProjection& viewProjection);
 	void Finalize();
+	void setIsLighting(bool flag) { materialData_->enableLighting = flag; }
 private:
 	Texturemanager* textureManager_;
 	DirectionalLight* directionalLight_;

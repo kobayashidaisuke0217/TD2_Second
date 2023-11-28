@@ -8,11 +8,11 @@ ReflectEnemy::~ReflectEnemy()
 {
 }
 
-void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture)
+void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocity, float moveSpeed, uint32_t texture, Model* model)
 {
 	texManager_ = Texturemanager::GetInstance();
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
+	/*sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();*/
 
 	
 	worldTransform_.translation_ = transform.translate;
@@ -32,6 +32,8 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	reflectCount_ = 0;
 	isDown_ = false;
 	type_ = kReflect;
+	model_->setIsLighting(false);
+	model_->setIsLighting(false);
 }
 
 void ReflectEnemy::Update()
@@ -70,7 +72,8 @@ void ReflectEnemy::Update()
 
 void ReflectEnemy::Draw(const ViewProjection& viewProjection)
 {
-	sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	//sphere_->Draw({ 1.0f,1.0f,1.0f,1.0f }, worldTransform_, texindex_, viewProjection);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void ReflectEnemy::isCollision(OBB pertner)
