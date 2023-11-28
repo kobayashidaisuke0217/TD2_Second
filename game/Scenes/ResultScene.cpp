@@ -114,6 +114,9 @@ void ResultScene::Initialize() {
 	drawerWaveNum_ = 0;
 	bestWaveNum_ = WaveManager::GetInstance()->GetBestWave();
 	MapManager::GetInstance()->WaveRead(0);
+
+	isRunAnimation_ = false;
+	phase_ = FROMGAME;
 }
 
 void ResultScene::ApplyGlobalVariables()
