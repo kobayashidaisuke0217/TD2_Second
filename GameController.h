@@ -16,7 +16,7 @@ public:
 	//float Move();
 	bool Left();
 	bool Right();
-
+	
 private:
 	GameController() = default;
 	~GameController() = default;

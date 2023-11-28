@@ -16,6 +16,14 @@ void GameController::Update() {
 }
 
 bool GameController::Enter() {
+	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+		rastInput_ = 0;
+		return true;
+	}
+	if ((joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_A) && !(preJoyState_.Gamepad.wButtons & XINPUT_GAMEPAD_A)) {
+		rastInput_ = 1;
+		return true;
+	}
 	return false;
 }
 bool GameController::Cancel() {

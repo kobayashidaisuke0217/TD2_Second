@@ -12,6 +12,7 @@
 #include <game/Scenes/Iscene.h>
 #include<game/Scenes/gameScene.h>
 #include <game/Scenes/TitleScene.h>
+#include <game/Scenes/ResultScene.h>
 #pragma endregion
 class SceneManager
 {
@@ -32,7 +33,7 @@ private:
 	Input* input;
 	Texturemanager* textureManager_;
 	Audio* audio_;
-	std::unique_ptr<Iscene> sceneArr_[2];
+	std::unique_ptr<Iscene> sceneArr_[3];
 	GlovalVariables* glovalVariables_;
 	ImGuiManger* imguiManager_;
 	DirectionalLight* directionallight_;
