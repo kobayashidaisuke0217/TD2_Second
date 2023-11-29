@@ -21,7 +21,7 @@ void WaveManager::LoadAllFiles() {
 	waves_.clear();
 	waves_.shrink_to_fit();
 	LoadFile("Resource/Wave/waveData.wave");
-	//LoadFile("Resource/Wave/waveData.wave");
+	LoadFile("Resource/Wave/waveData2.wave");
 }
 
 void WaveManager::LoadFile(const char filename[]) {
@@ -177,6 +177,9 @@ void WaveManager::Update() {
 				enemyList_->push_back(newEnemy); break;
 			case kTire://3
 				newEnemy = new TireEnemy();
+
+				transform.scale = { 2.0f,2.0f,2.0f };
+
 				//{ 0.3f, -1.0f, 0.0f }
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->wheelEnemyModel_.get());
 

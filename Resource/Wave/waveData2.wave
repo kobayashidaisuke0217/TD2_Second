@@ -171,8 +171,15 @@ frame 240
 enemy a
 position 13 13 0
 velocity -1.0 0.0 0.0
-speed 0.2
+speed 0.4
 type 3
 frame 10
 
-frame 250
+enemy a
+position -13 13 0
+velocity 1.0 0.0 0.0
+speed 0.4
+type 3
+frame 10
+
+length 260
