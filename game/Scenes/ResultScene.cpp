@@ -115,6 +115,22 @@ void ResultScene::Initialize() {
 
 	returnTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/UI/backUI.png");
 	
+	newRSprite_.reset(new Sprite);
+	newRSprite_->Initialize({ -500,-160,0,0 }, { 500,160,0,0 });
+	clearSprite_.reset(new Sprite);
+	clearSprite_->Initialize({ -500,-160,0,0 }, { 500,160,0,0 });
+	globalVariables->AddItem(groupName, "ClearScale", clearTransform_.scale);
+	globalVariables->AddItem(groupName, "ClaerRotate", clearTransform_.rotate);
+	globalVariables->AddItem(groupName, "ClearTranslate", clearTransform_.translate);
+
+	globalVariables->AddItem(groupName, "newRScale", newRTransform_.scale);
+	globalVariables->AddItem(groupName, "newRRotate", newRTransform_.rotate);
+	globalVariables->AddItem(groupName, "newRTranslate", newRTransform_.translate);
+
+
+	newRTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/newR.png");
+	clearTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/clear.png");
+
 
 	//単体テスト用
 #ifdef _DEBUG
@@ -148,7 +164,7 @@ void ResultScene::ApplyGlobalVariables()
 	worldTransformReach10_.translation_ = globalVariables->GetVector3Value(groupName, "reach10Translate");
 	worldTransformReach1_.scale_ = globalVariables->GetVector3Value(groupName, "reach1Scale");
 	worldTransformReach1_.translation_ = globalVariables->GetVector3Value(groupName, "reach1Translate");
-	
+
 	worldTransformBest_.rotation_ = globalVariables->GetVector3Value(groupName, "BestRotate");
 	worldTransformBest_.translation_ = globalVariables->GetVector3Value(groupName, "BestTranslate");
 	worldTransformBestChar_.scale_ = globalVariables->GetVector3Value(groupName, "BestCharScale");
@@ -162,6 +178,15 @@ void ResultScene::ApplyGlobalVariables()
 
 	titleTransform_.scale = globalVariables->GetVector3Value(groupName, "TitleScale");
 	titleTransform_.translate = globalVariables->GetVector3Value(groupName, "TitlePosition");
+
+	//if (phase_ == FROMGAME) {
+		clearTransform_.scale = globalVariables->GetVector3Value(groupName, "ClearScale");
+		clearTransform_.rotate = globalVariables->GetVector3Value(groupName, "ClaerRotate");
+		clearTransform_.translate = globalVariables->GetVector3Value(groupName, "ClearTranslate");
+	//}
+		newRTransform_.scale = globalVariables->GetVector3Value(groupName, "newRScale");
+		newRTransform_.rotate = globalVariables->GetVector3Value(groupName, "newRRotate");
+		newRTransform_.translate = globalVariables->GetVector3Value(groupName, "newRTranslate");
 
 }
 
@@ -218,6 +243,9 @@ void ResultScene::FromGame() {
 		
 		if (frameCount_ >= transitionAnimationLength_) {
 			isRunAnimation_ = false;
+			isFinCount_ = false;
+			isUpdate_ = false;
+			plus_ = clearTransform_;
 			phase_ = RESULT;
 			frameCount_ = 0;
 		}
@@ -225,13 +253,23 @@ void ResultScene::FromGame() {
 	frameCount_++;
 }
 
+float easeback(float t) {
+	float c1 = 1.70158f;
+	float c3 = c1 + 1.0f;
+
+	return float(1 + c3 * std::pow(t - 1.0f, 3) + c1 * std::pow(t - 1.0f, 2));
+}
+
 void ResultScene::Result() {
 	if (drawerWaveNum_ < WaveManager::GetInstance()->GetWave() + 1) {
 		theta_ = 0;
 		alpha_ = 0;
+		frameCount2_ = 0;
+		isFinClearAnime_ = false;
 		if (frameCount_ > numChangeLength_) {
 			drawerWaveNum_++;
 			if (bestWaveNum_ < drawerWaveNum_) {
+				isUpdate_ = true;
 				bestWaveNum_ = drawerWaveNum_;
 				WaveManager::GetInstance()->SetBestWave(uint32_t(bestWaveNum_));
 			}
@@ -239,7 +277,30 @@ void ResultScene::Result() {
 		}
 		frameCount_++;
 	}
+	else if (isFinClearAnime_ == false && (WaveManager::GetInstance()->IsEnd())) {
+		if (!WaveManager::GetInstance()->ISClear() && WaveManager::GetInstance()->IsEnd()) {
+			isUpdate_ = true;
+		}
+		WaveManager::GetInstance()->GameClear();
+		if (frameCount_ <= clearAnimationLength_) {
+			float t = float(frameCount_) / float(clearAnimationLength_);
+			float easedT = easeback(t);
+			plus_.scale = clearTransform_.scale * easedT;
+			if (frameCount_ <= clearAnimationLength_/2) {
+				plus_.rotate = Lerp(t*2.0f, { 0,0,0 }, clearTransform_.rotate);
+			}
+			
+			//plus_.rotate = clearTransform_.rotate;
+		}
+		else {
+			isFinClearAnime_ = true;
+		}
+		isFinCount_ = true;
+		frameCount_++;
+	}
 	else {
+		isFinCount_ = true;
+		isFinClearAnime_ = true;
 		if (GameController::GetInstance()->Enter()) {
 			phase_ = TOTITLE;
 		}
@@ -300,10 +361,19 @@ void ResultScene::Draw2D() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 	if (phase_ != FROMGAME) {
 		returnTitleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,alpha_},returnTextureHandle_);
+		if (isFinCount_ && WaveManager::GetInstance()->IsEnd()) {
+			//plus_.rotate = clearTransform_.rotate;
+			clearSprite_->Draw(plus_, uv, {1.0f,1.0f,1.0f,1.0f},clearTextureHandle_);
+		}
+		if (isFinClearAnime_ && isUpdate_) {
+			newRSprite_->Draw(newRTransform_, uv, { 1.0f,1.0f,1.0f,alpha_ },newRTextureHandle_);
+		}
 	}
+	
 	if (isRunAnimation_) {
 		Vector4 material = {0,0,0,1.0f};
 		if (phase_ == FROMGAME && WaveManager::GetInstance()->IsEnd()) {
+			material = {1.0f,1.0f,1.0f,1.0f};
 			material.w =1.0f - frameCount_ / float(transitionAnimationLength_);
 		}
 		Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{transitionSpritePosition_.x,transitionSpritePosition_.y,transitionSpritePosition_.z} };
