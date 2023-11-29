@@ -127,6 +127,9 @@ void WaveManager::Initialize() {
 	num2 = 0;
 	num3 = 0;
 
+	waveSprite_.reset(new Sprite);
+	waveSprite_->Initialize({ -1150.0f,-500.0f,0,0 }, { 1150.0f,500.0f,0,0 });
+	waveTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/wavetex/wave.png");
 	isChangeNum_ = false;
 	isChange10 = false;
 	isEnd_ = false;
@@ -271,7 +274,8 @@ void WaveManager::Draw() {
 	lowNum1->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num2]);
 	transform.translate = s3;
 	highNum1->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num3]);
-
+	transform.translate = {640.0f,250.0f,0};
+	waveSprite_->Draw(transform, uv,{ 1.0f,1.0f,1.0f,1.0f },waveTextureHandle_);
 }
 
 void WaveManager::ChangeNumAnimation() {

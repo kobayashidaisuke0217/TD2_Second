@@ -84,6 +84,9 @@ private:
 	int num2=0;
 	int num3=0;
 	
+	std::unique_ptr<Sprite> waveSprite_;
+	uint32_t waveTextureHandle_;
+
 	//Transform leftTransform_;
 	//Transform RightTransform_;
 	//表示用ウェーブ数
