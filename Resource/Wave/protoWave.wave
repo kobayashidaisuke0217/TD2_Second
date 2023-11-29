@@ -1,39 +1,50 @@
 wave 1
 
-length 10
+enemy a
+position 14 0 0
+velocity -1.0 0.0 0.0
+speed 0.4
+type 0
+frame 60
+
+enemy a
+position 14 1 0
+velocity -1.0 0.0 0.0
+speed 0.4
+type 0
+frame 60
+
+enemy a
+position 14 2 0
+velocity -1.0 0.0 0.0
+speed 0.4
+type 0
+frame 60
+
+enemy a
+position 14 3 0
+velocity -1.0 0.0 0.0
+speed 0.4
+type 0
+frame 60
+
+enemy a
+position 14 4 0
+velocity -1.0 0.0 0.0
+speed 0.4
+type 0
+frame 60
+
+enemy a
+position 14 5 0
+velocity -1.0 0.0 0.0
+speed 0.4
+type 0
+frame 60
+
+
+length 1000000
 
 wave 2
-
-length 10
-
-wave 3
-
-length 10
-
-wave 4
-
-length 10
-
-wave 5
-
-length 10
-
-wave 6
-
-length 10
-
-wave 7
-
-length 10
-
-wave 8
-
-length 10
-
-wave 9
-
-length 10
-
-wave 10
 
 length 10
