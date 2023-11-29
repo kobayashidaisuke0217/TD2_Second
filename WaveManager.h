@@ -35,7 +35,7 @@ public:
 	void SetBestWave(uint32_t waveNum) { bestWaveNum_ = waveNum; };
 	size_t GetBestWave() { return bestWaveNum_; };
 	size_t GetMaxWave() { return maxWaveNum_; };
-
+	bool IsEnd() { return isEnd_; };
 	void Initialize();
 	void Update();
 	void Draw();
@@ -94,5 +94,8 @@ private:
 	int32_t changeAnimationLength_ = 30;
 	int32_t changeAnimationCount_;
 	int32_t waveInterval_ = 180;
+
+	//終了検知
+	bool isEnd_;
 };
 

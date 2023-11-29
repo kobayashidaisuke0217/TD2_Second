@@ -444,7 +444,8 @@ void GameScene::InGame() {
 
 	}
 	if (!isRunAnimation_) {
-		if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave()) {
+		if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave() && 
+			WaveManager::GetInstance()->IsEnd()) {
 			//sceneNum = 2;
 			//isRunAnimation_;
 			isInGame_ = false;

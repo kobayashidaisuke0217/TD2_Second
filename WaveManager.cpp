@@ -129,6 +129,7 @@ void WaveManager::Initialize() {
 
 	isChangeNum_ = false;
 	isChange10 = false;
+	isEnd_ = false;
 }
 
 void WaveManager::Update() {
@@ -234,7 +235,11 @@ void WaveManager::Update() {
 	currentFrame_++;
 	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_) {
 		if (waves_.size() - 1 > waveNum_) {
+			isEnd_ = false;
 			waveNum_++;
+		}
+		else {
+			isEnd_ = true;
 		}
 		currentFrame_ = 0;
 	}
