@@ -109,6 +109,8 @@ void GameScene::Initialize()
 	backTextureHandle_ = textureManager_->Load("resource/back.png");
 	startTextureHandle_ = textureManager_->Load("resource/gameStart.png");
 
+	fadeTextureHandle_ = textureManager_->Load("resource/white.png");
+
 	globalVariables->AddItem(groupName2, "TitleScale", titleTransform_.scale);
 	globalVariables->AddItem(groupName2, "TitleTransform", titleTransform_.translate);
 
@@ -457,9 +459,9 @@ void GameScene::InGame() {
 		}
 	}
 	if (isRunAnimation_) {
-		resetT_ = frameCount_ / float(transitionAnimationLength_);
-		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
-
+		//resetT_ = frameCount_ / float(transitionAnimationLength_);
+		//resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
+		resetT_ = 1.0f;
 		if (frameCount_ >= transitionAnimationLength_) {
 			isRunAnimation_ = false;
 		}
@@ -660,8 +662,13 @@ void GameScene::Draw2D() {
 		}
 	}
 	if (isRunAnimation_) {
+		Vector4 fadematerial = {0.0f,0.0f,0.0f,1.0f};
+		if (isEndGame_) {
+			fadematerial = { 1.0f,1.0f,1.0f,1.0f };
+			fadematerial.w = (float(frameCount_) / float(transitionAnimationLength_)) * 2.0f;
+		}
 		Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{transitionSpritePosition_.x,transitionSpritePosition_.y,transitionSpritePosition_.z} };
-		transitionSprite_->Draw(pos, uv,{ 0.0f,0.0f,0.0f,1.0f } ,blackTextureHandle_);
+		transitionSprite_->Draw(pos, uv,fadematerial , fadeTextureHandle_);
 	}
 }
 
@@ -740,8 +747,12 @@ void GameScene::ReStartAnimation() {
 		frameCount_ = 0;
 	}
 	if (isRunAnimation_) {
-		resetT_ = frameCount_ / float(transitionAnimationLength_);
-		resetT_ = std::powf(resetT_*2.0f-1.0f, 2)*-1.0f + 1.0f;
+		resetT_ = 1.0f;
+		if (!isEndGame_) {
+			resetT_ = frameCount_ / float(transitionAnimationLength_);
+			resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
+
+		}
 		
 		if (frameCount_ == transitionAnimationLength_/2) {
 			ReStartWave();

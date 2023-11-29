@@ -137,6 +137,8 @@ private:
 	uint32_t jumpTextureHandle_;
 	uint32_t reverseTextureHandle_;
 
+	uint32_t fadeTextureHandle_;
+
 	std::vector<std::unique_ptr<Sprite>> lifeSprites_;
 	Vector3 lifeScale_;
 	Vector3 lifeTranslates_[3];
