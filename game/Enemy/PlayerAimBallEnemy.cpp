@@ -30,6 +30,7 @@ void PlayerAimBallEnemy::Initialize(const Transform& transform, const Vector3& v
 	ishit_ = false;
 	model_ = model;
 	model_->setIsLighting(false);
+	count = 0;
 }
 
 void PlayerAimBallEnemy::Update()
@@ -54,6 +55,9 @@ void PlayerAimBallEnemy::Update()
 			break;
 		}
 		behaviorRequest_ = std::nullopt;
+	}
+	if (count > 4) {
+		isAlive_ = false;
 	}
 	switch (behavior_) {
 	case Behavior::kstandBy:
@@ -98,7 +102,7 @@ void PlayerAimBallEnemy::BehaviorStandbyUpdate()
 	if (BehaviorChangeCount >= 30) {
 		standBycount++;
 		worldTransform_.rotation_.z = standBycount / 5.0f;
-		if (standBycount >= 120) {
+		if (standBycount >= 60) {
 			behaviorRequest_ = Behavior::kAtack;
 		}
 	}
@@ -121,6 +125,8 @@ void PlayerAimBallEnemy::BehaviorLeaveUpdate()
 {
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	standBycount--;
+	worldTransform_.rotation_.z = standBycount / 5.0f;
 	if (worldTransform_.translation_.y >= 50.0f) {
 		behaviorRequest_ = Behavior::kstandBy;
 	}
@@ -129,6 +135,7 @@ void PlayerAimBallEnemy::BehaviorLeaveUpdate()
 
 void PlayerAimBallEnemy::BehaviorStandbyInitialize()
 {
+	count++;
 	standBycount = 0;
 	BehaviorChangeCount = 0;
 }
