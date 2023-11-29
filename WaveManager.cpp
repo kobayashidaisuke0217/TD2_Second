@@ -167,7 +167,7 @@ void WaveManager::Update() {
 				break;
 			case kReflect://1
 				newEnemy = new ReflectEnemy();
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->reverceEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;
 			case kBound://2
@@ -215,7 +215,7 @@ void WaveManager::Update() {
 			case kAimBound://8
 				newEnemy = new PlayerAimBallEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
-				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->targetballEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
 				enemyList_->push_back(newEnemy);

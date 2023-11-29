@@ -128,7 +128,8 @@ void GameScene::Initialize()
 	jumpTextureHandle_ = textureManager_->Load("Resource/UI/jumpUI.png");
 	reverseTextureHandle_ = textureManager_->Load("Resource/UI/reversUI.png");
 	//モデルの初期化
-	ballEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy","targetBall.obj"));
+	ballEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy","ball.obj"));
+	targetballEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "targetBall.obj"));
 	beamEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "berm.obj"));
 	bulletEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "bullet.obj"));
 	reverceEnemyModel_.reset(Model::CreateModelFromObj("Resource/Enemy", "revese.obj"));
@@ -599,7 +600,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kBound:
 		enemy = new BoundEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, reverceEnemyModel_.get());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, ballEnemyModel_.get());
 
 		enemys_.push_back(enemy);
 		break;
@@ -638,7 +639,7 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kAimBound:
 		enemy = new PlayerAimBallEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,ballEnemyModel_.get());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,targetballEnemyModel_.get());
 		enemy->SetPlayer(player_.get());
 		enemy->SetGameScene(this);
 		enemys_.push_back(enemy);

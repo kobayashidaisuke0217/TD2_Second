@@ -54,6 +54,7 @@ public:
 	std::unique_ptr<Model>bulletEnemyModel_;
 	std::unique_ptr<Model>wheelEnemyModel_;
 	std::unique_ptr<Model>ballEnemyModel_;
+	std::unique_ptr<Model>targetballEnemyModel_;
 	std::unique_ptr<Model>reverceEnemyModel_;
 private:
 
