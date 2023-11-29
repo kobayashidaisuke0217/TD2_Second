@@ -20,7 +20,7 @@ void WaveManager::LoadAllFiles() {
 	maxWaveNum_ = 0;
 	waves_.clear();
 	waves_.shrink_to_fit();
-	LoadFile("Resource/Wave/waveData.wave");
+	//LoadFile("Resource/Wave/waveData.wave");
 	LoadFile("Resource/Wave/waveData2.wave");
 }
 
@@ -172,6 +172,7 @@ void WaveManager::Update() {
 				break;
 			case kBound://2
 				newEnemy = new BoundEnemy();
+				transform.scale = { 3.0f,3.0f,3.0f };
 				//{ 0.3f, -1.0f, 0.0f }
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
 				enemyList_->push_back(newEnemy); break;
