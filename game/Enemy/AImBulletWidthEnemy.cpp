@@ -41,6 +41,7 @@ void AImBulletWidthEnemy::Update()
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
 	currentCollTime_++;
+	worldTransform_.rotation_.x += currentAtackCount_ / 15.0f;
 	if (player_) {
 		worldTransform_.translation_.y = player_->GetWorldTransform().translation_.y+1.0f;
 	}

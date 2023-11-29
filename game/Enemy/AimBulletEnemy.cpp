@@ -35,7 +35,8 @@ void AimBulletEnemy::Initialize(const Transform& transform, const Vector3& veloc
 void AimBulletEnemy::Update()
 {
   currentCollTime_++;
-	if (player_) {
+  worldTransform_.rotation_.y += currentAtackCount_ / 15.0f;
+  if (player_) {
 		worldTransform_.translation_.x = player_->GetWorldTransform().translation_.x;
 	}
 	if(currentAtackCount_<=atackCount_)
