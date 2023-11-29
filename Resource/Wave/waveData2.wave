@@ -725,10 +725,10 @@ length 680
 wave 19
 
 enemy a
-position -12 13 0
+position 0 13 0
 velocity 0.0 0.0 0.0
-speed 0.5
+speed 0.8
 type 1
 frame 10
 
-length 100
+length 10

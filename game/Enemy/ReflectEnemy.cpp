@@ -58,12 +58,12 @@ void ReflectEnemy::Update()
 			cooltime_ = 0;
 		}
 		
-			if (reflectCount_ >= 4) {
+			if (reflectCount_ >= 12) {
 				isAlive_ = false;
 			}
 		
 		
-			if (worldTransform_.translation_.y >= 59.5) {
+			if (worldTransform_.translation_.y >= 52) {
 				if (!ishit_) {
 
 					ishit_ = true;
