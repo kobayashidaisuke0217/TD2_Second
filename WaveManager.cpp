@@ -298,7 +298,7 @@ void WaveManager::Draw() {
 	if (isFinal_){
 		transform.translate = { 700.0f,200.0f,0 };
 		transform.rotate.z = 0.3f;
-		transform.scale = Vector3{0.5f,0.5f,0.5f} * finalScale_;
+		transform.scale = Vector3{0.3f,0.3f,0.3f} * finalScale_;
 		finalSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f },finalTextureHandle_);
 	}
 }
