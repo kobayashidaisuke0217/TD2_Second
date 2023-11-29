@@ -103,17 +103,19 @@ void BoundEnemy::isCollision(OBB pertner)
 			if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
 				if (!isDown_) {
 					velocity_.y = 0.2f;
+					worldTransform_.translation_.y = pertner.center.y + pertner.size.y + worldTransform_.scale_.y;
 				}
 				else {
 					velocity_.y = -0.2f;
+					worldTransform_.translation_.y = pertner.center.y - pertner.size.y - worldTransform_.scale_.y;
 				}
-				worldTransform_.translation_ = prePos_;
+				//worldTransform_.translation_ = prePos_;
 
 			}
 			else if (std::abs(obb_.center.x - pertner.center.x) <= worldTransform_.scale_.x * 2.0f) {
 
 				velocity_.x *= -1.0f;
-				worldTransform_.translation_ = prePos_;
+				worldTransform_.translation_.x = prePos_.x;
 			}
 		}
 		else {
