@@ -1,133 +1,118 @@
 wave 1
 
 enemy a
-position 13 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 60
-
-enemy a
-position 12 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 60
-
-enemy a
-position 11 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 60
-
-enemy a
-position 10 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 60
-
-enemy a
-position 9 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 60
-
-enemy a
-position 8 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 60
-
-enemy a
 position 14 1 0
 velocity -1.0 0.0 0.0
 speed 0.5
 type 0
-frame 120
+frame 60
 
 enemy a
 position 14 2 0
 velocity -1.0 0.0 0.0
 speed 0.5
 type 0
-frame 120
+frame 60
 
 enemy a
 position 14 3 0
 velocity -1.0 0.0 0.0
 speed 0.5
 type 0
-frame 120
+frame 60
 
 enemy a
-position -13 13 0
-velocity 0.0 -1 0.0
-speed 0.3
+position 14 4 0
+velocity -1.0 0.0 0.0
+speed 0.5
 type 0
-frame 180
+frame 60
 
 enemy a
-position -12 13 0
-velocity 0.0 -1 0.0
-speed 0.3
+position -14 9 0
+velocity 1.0 0.0 0.0
+speed 0.5
 type 0
 frame 180
-
-enemy a
-position -11 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 180
-
-enemy a
-position -10 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 180
-
-enemy a
-position -9 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 180
-
-enemy a
-position -8 13 0
-velocity 0.0 -1 0.0
-speed 0.3
-type 0
-frame 180
-
 
 enemy a
 position -14 8 0
 velocity 1.0 0.0 0.0
 speed 0.5
 type 0
-frame 240
+frame 180
 
 enemy a
 position -14 7 0
 velocity 1.0 0.0 0.0
 speed 0.5
 type 0
-frame 240
+frame 180
 
 enemy a
 position -14 6 0
 velocity 1.0 0.0 0.0
 speed 0.5
 type 0
-frame 240
+frame 180
 
-length 330
+enemy a
+position -14 1 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position -14 2 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position -14 3 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position -14 4 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 9 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 8 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 7 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 6 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+length 400
 
 wave 2
 
