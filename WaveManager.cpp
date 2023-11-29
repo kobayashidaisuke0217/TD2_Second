@@ -20,8 +20,8 @@ void WaveManager::LoadAllFiles() {
 	maxWaveNum_ = 0;
 	waves_.clear();
 	waves_.shrink_to_fit();
-	//LoadFile("Resource/Wave/waveData.wave");
-	//LoadFile("Resource/Wave/waveData2.wave");
+	LoadFile("Resource/Wave/waveData.wave");
+	LoadFile("Resource/Wave/waveData2.wave");
 	LoadFile("Resource/Wave/waveData3.wave");
 }
 
