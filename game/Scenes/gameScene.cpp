@@ -21,6 +21,8 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
+	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[inGameBGM], 1.0f);
+
 	sceneNum = 1;
 	blueMoon_ = BlueMoon::GetInstance();
 
@@ -167,6 +169,8 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	
+
 	ApplyGlobalVariables();
 	//preJoyState_ = joyState_;
 	//Input::GetInstance()->GetJoystickState(0, joyState_);
@@ -281,7 +285,7 @@ void GameScene::Title() {
 		isStartGame_ = true;
 		isInGame_ = true;
 		isTitle_ = false;
-		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[GameStart],1.0f);
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart],1.0f);
 
 		//WaveManager::GetInstance()->SetWave(0);
 	}
@@ -333,21 +337,20 @@ void GameScene::InGame() {
 
 	
 	ImGui::InputInt("SceneNum", &sceneNum);
-	if (sceneNum > 1) {
-		sceneNum = 1;
-	}
+	
 	ImGui::End();
 	player_->Update();
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
 		followCamera_->Shake();
 		ReStart();
-		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death],1.0f);
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death],1.0f);
 
 	}
 	
 	bullets_.remove_if([](PlayerAimBullet* bullet) {
 		if (!bullet->GetIsAlive()) {
 			delete bullet;
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], 1.0f);
 			return true;
 		}
 		return false;
@@ -355,6 +358,8 @@ void GameScene::InGame() {
 	enemys_.remove_if([](IEnemy* enemy) {
 		if (!enemy->GetIsAlive()) {
 			delete enemy;
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], 1.0f);
+
 			return true;
 		}
 		return false;
@@ -398,7 +403,7 @@ void GameScene::InGame() {
  				bullet->isCollision();
 			}
 			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
-				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death], 1.0f);
+				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], 1.0f);
 
 				ReStart();
 				followCamera_->Shake();
@@ -452,7 +457,7 @@ void GameScene::InGame() {
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
 			ReStart();
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death], 1.0f);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], 1.0f);
 
 			followCamera_->Shake();
 			return;
@@ -727,8 +732,12 @@ void GameScene::ReStartWave()
 	bullets_.clear();
 	if (player_->GetLife() <= 0) {
 		sceneNum = 2;
+		Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
+
 	}
 	if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave()) {
+		Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
+
 		sceneNum = 2;
 	}
 	size_t num = WaveManager::GetInstance()->GetWave();

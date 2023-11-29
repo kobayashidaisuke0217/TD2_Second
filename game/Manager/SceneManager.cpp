@@ -70,22 +70,28 @@ void SceneManager::Initialize()
 	glovalVariables_->LoadFiles();
 	directionallight_ = DirectionalLight::GetInstance();
 	directionallight_->Initialize();
+	audio_ = Audio::GetInstance();
+	audio_->Initialize();
 	sceneArr_[TITLE_SCENE] = std::make_unique <TitleScene>();
 	sceneArr_[GAME_SCENE] = std::make_unique <GameScene>();
 	sceneArr_[RESULT_SCENE] = std::make_unique <ResultScene>();
 
 	sceneNum_ = GAME_SCENE;
+	
+	
+	audio_->handle_[EnemyPop] = audio_->SoundLoadWave("resource/SE/enemyPop.wav");
+
+	audio_->handle_[GameStart] = audio_->SoundLoadWave("resource/SE/gameStart.wav");
+	audio_->handle_[Death] = audio_->SoundLoadWave("resource/SE/death.wav");
+	audio_->handle_[Reverce] = audio_->SoundLoadWave("resource/SE/reverce.wav");
+	
+	audio_->handle_[Jump] = audio_->SoundLoadWave("resource/SE/jump.wav");
+	audio_->handle_[DeleteEnemy] = audio_->SoundLoadWave("resource/SE/deleteEnemy.wav");
+	audio_->handle_[ResultBGM] = audio_->SoundLoadWave("resource/SE/resultBGM.wav");
+	audio_->handle_[inGameBGM] = audio_->SoundLoadWave("resource/SE/inGameBGM.wav");
+	audio_->handle_[Move] = audio_->SoundLoadWave("resource/SE/block.wav");
 	sceneArr_[sceneNum_]->Initialize();
 
-	audio_ = Audio::GetInstance();
-	audio_->Initialize();
-	audio_->soundDatas[EnemyPop] = audio_->SoundLoadWave("resource/SE/enemyPop.wav");
-
-	audio_->soundDatas[GameStart] = audio_->SoundLoadWave("resource/SE/gameStart.wav");
-	audio_->soundDatas[Death] = audio_->SoundLoadWave("resource/SE/death.wav");
-	audio_->soundDatas[Reverce] = audio_->SoundLoadWave("resource/SE/reverce.wav");
-	
-	audio_->soundDatas[Jump] = audio_->SoundLoadWave("resource/SE/jump.wav");
 }
 
 

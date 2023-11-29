@@ -9,6 +9,11 @@ enum AudioNum {
 	EnemyPop,
 	Reverce,
 	Death,
+	DeleteEnemy,
+	inGameBGM,
+	ResultBGM,
+	Move,
+
 };
 // チャンクヘッダ
 struct ChunkHeader {
@@ -46,17 +51,22 @@ public:
 	void Initialize();
 
 	// 音声データの読み込み
-	SoundData SoundLoadWave(const char* filename);
+	uint32_t SoundLoadWave(const char* filename);
 
 	// 音声データ解放
 	void SoundUnload(SoundData* soundData);
 
 	// 音声再生
-	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, float volume);
+	void SoundPlayWave(uint32_t audioHandle, float volume);
 	//ループ再生
-	void SoundPlayloop(IXAudio2* xAudio2, const SoundData& soundData, float volume);
+	void SoundPlayloop(uint32_t audioHandle, float volume);
+
+	void StopAudio(uint32_t audioHandle);
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice;
+	IXAudio2SourceVoice* sourceVoice[20];
 	SoundData soundDatas[20];
+	uint32_t audioHandle_;
+	uint32_t handle_[20];
 
 };
