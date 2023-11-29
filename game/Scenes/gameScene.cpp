@@ -641,7 +641,11 @@ void GameScene::Draw2D() {
 		jumpmaterial.w = 0.5f;
 	}
 	jumpSprite_->Draw(jump_, uv, jumpmaterial, jumpTextureHandle_);
-	reverseSprite_->Draw(reverse_, uv, { 1.0f,1.0f,1.0f,1.0f }, reverseTextureHandle_);
+	Vector4 reversMaterial= { 1.0f,1.0f,1.0f,1.0f };
+	if (!MapManager::GetInstance()->IsReversAble()) {
+		reversMaterial.w = 0.5f;
+	}
+	reverseSprite_->Draw(reverse_, uv, reversMaterial, reverseTextureHandle_);
 	if (!isStartGame_ && !isEndGame_){
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
 	}

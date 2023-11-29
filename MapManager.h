@@ -61,6 +61,8 @@ public:
 	void SetPreJoyState(XINPUT_STATE* joystate) { preJoyState_ = joystate; };
 	void SetShakeCamera(std::function<void()> cameraShake) { cameraShake_ = cameraShake; };
 
+	bool IsReversAble() { return reverseCoolTime_ <= 0; };
+
 	//マップの読み込み最大幅
 	static const uint32_t kMapWidth = 30;
 	//マップの読み込み最大高さ
