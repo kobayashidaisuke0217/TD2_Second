@@ -198,6 +198,7 @@ void WaveManager::Update() {
 			case kAimBulletWidth://6
 				newEnemy = new AImBulletWidthEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
+				transform.scale = { 3.0f,3.0f,3.0f };
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
@@ -207,6 +208,7 @@ void WaveManager::Update() {
 				newEnemy = new AimBulletEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
 				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+				transform.scale = { 3.0f,3.0f,3.0f };
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
