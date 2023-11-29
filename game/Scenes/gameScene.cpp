@@ -459,9 +459,9 @@ void GameScene::InGame() {
 		}
 	}
 	if (isRunAnimation_) {
-		//resetT_ = frameCount_ / float(transitionAnimationLength_);
-		//resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
-		resetT_ = 1.0f;
+		resetT_ = frameCount_ / float(transitionAnimationLength_);
+		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
+		//resetT_ = 1.0f;
 		if (frameCount_ >= transitionAnimationLength_) {
 			isRunAnimation_ = false;
 		}
