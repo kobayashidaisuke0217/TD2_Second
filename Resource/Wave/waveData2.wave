@@ -424,7 +424,7 @@ speed 0.5
 type 0
 frame 330
 
-length 680
+length 580
 
 //////////////////////////////////////////////////////
 
@@ -570,13 +570,6 @@ velocity 0.0 -1.0 0.0
 speed 0.5
 type 0
 frame 190
-
-enemy a
-position 13 13 0
-velocity -0.8 -1.0 0.0
-speed 0.3
-type 2
-frame 200
 
 enemy a
 position -14 6 0
