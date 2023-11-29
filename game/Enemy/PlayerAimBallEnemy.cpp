@@ -57,7 +57,7 @@ void PlayerAimBallEnemy::Update()
 		}
 		behaviorRequest_ = std::nullopt;
 	}
-	if (count > 4) {
+	if (count > 5) {
 		isAlive_ = false;
 	}
 	switch (behavior_) {
@@ -136,14 +136,14 @@ void PlayerAimBallEnemy::BehaviorLeaveUpdate()
 
 void PlayerAimBallEnemy::BehaviorStandbyInitialize()
 {
-	count++;
+	
 	standBycount = 0;
 	BehaviorChangeCount = 0;
 }
 
 void PlayerAimBallEnemy::BehaviorLeaveInitialize()
 {
-
+	count++;
 	Vector3 target = player_->GetWorldTransform().translation_;
 	target.y = 60.0f;
 	velocity_ = Subtract(target, worldTransform_.translation_);
