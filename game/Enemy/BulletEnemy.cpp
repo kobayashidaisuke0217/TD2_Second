@@ -51,6 +51,11 @@ void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity
 void BulletEnemy::Update()
 {
 	currentCount++;
+	
+	
+		worldTransform_.rotation_.x += 0.2f;
+	
+	
 	if (currentCount >= startCount_) {
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 

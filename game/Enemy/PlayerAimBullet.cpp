@@ -30,6 +30,10 @@ void PlayerAimBullet::Initialize(Vector3 velocity, Transform transform, uint32_t
 
 void PlayerAimBullet::Update()
 {
+		worldTransform_.rotation_.x += 0.2f;
+	
+
+
 	if (std::abs(worldTransform_.translation_.x) > 100.0f) {
 		isAlive_ = false;
 	}
