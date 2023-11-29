@@ -13,10 +13,10 @@ class Particle
 {
 public:
 	void Initialize(uint32_t Drawparticle);
-	void Draw( const ViewProjection& viewProjection, const Vector4& material, uint32_t index);
+	void Draw(const ViewProjection& viewProjection, const Vector4& material, uint32_t index);
 	void Update();
 	void Finalize();
-	void AddParticle(const Emitter& emitter,const int& count);
+	void AddParticle(const Emitter& emitter, const int& count);
 private:
 	void SettingVertex();
 	void SetColor();
@@ -35,7 +35,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 	Transformmatrix* wvpData_;
 	DirectionalLight* directionalLight_;
-	static	const uint32_t kNumMaxInstance_ = 1000;
+	static	const uint32_t kNumMaxInstance_ = 100000;
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
 	ParticleForGPU* instancingData;
 	std::list<ParticleData>particles_;
@@ -44,6 +44,6 @@ private:
 	uint32_t DrawInstanceNum_;
 	int instanceCount;
 private:
-	ParticleData MakeNewParticle(const Emitter& emitter,std::mt19937& randomEngine);
+	ParticleData MakeNewParticle(const Emitter& emitter, std::mt19937& randomEngine);
 };
 

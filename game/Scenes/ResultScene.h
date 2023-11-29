@@ -10,7 +10,7 @@
 #include "ViewProjection.h"
 #include "Texturemanager.h"
 #include "GlobalVariables.h"
-#include "Particle.h"
+
 #include "Plane.h"
 //#include "game/Player.h"
 #include <list>

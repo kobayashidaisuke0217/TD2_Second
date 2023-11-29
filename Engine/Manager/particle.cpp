@@ -9,15 +9,15 @@ void Particle::Initialize(uint32_t Drawparticle)
 	textureManager_ = Texturemanager::GetInstance();
 	srvHeap_ = SrvDescriptorHeap::GetInstance();
 	directionalLight_ = DirectionalLight::GetInstance();
-	knumInstance_ =300;
+	knumInstance_ = 300;
 	SettingVertex();
 	SetColor();
 	TransformMatrix();
 }
 void Particle::TransformMatrix()
 {
-	
-	
+
+
 	instancingResource_ = direct_->CreateBufferResource(direct_->GetDevice().Get(), sizeof(ParticleForGPU) * kNumMaxInstance_);
 	instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
 	CreateSRV(1);
@@ -32,24 +32,25 @@ void Particle::CreateSRV(uint32_t num)
 	srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	srvDesc.Buffer.NumElements = kNumMaxInstance_;
 	srvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
-	srvHeap_->AddIndex();
-	srvHeap_->SetGPUHandle(direct_->GetSrvHeap().Get(), srvHeap_->GetSizeSRV(), srvHeap_->GetIndex());//direct_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
-	srvHeap_->SetCPUHandle(direct_->GetSrvHeap().Get(), srvHeap_->GetSizeSRV(), srvHeap_->GetIndex());//srvHandleCPU_ = textureManager_->GettextureSrvHandleCPU(direct_->GetSrvHeap().Get(), textureManager_->GetSizeSRV(), num);
+	//srvHeap_->AddIndex();
+	srvHeap_->SetGPUHandle(direct_->GetSrvHeap().Get(), srvHeap_->GetSizeSRV(), 1);//direct_->GetSrvHeap()->GetGPUDescriptorHandleForHeapStart();
+	srvHeap_->SetCPUHandle(direct_->GetSrvHeap().Get(), srvHeap_->GetSizeSRV(), 1);//srvHandleCPU_ = textureManager_->GettextureSrvHandleCPU(direct_->GetSrvHeap().Get(), textureManager_->GetSizeSRV(), num);
 	//srvHandleGPU_ = textureManager_->GettextureSrvHandleGPU(direct_->GetSrvHeap().Get(), textureManager_->GetSizeSRV(), num);
-	index_ = srvHeap_->GetIndex();
-	direct_->GetDevice().Get()->CreateShaderResourceView(instancingResource_.Get(), &srvDesc, srvHeap_->GetCPUHandle(srvHeap_->GetIndex()));
+	index_ = 1;
+	direct_->GetDevice().Get()->CreateShaderResourceView(instancingResource_.Get(), &srvDesc, srvHeap_->GetCPUHandle(1));
 }
-ParticleData Particle::MakeNewParticle(const Emitter& emitter,std::mt19937& randomEngine)
+ParticleData Particle::MakeNewParticle(const Emitter& emitter, std::mt19937& randomEngine)
 {
 	ParticleData particle;
 	std::uniform_real_distribution<float>distribution(-1.0f, 1.0f);
+	std::uniform_real_distribution<float>distrivelocity(-5.0f, 5.0f);
 	std::uniform_real_distribution<float>distColor(-1.0f, 1.0f);
 	std::uniform_real_distribution<float>distTime(1.0f, 3.0f);
 	particle.transform.scale = { 1.0f,1.0f,1.0f };
 	particle.transform.rotate = { 0.0f,0.0f,0.0f };
 	particle.transform.translate = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
-	particle.velocity = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
-	particle.color = { distColor(randomEngine),distColor(randomEngine) ,distColor(randomEngine) ,1.0f };
+	particle.velocity = { distrivelocity(randomEngine),distrivelocity(randomEngine),distrivelocity(randomEngine) };
+	particle.color = { distColor(randomEngine),distColor(randomEngine),distColor(randomEngine) ,1.0f };
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0.0f;
 	particle.isAlive = true;
@@ -63,7 +64,7 @@ void Particle::SetColor() {
 
 }
 
-void Particle::Draw( const ViewProjection& viewProjection, const Vector4& material, uint32_t index)
+void Particle::Draw(const ViewProjection& viewProjection, const Vector4& material, uint32_t index)
 {
 	Transform uvTransform = { { 1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f} };
 
@@ -71,17 +72,17 @@ void Particle::Draw( const ViewProjection& viewProjection, const Vector4& materi
 	uvtransformMtrix = Multiply(uvtransformMtrix, MakeRotateZMatrix(uvTransform.rotate.z));
 	uvtransformMtrix = Multiply(uvtransformMtrix, MakeTranslateMatrix(uvTransform.translate));
 	Matrix4x4 bakToFront = MakeRotateYMatrix(std::numbers::pi_v<float>);
-	Matrix4x4 billboard = Multiply(bakToFront,Inverse( viewProjection.matView));
+	Matrix4x4 billboard = Multiply(bakToFront, Inverse(viewProjection.matView));
 	billboard.m[3][0] = 0.0f;
 	billboard.m[3][1] = 0.0f;
-	billboard.m[3][2] = 0.0f; 
+	billboard.m[3][2] = 0.0f;
 	instanceCount = 0;
 	for (std::list<ParticleData>::iterator iterator = particles_.begin();
 		iterator != particles_.end(); ++iterator) {
-		
-		
+
+
 		instancingData[instanceCount].World = MakeBillBoardMatrix((*iterator).transform.scale, billboard, (*iterator).transform.translate); //MakeAffineMatrix(particles_[i].transform.scale, particles_[i].transform.rotate, particles_[i].transform.translate);
-		instancingData[instanceCount].World = Multiply(instancingData[instanceCount].World, MakeAffineMatrix((*iterator).emitter.transform.scale, {0.0f,0.0f,0.0f}, (*iterator).emitter.transform.translate));
+		instancingData[instanceCount].World = Multiply(instancingData[instanceCount].World, MakeAffineMatrix((*iterator).emitter.transform.scale, { 0.0f,0.0f,0.0f }, (*iterator).emitter.transform.translate));
 		instanceCount++;
 	}
 	*materialData_ = { material,false };
@@ -104,7 +105,7 @@ void Particle::Draw( const ViewProjection& viewProjection, const Vector4& materi
 
 
 	//描画！(DrawCall/ドローコール)・3頂点で1つのインスタンス。インスタンスについては今後
-	direct_->GetCommandList()->DrawInstanced(6, DrawInstanceNum_, 0, 0);
+	direct_->GetCommandList()->DrawInstanced(6,DrawInstanceNum_, 0, 0);
 
 }
 void Particle::Update()
@@ -123,7 +124,7 @@ void Particle::Update()
 			instancingData[instanceCount].World = MakeIdentity4x4();
 			(*iterator).transform.translate = Add((*iterator).transform.translate, (*iterator).velocity * kDeltTime);
 			(*iterator).currentTime += kDeltTime;
-			
+
 			instancingData[instanceCount].Color = (*iterator).color;
 			++DrawInstanceNum_;
 			++instanceCount;
@@ -137,41 +138,41 @@ void Particle::Finalize()
 
 }
 
-void Particle::AddParticle(const Emitter& emitter,const int& count)
+void Particle::AddParticle(const Emitter& emitter, const int& count)
 {
 	std::random_device seedGenerator_;
 	std::mt19937 randomEngine(seedGenerator_());
 	instanceCount = 0;
 	if (particles_.size() == 0) {
-		particles_.push_back(MakeNewParticle(emitter,randomEngine));
+		particles_.push_back(MakeNewParticle(emitter, randomEngine));
 		instanceCount++;
 	}
 	for (int i = 0; i < count; i++) {
-		instanceCount=0;
-	
-			for (std::list<ParticleData>::iterator iterator = particles_.begin();
-				iterator != particles_.end(); ++iterator) {
-				instanceCount++;
-				if (instanceCount >= kNumMaxInstance_) {
-					break;
-				}
-				
-				if ((*iterator).isAlive == false) {
-					particles_.insert(iterator, MakeNewParticle(emitter,randomEngine));
-					instanceCount++;
-				continue;
-				}
-				
-			}
+		instanceCount = 0;
+
+		for (std::list<ParticleData>::iterator iterator = particles_.begin();
+			iterator != particles_.end(); ++iterator) {
+			instanceCount++;
 			if (instanceCount >= kNumMaxInstance_) {
 				break;
 			}
-				particles_.push_back(MakeNewParticle(emitter,randomEngine));
+
+			if ((*iterator).isAlive == false) {
+				particles_.insert(iterator, MakeNewParticle(emitter, randomEngine));
 				instanceCount++;
 				continue;
-			
+			}
+
 		}
-		
+		if (instanceCount >= kNumMaxInstance_) {
+			break;
+		}
+		particles_.push_back(MakeNewParticle(emitter, randomEngine));
+		instanceCount++;
+		continue;
+
+	}
+	++DrawInstanceNum_;
 	
 }
 
