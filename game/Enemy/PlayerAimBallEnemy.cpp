@@ -57,7 +57,7 @@ void PlayerAimBallEnemy::Update()
 		}
 		behaviorRequest_ = std::nullopt;
 	}
-	if (count > 5) {
+	if (count > 2) {
 		isAlive_ = false;
 	}
 	switch (behavior_) {
