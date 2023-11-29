@@ -111,5 +111,6 @@ private:
 	//終了検知
 	bool isEnd_;
 	bool isPastClear_ = false;
+	float firstAlpha_;
 };
 

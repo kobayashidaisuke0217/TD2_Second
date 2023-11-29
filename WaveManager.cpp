@@ -249,8 +249,9 @@ void WaveManager::Update() {
 	}
 	currentFrame_++;
 
-	if (waveNum_==0) {
+	if (waveNum_<5) {
 		isFirst_ = true;
+		firstAlpha_ = float(5 - waveNum_) / 5.0f;
 		t_ += 0.1f;
 		if (t_ > 1.0f) {
 			t_ = 1.0f;
@@ -328,7 +329,7 @@ void WaveManager::Draw() {
 		transform.translate = { 700.0f,200.0f,0 };
 		transform.rotate.z = 0.3f;
 		transform.scale = Vector3{ 0.3f,0.3f,0.3f } *finalScale_;
-		finalSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, yokeroTextureHandle_);
+		finalSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,firstAlpha_ }, yokeroTextureHandle_);
 	}
 }
 
