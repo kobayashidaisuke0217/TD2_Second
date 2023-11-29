@@ -213,6 +213,9 @@
     <ClCompile Include="RandomEngine.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Manager\particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\base\SrvDescriptorHeap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -222,7 +225,7 @@
     <ClCompile Include="game\Scenes\ResultScene.cpp">
       <Filter>ソース ファイル\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Manager\particle.cpp">
+    <ClCompile Include="ResultPlayer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -377,6 +380,9 @@
     <ClInclude Include="game\Enemy\BeamEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Manager\particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\base\SrvDescriptorHeap.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -386,7 +392,7 @@
     <ClInclude Include="game\Scenes\ResultScene.h">
       <Filter>ヘッダー ファイル\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Manager\particle.h">
+    <ClInclude Include="ResultPlayer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

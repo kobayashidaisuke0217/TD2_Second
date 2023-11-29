@@ -147,6 +147,9 @@ void ResultScene::Initialize() {
 	phase_ = FROMGAME;
 	theta_ = 0;
 	alpha_ = 0;
+
+	player_.reset(new ResultPlayer);
+	player_->Initialize();
 }
 
 void ResultScene::ApplyGlobalVariables()
@@ -214,6 +217,8 @@ void ResultScene::Update() {
 	if (isRunAnimation_) {
 		TransitionAnimation();
 	}
+
+	player_->Update();
 
 	worldTransformReach_.UpdateMatrix();
 	worldTransformReachChar_.UpdateMatrix();
@@ -351,6 +356,7 @@ void ResultScene::Draw3D() {
 	blueMoon_->ModelPreDraw();
 
 	MapManager::GetInstance()->Draw(viewProjection_);
+	player_->Draw(viewProjection_);
 
 	plane_->Draw(worldTransformReachChar_, viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, reachTextureHandle_);
 	plane_->Draw(worldTransformReachWave_, viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, waveTextureHandle_);
