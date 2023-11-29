@@ -747,7 +747,7 @@ void GameScene::ReStartWave()
 		Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
 
 	}
-	if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave()) {
+	if (WaveManager::GetInstance()->IsEnd()) {
 		Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
 
 		sceneNum = 2;
