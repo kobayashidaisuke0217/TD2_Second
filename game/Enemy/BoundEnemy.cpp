@@ -45,7 +45,7 @@ void BoundEnemy::Update()
 	obb_.center = worldTransform_.translation_;
 	GetOrientations(rotateMatrix, obb_.orientation);
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
-
+	worldTransform_.rotation_.z -= velocity_.x / 5.0f;
 	worldTransform_.UpdateMatrix();
 	if (ishit_ == true) {
 		cooltime_++;
