@@ -1,5 +1,4 @@
 #include "ReflectEnemy.h"
-
 ReflectEnemy::ReflectEnemy()
 {
 }
@@ -32,8 +31,9 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	reflectCount_ = 0;
 	isDown_ = false;
 	type_ = kReflect;
+	model_=model;
 	model_->setIsLighting(false);
-	model_->setIsLighting(false);
+	worldTransform_.UpdateMatrix();
 }
 
 void ReflectEnemy::Update()
@@ -59,7 +59,16 @@ void ReflectEnemy::Update()
 			}
 		
 		
-			
+			if (worldTransform_.translation_.y >= 59.5) {
+				if (!ishit_) {
+
+					ishit_ = true;
+					reflectCount_++;
+					velocity_.y *= -1.0f;
+					worldTransform_.translation_ = prePos_;
+				}
+				
+			}
 		
 		
 		ImGui::Begin("enemy");
