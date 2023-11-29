@@ -60,6 +60,7 @@ private:
 	//遷移アニメーションの開始までの長さ
 	uint32_t transitionAnimationDelay_ = 0;
 	uint32_t frameCount_;
+	uint32_t frameCount2_;
 	bool isRunAnimation_;
 	Vector4 transitionStartPosition_ = { 0.0f,-720.0f,0.0f,0.0f };
 	Vector4 transitionEndPosition_ = { 0.0f,0.0f,0.0f,0.0f };
@@ -99,4 +100,17 @@ private:
 	uint32_t returnTextureHandle_;
 	float alpha_;
 	float theta_;
+
+	std::unique_ptr<Sprite> newRSprite_;
+	std::unique_ptr<Sprite> clearSprite_;
+	uint32_t newRTextureHandle_;
+	uint32_t clearTextureHandle_;
+	Transform clearTransform_;
+	Transform newRTransform_;
+	bool isFinCount_;
+	uint32_t clearAnimationLength_ = 30;
+	Transform plus_;
+	bool isFinClearAnime_;
+
+	bool isUpdate_;
 };

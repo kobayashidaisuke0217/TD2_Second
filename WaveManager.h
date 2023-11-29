@@ -44,7 +44,8 @@ public:
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
 	void ChangeNumAnimation();
 	//void ChangeNumAnimation10();
-
+	void GameClear() { isPastClear_ = true; };
+	bool ISClear() {return isPastClear_;};
 private:
 	WaveManager() = default;
 	~WaveManager() = default;
@@ -100,5 +101,6 @@ private:
 
 	//終了検知
 	bool isEnd_;
+	bool isPastClear_ = false;
 };
 
