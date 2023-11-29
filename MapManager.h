@@ -13,6 +13,7 @@ public:
 		None,
 		Block,
 		Wall,
+		Ceiling,
 	};
 	struct Map {
 		MapState mapState;
@@ -95,6 +96,7 @@ private:
 
 	std::vector<std::shared_ptr<Map>> floor_;
 	std::vector<std::shared_ptr<Map>> wall_;
+	std::vector<std::shared_ptr<Map>> ceiling_;//天井
 
 
 	MapState map[kMapHeight][kMapWidth];

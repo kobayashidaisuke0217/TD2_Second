@@ -82,6 +82,7 @@ void MapManager::MapBuild() {
 	//floor_.shrink_to_fit();
 	wall_.clear();
 	//wall_.shrink_to_fit();
+	ceiling_.clear();
 	uint32_t floorID = 0;
 	for (uint32_t y = 0; y < mapHeight_;y++) {
 		for (uint32_t x = 0; x < mapWidth_;x++) {
@@ -115,6 +116,9 @@ void MapManager::MapBuild() {
 				}
 				else if (map[y][x] == MapState::Wall) {
 					wall_.push_back((object));
+				}
+				else if (map[y][x] == MapState::Ceiling) {
+					ceiling_.push_back((object));
 				}
 			}
 		}
@@ -194,6 +198,9 @@ void MapManager::Draw(const ViewProjection& viewProjection) {
 	}
 	for (std::shared_ptr<Map> object : wall_) {
 		modelArie_->Draw(object->worldTransform,viewProjection);
+	}
+	for (std::shared_ptr<Map> object : ceiling_) {
+		modelArie_->Draw(object->worldTransform, viewProjection);
 	}
 }
 
