@@ -2,6 +2,7 @@
 #include "MapManager.h"
 #include "WaveManager.h"
 #include "GameController.h"
+#include "Audio.h"
 ResultScene::~ResultScene() {
 
 }
@@ -302,6 +303,8 @@ void ResultScene::Result() {
 		isFinCount_ = true;
 		isFinClearAnime_ = true;
 		if (GameController::GetInstance()->Enter()) {
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[GameStart], 1.0f);
+
 			phase_ = TOTITLE;
 		}
 		alpha_ = (std::sin(theta_) + 1.0f) * 0.5f;
