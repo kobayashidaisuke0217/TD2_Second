@@ -21,7 +21,7 @@ void ResultScene::Initialize() {
 
 	transitionSprite_.reset(new Sprite);
 	transitionSprite_->Initialize({ 0.0f,0.0f,0.0f,0.0f }, { 1280.0f,720.0f,0.0f,0.0f });
-	blackTextureHandle_ = textureManager_->Load("resource/startLine.png");
+	blackTextureHandle_ = textureManager_->Load("resource/white.png");
 
 	backGroundSprite_.reset(new Sprite);
 	backGroundSprite_->Initialize({ 0,0,0,0 }, { 1280,720,0,0 });
@@ -211,7 +211,10 @@ void ResultScene::FromGame() {
 		resetT_ = frameCount_ / float(transitionAnimationLength_);
 		//resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
 		resetT_ = 1.0f - resetT_;
-
+		if (WaveManager::GetInstance()->IsEnd()) {
+			resetT_ = 1.0f;
+		}
+		
 		
 		if (frameCount_ >= transitionAnimationLength_) {
 			isRunAnimation_ = false;
@@ -299,8 +302,12 @@ void ResultScene::Draw2D() {
 		returnTitleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,alpha_},returnTextureHandle_);
 	}
 	if (isRunAnimation_) {
+		Vector4 material = {0,0,0,1.0f};
+		if (phase_ == FROMGAME && WaveManager::GetInstance()->IsEnd()) {
+			material.w =1.0f - frameCount_ / float(transitionAnimationLength_);
+		}
 		Transform pos = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{transitionSpritePosition_.x,transitionSpritePosition_.y,transitionSpritePosition_.z} };
-		transitionSprite_->Draw(pos, uv, { 0.0f,0.0f,0.0f,1.0f }, blackTextureHandle_);
+		transitionSprite_->Draw(pos, uv, material, blackTextureHandle_);
 	}
 }
 
