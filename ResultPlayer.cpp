@@ -23,7 +23,7 @@ void ResultPlayer::Initialize() {
 	worldTransformbody_.Initialize();
 	worldTransformbody_.parent_ = &worldTransformModel_;
 	worldTransformback_.Initialize();
-	worldTransformback_.parent_ = &worldTransformbody_;
+	//worldTransformback_.parent_ = &worldTransformbody_;
 	worldTransformback_.scale_ = { 2.0f,2.0f,1.5f };
 	worldTransformCode_.Initialize();
 	worldTransformHead_.Initialize();
@@ -45,6 +45,8 @@ void ResultPlayer::Initialize() {
 	const char* groupName = "ResultPlayer";
 	globalVariables->AddItem(groupName, "Translate", worldTransformModel_.translation_);
 	globalVariables->AddItem(groupName, "Rotate", worldTransformModel_.rotation_);
+	globalVariables->AddItem(groupName, "backRotate", worldTransformback_.rotation_);
+	globalVariables->AddItem(groupName, "backTranslate", worldTransformback_.translation_);
 	theta_ = 0;
 }
 
@@ -55,14 +57,14 @@ void ResultPlayer::ApplyGlobalVariables()
 	const char* groupName = "ResultPlayer";
 	worldTransformModel_.translation_ = globalVariables->GetVector3Value(groupName, "Translate");
 	worldTransformModel_.rotation_ = globalVariables->GetVector3Value(groupName, "Rotate");
-
-
+	backOffset_ = globalVariables->GetVector3Value(groupName, "backTranslate");
+	worldTransformback_.rotation_ = globalVariables->GetVector3Value(groupName, "backRotate");
 	const char* groupName2 = "PlayerModel";
 	antenaOffset_ = globalVariables->GetVector3Value(groupName2, "antena");
 	codeOffset_ = globalVariables->GetVector3Value(groupName2, "code");
 	headOffset_ = globalVariables->GetVector3Value(groupName2, "head");
 	bodyOffset_ = globalVariables->GetVector3Value(groupName2, "body");
-	backOffset_ = globalVariables->GetVector3Value(groupName2, "back");
+	//backOffset_ = globalVariables->GetVector3Value(groupName2, "back");
 	leftOffset_ = globalVariables->GetVector3Value(groupName2, "left");
 	rightOffset_ = globalVariables->GetVector3Value(groupName2, "right");
 	charctorScale_ = globalVariables->GetVector3Value(groupName2, "charactorScale");
@@ -86,6 +88,10 @@ void ResultPlayer::Update() {
 	worldTransformbody_.translation_ = bodyOffset_;
 	//worldTransformbody_.translation_.y += std::sin(floatAnimetion_) * 0.5f;
 	worldTransformbody_.UpdateMatrix();
+	worldTransformback_.scale_ = { 2.0f,2.0f,1.5f };
+	worldTransformback_.scale_.x *= charctorScale_.x;
+	worldTransformback_.scale_.y *= charctorScale_.y;
+	worldTransformback_.scale_.z *= charctorScale_.z;
 	worldTransformback_.translation_ = backOffset_;
 	worldTransformback_.UpdateMatrix();
 	worldTransformHead_.translation_ = headOffset_;
@@ -116,7 +122,7 @@ void ResultPlayer::Update() {
 void ResultPlayer::Draw(const ViewProjection& viewProjection) {
 	//model_->Draw(worldTransformOBB_,viewProjection);
 	body_->Draw(worldTransformbody_, viewProjection);
-	back_->Draw(worldTransformback_, viewProjection);
+	back2_->Draw(worldTransformback_, viewProjection);
 	
 	head_->Draw(worldTransformHead_, viewProjection);
 	leg_->Draw(worldTransformLeftLeg_, viewProjection);
