@@ -26,7 +26,7 @@ private:
 	
 		int standBycount;
 		int BehaviorChangeCount;
-
+		int count;
 
 	std::optional<Behavior> behaviorRequest_;
 	Behavior behavior_ = Behavior::kstandBy;
