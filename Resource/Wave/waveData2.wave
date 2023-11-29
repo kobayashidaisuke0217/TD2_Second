@@ -126,47 +126,6 @@ speed 0.5
 type 0
 frame 180
 
-enemy a
-position 5 13 0
-velocity 0.0 -1.0 0.0
-speed 0.5
-type 0
-frame 190
-
-enemy a
-position 6 13 0
-velocity 0.0 -1.0 0.0
-speed 0.5
-type 0
-frame 200
-
-enemy a
-position 7 13 0
-velocity 0.0 -1.0 0.0
-speed 0.5
-type 0
-frame 210
-
-enemy a
-position 8 13 0
-velocity 0.0 -1.0 0.0
-speed 0.5
-type 0
-frame 220
-
-enemy a
-position 9 13 0
-velocity 0.0 -1.0 0.0
-speed 0.5
-type 0
-frame 230
-
-enemy a
-position 10 13 0
-velocity 0.0 -1.0 0.0
-speed 0.5
-type 0
-frame 240
 
 enemy a
 position 13 13 0
@@ -688,4 +647,12 @@ speed 0.5
 type 7
 frame 10
 
-length 500
+enemy a
+position 14 0 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 6
+frame 220
+
+
+length 480

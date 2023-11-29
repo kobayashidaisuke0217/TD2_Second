@@ -568,14 +568,6 @@ length 400
 ///////////////////////////////////////////////////////////////////
 wave 4
 
-
-enemy a
-position 14 1 0
-velocity -1.0 0.0 0.0
-speed 0.5
-type 0
-frame 60
-
 enemy a
 position 14 2 0
 velocity -1.0 0.0 0.0
@@ -592,20 +584,6 @@ frame 60
 
 enemy a
 position 14 4 0
-velocity -1.0 0.0 0.0
-speed 0.5
-type 0
-frame 60
-
-enemy a
-position 14 5 0
-velocity -1.0 0.0 0.0
-speed 0.5
-type 0
-frame 60
-
-enemy a
-position 14 6 0
 velocity -1.0 0.0 0.0
 speed 0.5
 type 0

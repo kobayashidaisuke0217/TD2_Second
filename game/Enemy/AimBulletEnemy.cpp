@@ -26,8 +26,8 @@ void AimBulletEnemy::Initialize(const Transform& transform, const Vector3& veloc
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	type_ = kAimBulletHeight;
 	isAlive_ = true;
-	atackCount_ = 5;
-	coolTime_ = 10;
+	atackCount_ = 8;
+	coolTime_ = 30;
 	model_ = model;
 	model_->setIsLighting(false);
 }

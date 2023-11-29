@@ -28,8 +28,8 @@ void AImBulletWidthEnemy::Initialize(const Transform& transform, const Vector3& 
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	type_ = kAimBulletWidth;
 	isAlive_ = true;
-	atackCount_ = 5;
-	coolTime_ = 10;
+	atackCount_ = 4;
+	coolTime_ = 50;
 	model_ = model;
 	model_->setIsLighting(false);
 }
