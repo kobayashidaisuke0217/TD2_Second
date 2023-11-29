@@ -47,10 +47,11 @@ struct SoundData {
 class Audio
 {
 public:
+public:
 	static Audio* GetInstance();
 
 	void Initialize();
-	void Update();
+
 	// 音声データの読み込み
 	uint32_t SoundLoadWave(const char* filename);
 
@@ -58,9 +59,9 @@ public:
 	void SoundUnload(SoundData* soundData);
 
 	// 音声再生
-	void SoundPlayWave(uint32_t audioHandle);
+	void SoundPlayWave(uint32_t audioHandle, float volume);
 	//ループ再生
-	void SoundPlayloop(uint32_t audioHandle);
+	void SoundPlayloop(uint32_t audioHandle, float volume);
 
 	void StopAudio(uint32_t audioHandle);
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
@@ -69,6 +70,5 @@ public:
 	SoundData soundDatas[20];
 	uint32_t audioHandle_;
 	uint32_t handle_[20];
-	float volume[20];
-	void ApplyGlobalVariables();
+
 };

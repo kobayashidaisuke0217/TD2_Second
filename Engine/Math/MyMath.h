@@ -323,3 +323,5 @@ inline Vector3 Reflect(const Vector3& input, const Vector3& normal) {
 }
 
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
+static float SoundVolume[20] = { 1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0,1.0f,1.0f };

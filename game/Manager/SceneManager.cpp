@@ -24,7 +24,6 @@ void SceneManager::Run() {
 		input->Update();
 		glovalVariables_->Update();
 		directionallight_->Update();
-		audio_->Update();
 		blueMoon_->BeginFrame();
 
 		preSceneNum_ = sceneNum_;

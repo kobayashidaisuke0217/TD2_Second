@@ -12,7 +12,7 @@ void ResultScene::Finalize() {
 }
 
 void ResultScene::Initialize() {
-	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[ResultBGM]);
+	//SoundVolume[ResultBGM] = 0.0f; 
 	sceneNum = 2;
 	blueMoon_ = BlueMoon::GetInstance();
 
@@ -150,6 +150,9 @@ void ResultScene::Initialize() {
 
 	player_.reset(new ResultPlayer);
 	player_->Initialize();
+	ApplyGlobalVariables();
+		Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[ResultBGM], SoundVolume[ResultBGM]);
+
 }
 
 void ResultScene::ApplyGlobalVariables()
@@ -192,7 +195,7 @@ void ResultScene::ApplyGlobalVariables()
 		newRTransform_.scale = globalVariables->GetVector3Value(groupName, "newRScale");
 		newRTransform_.rotate = globalVariables->GetVector3Value(groupName, "newRRotate");
 		newRTransform_.translate = globalVariables->GetVector3Value(groupName, "newRTranslate");
-
+		
 }
 
 void ResultScene::Update() {
@@ -315,7 +318,7 @@ void ResultScene::Result() {
 		isFinCount_ = true;
 		isFinClearAnime_ = true;
 		if (GameController::GetInstance()->Enter()) {
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart]);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart], SoundVolume[GameStart]);
 
 			phase_ = TOTITLE;
 		}
