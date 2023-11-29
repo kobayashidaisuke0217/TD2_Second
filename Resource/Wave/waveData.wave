@@ -458,8 +458,6 @@ speed 0.5
 type 0
 frame 150
 
-length 150
-
 enemy a
 position 13 13 0
 velocity 0.0 -1.0 0.0
