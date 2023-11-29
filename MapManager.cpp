@@ -202,7 +202,7 @@ void MapManager::Map::Update() {
 	if (moveFlag_ && !isTouch_) {
 		//移動開始
 		if (isCollision_) {
-		
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Block]);
 			Reverse();
 			delay_ = kBlocckFloatAnimationDelay;
 		}
@@ -223,7 +223,7 @@ void MapManager::Map::Update() {
 	//isCollision_ = false;
 	isTouch_ = false;
 	if (isMove_) {
-		//Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Block]);
+		
 		Move();
 	}
 	obb.center = worldTransform.translation_;
