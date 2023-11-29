@@ -179,6 +179,7 @@ void GameScene::Initialize()
 	particle_ = std::make_unique<Particle>();
 	particle_->Initialize(1000000000);
 	Transform t = { {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	ApplyGlobalVariables();
 	//particle_->AddParticle({ t }, 10);
 	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[inGameBGM], Audio::GetInstance()->SoundVolume[inGameBGM]);
 }
