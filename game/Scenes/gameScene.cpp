@@ -592,14 +592,14 @@ void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)
 	case kReflect:
 		enemy = new ReflectEnemy();
 		enemy->SetPlayer(player_.get());
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,ballEnemyModel_.get());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, reverceEnemyModel_.get());
 		
 		enemys_.push_back(enemy);
 		break;
 	case kBound:
 		enemy = new BoundEnemy();
 		//{ 0.3f, -1.0f, 0.0f }
-		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_,ballEnemyModel_.get());
+		enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_, reverceEnemyModel_.get());
 
 		enemys_.push_back(enemy);
 		break;
