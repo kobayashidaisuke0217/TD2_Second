@@ -105,6 +105,9 @@ private:
 	float finalScale_;
 	float t_;
 
+	uint32_t yokeroTextureHandle_;
+	bool isFirst_;
+
 	//終了検知
 	bool isEnd_;
 	bool isPastClear_ = false;
