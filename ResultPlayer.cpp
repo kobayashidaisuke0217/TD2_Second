@@ -77,7 +77,7 @@ void ResultPlayer::Update() {
 	theta_ += 0.1f;
 	worldTransformLeftLeg_.rotation_.x = -3.14f*0.25f + std::sin(theta_)*0.2f;
 	worldTransformRightLeg_.rotation_.x = -3.14f * 0.25f - std::sin(theta_)*0.2f;
-
+	worldTransformHead_.rotation_.z = std::sin(theta_) * 0.2f;
 
 	worldTransformModel_.scale_ = charctorScale_;
 	worldTransformModel_.UpdateMatrix();
@@ -101,7 +101,7 @@ void ResultPlayer::Update() {
 
 
 	Vector3 antenaPos = vectorTransform(antenaOffset_, worldTransformHead_.matWorld_);
-	worldTransformAntena_.translation_ = Lerp(1.0f, worldTransformAntena_.translation_, antenaPos);
+	worldTransformAntena_.translation_ = Lerp(0.1f, worldTransformAntena_.translation_, antenaPos);
 	worldTransformAntena_.scale_ = { 0.7f,0.7f,0.7f };
 	worldTransformAntena_.UpdateMatrix();
 	worldTransformCode_.scale_ = { 0.5f,0.5f,0.7f };
