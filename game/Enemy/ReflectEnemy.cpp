@@ -34,7 +34,7 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	type_ = kReflect;
 	model_=model;
 	model_->setIsLighting(false);
-	velocity_ = Subtract(player_->GetWorldTransform().GetWorldPos(), worldTransform_.translation_);
+	//velocity_ = Subtract(player_->GetWorldTransform().GetWorldPos(), worldTransform_.translation_);
 	velocity_ = Normalise(velocity_);
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	worldTransform_.UpdateMatrix();
