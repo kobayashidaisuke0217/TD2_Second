@@ -1,4 +1,5 @@
 #include "ReflectEnemy.h"
+#include "game/Player.h"
 ReflectEnemy::ReflectEnemy()
 {
 }
@@ -23,7 +24,7 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	velocity_.y = std::clamp(velocity_.y, -1.0f, 1.0f);
 	velocity_.z = std::clamp(velocity_.z, -1.0f, 1.0f);
 	texindex_ = texture;
-	velocity_ = Multiply(MoveSpeed_, velocity_);
+
 	isAlive_ = true;
 	ishit_ = false;
 	cooltime_ = 0;
@@ -33,6 +34,9 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	type_ = kReflect;
 	model_=model;
 	model_->setIsLighting(false);
+	velocity_ = Subtract(player_->GetWorldTransform().GetWorldPos(), worldTransform_.translation_);
+	velocity_ = Normalise(velocity_);
+	velocity_ = Multiply(MoveSpeed_, velocity_);
 	worldTransform_.UpdateMatrix();
 }
 
@@ -49,7 +53,7 @@ void ReflectEnemy::Update()
 		if (ishit_ == true) {
 			cooltime_++;
 		}
-		if (cooltime_ >= 5) {
+		if (cooltime_ >= 10) {
 			ishit_ = false;
 			cooltime_ = 0;
 		}
@@ -95,7 +99,14 @@ void ReflectEnemy::isCollision(OBB pertner)
 					if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
 						velocity_.y *= -1.0f;
 						worldTransform_.translation_ = prePos_;
-		
+						if (obb_.center.y >= pertner.center.y) {
+							worldTransform_.translation_.y = pertner.center.y + pertner.size.y + worldTransform_.scale_.y;
+
+						}
+						else {
+							worldTransform_.translation_.y = pertner.center.y - pertner.size.y - worldTransform_.scale_.y;
+
+						}
 					}
 					else if (std::abs(obb_.center.x - pertner.center.x) <= worldTransform_.scale_.x * 2.0f) {
 		
