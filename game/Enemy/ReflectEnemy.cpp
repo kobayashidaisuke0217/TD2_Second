@@ -42,13 +42,15 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 
 void ReflectEnemy::Update()
 {
-	prePos_ = worldTransform_.translation_;
+	currentTime_++;
+	if (currentTime_ >= startCount_) {
+		prePos_ = worldTransform_.translation_;
 		Matrix4x4 rotateMatrix = MakeRotateMatrix(Vector3{ 0.0f,0.0f,0.0f });
-		obb_.size = { worldTransform_.scale_.x/2.0f ,worldTransform_.scale_.y/2.0f ,worldTransform_.scale_.z/2.0f  };
+		obb_.size = { worldTransform_.scale_.x / 2.0f ,worldTransform_.scale_.y / 2.0f ,worldTransform_.scale_.z / 2.0f };
 		obb_.center = worldTransform_.translation_;
 		GetOrientations(rotateMatrix, obb_.orientation);
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
-		
+
 		worldTransform_.UpdateMatrix();
 		if (ishit_ == true) {
 			cooltime_++;
@@ -57,29 +59,25 @@ void ReflectEnemy::Update()
 			ishit_ = false;
 			cooltime_ = 0;
 		}
-		
-			if (reflectCount_ >= 12) {
-				isAlive_ = false;
-			}
-		
-		
-			if (worldTransform_.translation_.y >= 52) {
-				if (!ishit_) {
 
-					ishit_ = true;
-					reflectCount_++;
-					velocity_.y *= -1.0f;
-					worldTransform_.translation_ = prePos_;
-				}
-				
+		if (reflectCount_ >= 12) {
+			isAlive_ = false;
+		}
+
+
+		if (worldTransform_.translation_.y >= 52) {
+			if (!ishit_) {
+
+				ishit_ = true;
+				reflectCount_++;
+				velocity_.y *= -1.0f;
+				worldTransform_.translation_ = prePos_;
 			}
+
+		}
+
+	}
 		
-		
-		ImGui::Begin("enemy");
-		ImGui::DragFloat3("velocity", &velocity_.x);
-		ImGui::DragFloat3("translate", &worldTransform_.translation_.x);
-	
-		ImGui::End();
 		
 }
 

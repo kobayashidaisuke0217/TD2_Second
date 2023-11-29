@@ -167,6 +167,7 @@ void WaveManager::Update() {
 				break;
 			case kReflect://1
 				newEnemy = new ReflectEnemy();
+				newEnemy->SetStartCount(gameScene_->BulletStartCount);
 				newEnemy->SetPlayer(player_);
 				transform.scale = { 3.0f,3.0f,3.0f };
 
