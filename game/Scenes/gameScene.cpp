@@ -328,7 +328,7 @@ void GameScene::Title() {
 	}
 	worldTransformStart_.translation_ = startOffset_;
 	worldTransformStart_.translation_.y += std::sin(startFloatTheta_) *0.5f;
-	startFloatTheta_ += 0.3f;
+	startFloatTheta_ += 0.1f;
 }
 
 void GameScene::InGame() {
