@@ -92,6 +92,27 @@ length 660
 wave 22
 
 enemy a
+position 14 3 0
+velocity 0.0 0.0 0.0
+speed 0.9
+type 8
+frame 30
+
+enemy a
+position -14 8 0
+velocity 0.0 0.0 0.0
+speed 0.9
+type 8
+frame 30
+
+length 420
+
+
+/////////////////////////////////////////////////////
+
+wave 23
+
+enemy a
 position 13 13 0
 velocity -1.0 0.0 0.0
 speed 0.5
@@ -168,29 +189,15 @@ speed 0.5
 type 0
 frame 260
 
+enemy a
+position 14 4 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 270
+
 
 length 400
-
-/////////////////////////////////////////////////////
-
-wave 23
-
-enemy a
-position 14 3 0
-velocity 0.0 0.0 0.0
-speed 0.9
-type 8
-frame 30
-
-enemy a
-position -14 8 0
-velocity 0.0 0.0 0.0
-speed 0.9
-type 8
-frame 30
-
-length 200
-
 
 ////////////////////////////////////////////////////
 wave 24
@@ -405,4 +412,18 @@ speed 0.5
 type 0
 frame 350
 
-length 2000
+enemy a
+position 13 13 0
+velocity -1.0 0.0 0.0
+speed 0.3
+type 2
+frame 60
+
+enemy a
+position -13 13 0
+velocity 1.0 0.0 0.0
+speed 0.3
+type 2
+frame 200
+
+length 500 
