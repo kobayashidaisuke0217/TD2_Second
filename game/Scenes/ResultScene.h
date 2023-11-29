@@ -12,7 +12,7 @@
 #include "GlobalVariables.h"
 
 #include "Plane.h"
-//#include "game/Player.h"
+#include "ResultPlayer.h"
 #include <list>
 class ResultScene :public Iscene
 {
@@ -113,4 +113,6 @@ private:
 	bool isFinClearAnime_;
 
 	bool isUpdate_;
+
+	std::unique_ptr<ResultPlayer> player_;
 };
