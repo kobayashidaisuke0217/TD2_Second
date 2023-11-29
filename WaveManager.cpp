@@ -290,7 +290,7 @@ void WaveManager::Update() {
 		currentFrame_ = 0;
 	}
 	if (waveNum_ > drawerWaveNum_ && !isChangeNum_) {
-		num0 = drawerWaveNum_ % 10 + 1;
+		num0 = int32_t(drawerWaveNum_+1) % 10 ;
 		num1 = num0 + 1;
 		if (num1 >= 10) {
 			num1 = 0;
