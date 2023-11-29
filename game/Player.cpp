@@ -6,6 +6,7 @@
 #include "Globalvariables.h"
 #include "GameController.h"
 #include "RandomEngine.h"
+#include"Audio.h"
 void Player::Initialize(){
 
 	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
@@ -182,6 +183,8 @@ void Player::Update() {
 	if (!isDead_) {
 		prePosition_ = worldTransform_.translation_;
 		if (GameController::GetInstance()->Jump() && jumpAble_ && jumpCoolTime_ <= 0) {
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Jump],1.0f);
+
 			velocity_.y = 0.0f;
 			velocity_.y = jumpAccerelation_.y;
 			jumpAble_ = false;

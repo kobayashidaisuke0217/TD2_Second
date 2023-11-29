@@ -3,7 +3,13 @@
 #pragma comment(lib, "xaudio2.lib")
 #include <fstream>
 #include <wrl.h>
-
+enum AudioNum {
+	GameStart,
+	Jump,
+	EnemyPop,
+	Reverce,
+	Death,
+};
 // チャンクヘッダ
 struct ChunkHeader {
 	char id[4];	  // チャンク毎のID
@@ -46,9 +52,11 @@ public:
 	void SoundUnload(SoundData* soundData);
 
 	// 音声再生
-	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData);
-
+	void SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, float volume);
+	//ループ再生
+	void SoundPlayloop(IXAudio2* xAudio2, const SoundData& soundData, float volume);
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
 	IXAudio2MasteringVoice* masterVoice;
-	SoundData soundDatas[10];
+	SoundData soundDatas[20];
+
 };

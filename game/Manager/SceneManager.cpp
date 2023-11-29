@@ -35,9 +35,7 @@ void SceneManager::Run() {
 
 		}
 		sceneArr_[sceneNum_]->Update();
-		if (input->PushKey(DIK_1)) {
-			audio_->SoundPlayWave(audio_->xAudio2.Get(), audio_->soundDatas[0]);
-		}
+		
 
 		sceneArr_[sceneNum_]->Draw();
 
@@ -81,7 +79,13 @@ void SceneManager::Initialize()
 
 	audio_ = Audio::GetInstance();
 	audio_->Initialize();
-	audio_->soundDatas[0] = audio_->SoundLoadWave("resource/Alarm01.wav");
+	audio_->soundDatas[EnemyPop] = audio_->SoundLoadWave("resource/SE/enemyPop.wav");
+
+	audio_->soundDatas[GameStart] = audio_->SoundLoadWave("resource/SE/gameStart.wav");
+	audio_->soundDatas[Death] = audio_->SoundLoadWave("resource/SE/death.wav");
+	audio_->soundDatas[Reverce] = audio_->SoundLoadWave("resource/SE/reverce.wav");
+	
+	audio_->soundDatas[Jump] = audio_->SoundLoadWave("resource/SE/jump.wav");
 }
 
 

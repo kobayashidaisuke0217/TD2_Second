@@ -2,6 +2,7 @@
 #include "MapManager.h"
 #include "GameController.h"
 #include "WaveManager.h"
+#include "Audio.h"
 #include <functional>
 GameScene::~GameScene()
 {
@@ -278,6 +279,8 @@ void GameScene::Title() {
 		isStartGame_ = true;
 		isInGame_ = true;
 		isTitle_ = false;
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[GameStart],1.0f);
+
 		//WaveManager::GetInstance()->SetWave(0);
 	}
 
@@ -336,6 +339,8 @@ void GameScene::InGame() {
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
 		followCamera_->Shake();
 		ReStart();
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death],1.0f);
+
 	}
 	
 	bullets_.remove_if([](PlayerAimBullet* bullet) {
@@ -391,9 +396,11 @@ void GameScene::InGame() {
  				bullet->isCollision();
 			}
 			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
-				
+				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death], 1.0f);
+
 				ReStart();
 				followCamera_->Shake();
+			
 				return;
 			}
 			
@@ -442,7 +449,9 @@ void GameScene::InGame() {
 		}
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
-			//ReStart();
+			ReStart();
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death], 1.0f);
+
 			followCamera_->Shake();
 			return;
 		}
@@ -481,8 +490,8 @@ void GameScene::Draw()
 	blueMoon_->ModelPreDraw();
 	Draw3D();
 	//2D描画準備
-	//blueMoon_->SpritePreDraw();
-	//Draw2D();
+	blueMoon_->SpritePreDraw();
+	Draw2D();
 }
 
 void GameScene::Draw3D()
@@ -503,10 +512,7 @@ void GameScene::Draw3D()
 		titleChar_->Draw(worldTransformStart_, viewProjection_,{1.0f,1.0f,1.0f,1.0f},startTextureHandle_);
 	}
 	blueMoon_->PariclePreDraw();
-	if (particletextureHandle == 30) {
-		particle_->Draw(viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, particletextureHandle);
-
-	}
+	
 		particle_->Draw(viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, particletextureHandle);
 	
 	blueMoon_->ModelPreDrawWireFrame();

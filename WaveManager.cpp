@@ -8,7 +8,7 @@
 #include"game/Enemy/AimBulletEnemy.h"
 #include"game/Enemy/PlayerAimBullet.h"
 #include "game/Scenes/gameScene.h"
-
+#include "Audio.h"
 #include <fstream>
 #include <sstream>
 WaveManager* WaveManager::GetInstance() {
@@ -141,7 +141,7 @@ void WaveManager::Update() {
 			transform.scale = { 1.0f,1.0f,1.0f };
 			transform.rotate = { 0,0,0 };
 			transform.translate = enemy.translate;
-
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[EnemyPop],0.1f);
 			switch (enemy.type)
 			{
 			case kBullet:
