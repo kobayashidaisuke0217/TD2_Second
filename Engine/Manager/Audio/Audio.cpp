@@ -30,9 +30,9 @@ void Audio::Initialize() {
 void Audio::Update()
 {
 	ApplyGlobalVariables();
-	for (int i = 0; i < 20; i++) {
+	/*for (int i = 0; i < 20; i++) {
 		volume[i] = std::clamp(volume[i], 0.0f, 1.0f);
-	}
+	}*/
 }
 uint32_t Audio::SoundLoadWave(const char* filename) {
 	audioHandle_++;
@@ -160,8 +160,8 @@ void Audio::ApplyGlobalVariables()
 	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
 	const char* groupName = "SoundVolume";
 	globalVariables->CreateGroup(groupName);
-	volume[inGameBGM] = globalVariables->GetFloatValue(groupName, "Ingame");
-	volume[ResultBGM] = globalVariables->GetFloatValue(groupName, "Result");
+	volume[6] = globalVariables->GetFloatValue(groupName, "Ingame");
+	volume[7] = globalVariables->GetFloatValue(groupName, "Result");
 	volume[Jump] = globalVariables->GetFloatValue(groupName, "Jump");
 	volume[GameStart] = globalVariables->GetFloatValue(groupName, "start");
 	volume[Reverce] = globalVariables->GetFloatValue(groupName, "Reverce");

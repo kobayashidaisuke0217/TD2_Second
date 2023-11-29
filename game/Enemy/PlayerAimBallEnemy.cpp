@@ -102,7 +102,7 @@ void PlayerAimBallEnemy::BehaviorStandbyUpdate()
 	if (BehaviorChangeCount >= 30) {
 		standBycount++;
 		worldTransform_.rotation_.z = standBycount / 5.0f;
-		if (standBycount >= 60) {
+		if (standBycount >= 30) {
 			behaviorRequest_ = Behavior::kAtack;
 		}
 	}
