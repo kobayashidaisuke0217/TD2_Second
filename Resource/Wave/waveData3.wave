@@ -426,4 +426,82 @@ speed 0.3
 type 2
 frame 200
 
-length 500 
+length 480
+
+///////////////////////////////////////
+
+wave 25
+
+enemy a
+position 14 8 0
+velocity -1.0 0.0 0.0
+speed 0.9
+type 8
+frame 20
+
+enemy a
+position 0 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 7
+frame 10
+
+enemy a
+position 14 8 0
+velocity -1.0 0.0 0.0
+speed 0.3
+type 2
+frame 180
+
+enemy a
+position 13 13 0
+velocity -1.0 0.0 0.0
+speed 0.9
+type 8
+frame 300
+
+enemy a
+position 13 13 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 3
+frame 420
+
+enemy a
+position -13 13 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 3
+frame 420
+
+enemy a
+position -14 1 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 220
+
+enemy a
+position -14 2 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 230
+
+enemy a
+position -14 3 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 240
+
+enemy a
+position -14 4 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 250
+
+
+
+length 800
