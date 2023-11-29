@@ -1,16 +1,16 @@
 {
     "SoundVolume": {
-        "BlockBGM": 1.399999976158142,
-        "BoundBGM": 1.7000000476837158,
-        "ClearBGM": 2.0,
-        "DeathBGM": 3.0,
-        "DeleteEnemyBGM": 2.5999999046325684,
-        "EnemyPopBGM": 2.799999952316284,
-        "IngameBGM": 0.30000001192092896,
-        "JumpBGM": 0.6000000238418579,
-        "ResultBGM": 2.0999999046325684,
-        "ReverceBGM": 1.899999976158142,
-        "plusWaveBGM": 1.600000023841858,
-        "startBGM": 1.899999976158142
+        "BlockBGM": 0.10000000149011612,
+        "BoundBGM": 0.10000000149011612,
+        "ClearBGM": 0.10000000149011612,
+        "DeathBGM": 0.5,
+        "DeleteEnemyBGM": 0.10000000149011612,
+        "EnemyPopBGM": 0.05000000074505806,
+        "IngameBGM": 0.10000000149011612,
+        "JumpBGM": 1.0,
+        "ResultBGM": 0.10000000149011612,
+        "ReverceBGM": 0.10000000149011612,
+        "plusWaveBGM": 0.5,
+        "startBGM": 0.30000001192092896
     }
 }
