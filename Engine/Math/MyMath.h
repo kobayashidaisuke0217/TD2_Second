@@ -7,6 +7,10 @@
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <algorithm>
+enum particletype {
+	height,
+	random,
+};
 struct Vector4 {
 	float x;
 	float y;
@@ -60,6 +64,8 @@ struct MaterialData {
 };
 struct Emitter {
 	Transform transform;
+	particletype type;
+	Vector4 color;
 };
 struct ParticleData {
 	Transform transform;
