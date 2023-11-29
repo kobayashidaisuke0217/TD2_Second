@@ -21,7 +21,8 @@ void WaveManager::LoadAllFiles() {
 	waves_.clear();
 	waves_.shrink_to_fit();
 	//LoadFile("Resource/Wave/waveData.wave");
-	LoadFile("Resource/Wave/waveData2.wave");
+	//LoadFile("Resource/Wave/waveData2.wave");
+	LoadFile("Resource/Wave/waveData3.wave");
 }
 
 void WaveManager::LoadFile(const char filename[]) {
@@ -221,6 +222,7 @@ void WaveManager::Update() {
 			case kAimBound://8
 				newEnemy = new PlayerAimBallEnemy();
 				//{ 0.3f, -1.0f, 0.0f }
+				transform.scale = { 3.0f,3.0f,3.0f };
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->targetballEnemyModel_.get());
 				newEnemy->SetPlayer(player_);
 				newEnemy->SetGameScene(gameScene_);

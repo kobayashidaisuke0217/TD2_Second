@@ -1,3 +1,11 @@
 wave 20
 
-length 10
+enemy a
+position 0 13 0
+velocity 0.0 0.0 0.0
+speed 0.7
+type 1
+frame 10
+
+
+length 3000
