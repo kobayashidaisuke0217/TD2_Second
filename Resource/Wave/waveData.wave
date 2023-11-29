@@ -220,70 +220,70 @@ position -13 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 80
+frame 190
 
 enemy a
 position -12 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 80
+frame 190
 
 enemy a
 position -11 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 80
+frame 190
 
 enemy a
 position -10 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 80
+frame 190
 
 enemy a
 position -9 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 80
+frame 190
 
 enemy a
 position 13 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 190
+frame 80
 
 enemy a
 position 12 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 190
+frame 80
 
 enemy a
 position 11 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 190
+frame 80
 
 enemy a
 position 10 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 190
+frame 80
 
 enemy a
 position 9 13 0
 velocity 0.0 -1 0.0
 speed 0.5
 type 0
-frame 190
+frame 80
 
 enemy a
 position 4 13 0
@@ -1163,4 +1163,217 @@ length 550
 
 wave 9
 
-length 10
+enemy a
+position -14 1 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 60
+
+enemy a
+position -14 2 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 70
+
+enemy a
+position -14 3 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 80
+
+enemy a
+position -14 4 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 90
+
+enemy a
+position 14 9 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 60
+
+enemy a
+position 14 8 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 70
+
+enemy a
+position 14 7 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 80
+
+enemy a
+position 14 6 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 90
+
+enemy a
+position 14 1 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 210
+
+enemy a
+position 14 2 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 220
+
+enemy a
+position 14 3 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 230
+
+enemy a
+position 14 4 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 240
+
+enemy a
+position -14 9 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 210
+
+enemy a
+position -14 8 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 220
+
+enemy a
+position -14 7 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 230
+
+enemy a
+position -14 6 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 240
+
+
+enemy a
+position -13 13 0
+velocity 0.0 -1 0.0
+speed 0.5
+type 0
+frame 320
+
+enemy a
+position -12 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 330
+
+enemy a
+position -11 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 340
+
+enemy a
+position -10 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 350
+
+enemy a
+position -9 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 360
+
+enemy a
+position -8 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 370
+
+enemy a
+position -7 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 380
+
+enemy a
+position -6 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 390
+
+enemy a
+position -5 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 400
+
+enemy a
+position -4 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 410
+
+enemy a
+position -3 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 420
+
+enemy a
+position -2 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 430
+
+enemy a
+position -1 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 440
+
+enemy a
+position 0 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 0
+frame 450
+
+length 500
+
+//////////////////////////////////////////////////////////////////
