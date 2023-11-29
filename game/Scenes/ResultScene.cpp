@@ -298,7 +298,11 @@ void ResultScene::Result() {
 			if (frameCount_ <= clearAnimationLength_/2) {
 				plus_.rotate = Lerp(t*2.0f, { 0,0,0 }, clearTransform_.rotate);
 			}
-			
+			if (frameCount_ == clearAnimationLength_ / 2) {
+				///ここにクリア音を入れる
+
+				///
+			}
 			//plus_.rotate = clearTransform_.rotate;
 		}
 		else {

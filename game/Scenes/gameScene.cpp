@@ -375,6 +375,8 @@ void GameScene::InGame() {
 			player_->OnCollision(object.obb);
 		}
 	}*/
+	
+	MapManager::GetInstance()->Update();
 	for (IEnemy* enemy : enemys_) {
 		enemy->Update();
 		if (std::abs(enemy->GetWorldTransform().GetWorldPos().x) > horizonBorder_ ||
@@ -387,7 +389,7 @@ void GameScene::InGame() {
 
 		bullet->Update();
 	}
-	MapManager::GetInstance()->Update();
+	
 	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
 	for (std::shared_ptr<MapManager::Map> object : floors) {
 		if (IsCollision(player_->GetOBB(), object->obb)) {
