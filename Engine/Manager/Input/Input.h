@@ -12,6 +12,7 @@
 class Input
 {
 public:
+	
 	static Input* GetInstance();
 	void Initialize(WinApp* winApp);
 	void Update();

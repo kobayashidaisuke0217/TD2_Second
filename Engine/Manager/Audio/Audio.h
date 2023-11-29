@@ -70,5 +70,5 @@ public:
 	SoundData soundDatas[20];
 	uint32_t audioHandle_;
 	uint32_t handle_[20];
-
+	static float SoundVolume[20];
 };

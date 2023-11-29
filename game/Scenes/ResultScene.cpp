@@ -151,7 +151,7 @@ void ResultScene::Initialize() {
 	player_.reset(new ResultPlayer);
 	player_->Initialize();
 	ApplyGlobalVariables();
-		Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[ResultBGM], SoundVolume[ResultBGM]);
+		Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[ResultBGM], Audio::GetInstance()->SoundVolume[ResultBGM]);
 
 }
 
@@ -318,7 +318,7 @@ void ResultScene::Result() {
 		isFinCount_ = true;
 		isFinClearAnime_ = true;
 		if (GameController::GetInstance()->Enter()) {
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart], SoundVolume[GameStart]);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart], Audio::GetInstance()->SoundVolume[GameStart]);
 
 			phase_ = TOTITLE;
 		}

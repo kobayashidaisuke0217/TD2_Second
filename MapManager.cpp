@@ -169,7 +169,7 @@ void MapManager::Update() {
 			object->Update();
 		}
 		if (GameController::GetInstance()->Reverse() && reverseCoolTime_ <= 0) {
-			Audio::GetInstance()->SoundPlayWave( Audio::GetInstance()->handle_[Reverce], SoundVolume[Reverce]);
+			Audio::GetInstance()->SoundPlayWave( Audio::GetInstance()->handle_[Reverce], Audio::GetInstance()->SoundVolume[Reverce]);
 
 			for (std::shared_ptr<Map> object : floor_) {
 				object->Reverse();
@@ -202,7 +202,7 @@ void MapManager::Map::Update() {
 	if (moveFlag_ && !isTouch_) {
 		//移動開始
 		if (isCollision_) {
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Block], SoundVolume[Block]);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Block], Audio::GetInstance()->SoundVolume[Block]);
 			Reverse();
 			delay_ = kBlocckFloatAnimationDelay;
 		}

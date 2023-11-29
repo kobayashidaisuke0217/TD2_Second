@@ -1,6 +1,6 @@
 #include "Audio.h"
 #include <cassert>
-
+float Audio::SoundVolume[20];
 Audio* Audio::GetInstance() {
 	static Audio instance;
 

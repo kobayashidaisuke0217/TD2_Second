@@ -1,12 +1,12 @@
 {
     "SoundVolume": {
-        "Block": 3.0999999046325684,
-        "Death": 2.700000047683716,
-        "DeleteEnemy": 5.0,
-        "Ingame": 5.599999904632568,
-        "Jump": 3.5,
-        "Result": 3.9000000953674316,
-        "Reverce": 3.0,
-        "start": 1.2999999523162842
+        "BlockBGM": 1.399999976158142,
+        "DeathBGM": 0.0,
+        "DeleteEnemyBGM": 0.0,
+        "IngameBGM": 0.800000011920929,
+        "JumpBGM": 0.6000000238418579,
+        "ResultBGM": 0.0,
+        "ReverceBGM": 0.0,
+        "startBGM": 0.0
     }
 }

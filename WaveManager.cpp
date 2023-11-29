@@ -154,7 +154,7 @@ void WaveManager::Update() {
 			transform.scale = { 1.0f,1.0f,1.0f };
 			transform.rotate = { 0,0,0 };
 			transform.translate = enemy.translate;
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[EnemyPop], SoundVolume[EnemyPop]);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[EnemyPop], Audio::GetInstance()->SoundVolume[EnemyPop]);
 			switch (enemy.type)
 			{
 			case kBullet://0

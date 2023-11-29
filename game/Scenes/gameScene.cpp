@@ -21,7 +21,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
-	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[inGameBGM],SoundVolume[inGameBGM]);
+	
 
 	sceneNum = 1;
 	blueMoon_ = BlueMoon::GetInstance();
@@ -49,16 +49,16 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupName2, "startScale", lineScale_);
 	globalVariables->AddItem(groupName2, "startPosition", linePosition_);
 
-	const char* groupNameSound = "SoundVolum";
+	const char* groupNameSound = "SoundVolume";
 	globalVariables->CreateGroup(groupNameSound);
-	globalVariables->AddItem(groupNameSound, "IngameBGM", SoundVolume[inGameBGM]);
-	globalVariables->AddItem(groupNameSound, "ResultBGM", SoundVolume[ResultBGM]);
-	globalVariables->AddItem(groupNameSound, "JumpBGM", SoundVolume[Jump]);
-	globalVariables->AddItem(groupNameSound, "startBGM", SoundVolume[GameStart]);
-	globalVariables->AddItem(groupNameSound, "ReverceBGM", SoundVolume[Reverce]);
-	globalVariables->AddItem(groupNameSound, "DeathBGM", SoundVolume[Death]);
-	globalVariables->AddItem(groupNameSound, "DeleteEnemyBGM", SoundVolume[DeleteEnemy]);
-	globalVariables->AddItem(groupNameSound, "BlockBGM", SoundVolume[Block]);
+	globalVariables->AddItem(groupNameSound, "IngameBGM", Audio::GetInstance()->SoundVolume[inGameBGM]);
+	globalVariables->AddItem(groupNameSound, "ResultBGM", Audio::GetInstance()->SoundVolume[ResultBGM]);
+	globalVariables->AddItem(groupNameSound, "JumpBGM", Audio::GetInstance()->SoundVolume[Jump]);
+	globalVariables->AddItem(groupNameSound, "startBGM", Audio::GetInstance()->SoundVolume[GameStart]);
+	globalVariables->AddItem(groupNameSound, "ReverceBGM", Audio::GetInstance()->SoundVolume[Reverce]);
+	globalVariables->AddItem(groupNameSound, "DeathBGM", Audio::GetInstance()->SoundVolume[Death]);
+	globalVariables->AddItem(groupNameSound, "DeleteEnemyBGM", Audio::GetInstance()->SoundVolume[DeleteEnemy]);
+	globalVariables->AddItem(groupNameSound, "BlockBGM", Audio::GetInstance()->SoundVolume[Block]);
 	
 	MapManager::GetInstance()->Initialize();
 	//MapManager::GetInstance()->MapRead();
@@ -175,7 +175,7 @@ void GameScene::Initialize()
 	particle_->Initialize(1000000000);
 	Transform t = { {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	//particle_->AddParticle({ t }, 10);
-	
+	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[inGameBGM], Audio::GetInstance()->SoundVolume[inGameBGM]);
 }
 
 void GameScene::Update()
@@ -299,7 +299,7 @@ void GameScene::Title() {
 		isStartGame_ = true;
 		isInGame_ = true;
 		isTitle_ = false;
-		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart],SoundVolume[GameStart]);
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart], Audio::GetInstance()->SoundVolume[GameStart]);
 
 		//WaveManager::GetInstance()->SetWave(0);
 	}
@@ -360,14 +360,14 @@ void GameScene::InGame() {
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
 		followCamera_->Shake();
 		ReStart();
-		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], SoundVolume[Death]);
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], Audio::GetInstance()->SoundVolume[Death]);
 
 	}
 	
 	bullets_.remove_if([](PlayerAimBullet* bullet) {
 		if (!bullet->GetIsAlive()) {
 			delete bullet;
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], SoundVolume[DeleteEnemy]);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], Audio::GetInstance()->SoundVolume[DeleteEnemy]);
 			return true;
 		}
 		return false;
@@ -375,7 +375,7 @@ void GameScene::InGame() {
 	enemys_.remove_if([](IEnemy* enemy) {
 		if (!enemy->GetIsAlive()) {
 			delete enemy;
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy],SoundVolume[DeleteEnemy]);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], Audio::GetInstance()->SoundVolume[DeleteEnemy]);
 
 			return true;
 		}
@@ -422,7 +422,7 @@ void GameScene::InGame() {
  				bullet->isCollision();
 			}
 			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
-				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], SoundVolume[Death]);
+				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], Audio::GetInstance()->SoundVolume[Death]);
 
 				ReStart();
 				followCamera_->Shake();
@@ -485,7 +485,7 @@ void GameScene::InGame() {
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
 			ReStart();
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], SoundVolume[Death]);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], Audio::GetInstance()->SoundVolume[Death]);
 
 			followCamera_->Shake();
 			return;
@@ -593,17 +593,17 @@ void GameScene::ApplyGlobalVariables()
 	BulletStartCount = globalVariables->GetIntValue(groupNameEnemy, "time");
 
 	
-	const char* groupNameSound = "SoundVolum";
+	const char* groupNameSound = "SoundVolume";
 
-	SoundVolume[inGameBGM] = globalVariables->GetFloatValue(groupNameSound, "IngameBGM");
-	SoundVolume[ResultBGM] = globalVariables->GetFloatValue(groupNameSound, "ResultBGM");
-	SoundVolume[Jump] = globalVariables->GetFloatValue(groupNameSound, "JumpBGM");
-	SoundVolume[GameStart] = globalVariables->GetFloatValue(groupNameSound, "startBGM");
-	SoundVolume[Reverce] = globalVariables->GetFloatValue(groupNameSound, "ReverceBGM");
-	SoundVolume[Death] = globalVariables->GetFloatValue(groupNameSound, "DeathBGM");
-	SoundVolume[DeleteEnemy] = globalVariables->GetFloatValue(groupNameSound, "DeleteEnemyBGM");
-
-	SoundVolume[Block] = globalVariables->GetFloatValue(groupNameSound, "BlockBGM");
+	Audio::GetInstance()->SoundVolume[inGameBGM] = globalVariables->GetFloatValue(groupNameSound, "IngameBGM");
+	Audio::GetInstance()->SoundVolume[ResultBGM] = globalVariables->GetFloatValue(groupNameSound, "ResultBGM");
+	Audio::GetInstance()->SoundVolume[Jump] = globalVariables->GetFloatValue(groupNameSound, "JumpBGM");
+	Audio::GetInstance()->SoundVolume[GameStart] = globalVariables->GetFloatValue(groupNameSound, "startBGM");
+	Audio::GetInstance()->SoundVolume[Reverce] = globalVariables->GetFloatValue(groupNameSound, "ReverceBGM");
+	Audio::GetInstance()->SoundVolume[Death] = globalVariables->GetFloatValue(groupNameSound, "DeathBGM");
+	Audio::GetInstance()->SoundVolume[DeleteEnemy] = globalVariables->GetFloatValue(groupNameSound, "DeleteEnemyBGM");
+	
+	Audio::GetInstance()->SoundVolume[Block] = globalVariables->GetFloatValue(groupNameSound, "BlockBGM");
 
 }
 

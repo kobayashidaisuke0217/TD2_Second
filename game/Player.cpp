@@ -190,7 +190,7 @@ void Player::Update() {
 	if (!isDead_) {
 		prePosition_ = worldTransform_.translation_;
 		if (GameController::GetInstance()->Jump() && jumpAble_ && jumpCoolTime_ <= 0) {
-			Audio::GetInstance()->SoundPlayWave( Audio::GetInstance()->handle_[Jump], SoundVolume[Jump]);
+			Audio::GetInstance()->SoundPlayWave( Audio::GetInstance()->handle_[Jump], Audio::GetInstance()->SoundVolume[Jump]);
 
 			velocity_.y = 0.0f;
 			velocity_.y = jumpAccerelation_.y;
