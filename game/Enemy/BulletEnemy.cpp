@@ -45,6 +45,11 @@ void BulletEnemy::Initialize(const Transform& transform, const Vector3& velocity
 	if (velocity_.y < 0.0f) {
 		worldTransform_.rotation_.z = 4.75f;
 	}
+	if (velocity_.z < 0.0f) {
+		worldTransform_.rotation_.z= 1.6f;
+		worldTransform_.rotation_.y = -4.75f;
+	}
+	worldTransform_.UpdateMatrix();
 }
 
 
