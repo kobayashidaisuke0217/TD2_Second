@@ -77,7 +77,8 @@ void ResultPlayer::Update() {
 	theta_ += 0.1f;
 	worldTransformLeftLeg_.rotation_.x = -3.14f*0.25f + std::sin(theta_)*0.2f;
 	worldTransformRightLeg_.rotation_.x = -3.14f * 0.25f - std::sin(theta_)*0.2f;
-	worldTransformHead_.rotation_.z = std::sin(theta_) * 0.2f;
+	worldTransformHead_.rotation_.z = std::sin(theta_) * 0.5f;
+	worldTransformHead_.rotation_.y = std::sin(theta_) * 0.1f;
 
 	worldTransformModel_.scale_ = charctorScale_;
 	worldTransformModel_.UpdateMatrix();
