@@ -17,6 +17,7 @@ public:
 	void Update();
 	void Finalize();
 	void AddParticle(const Emitter& emitter, const int& count);
+	void Cler();
 private:
 	void SettingVertex();
 	void SetColor();

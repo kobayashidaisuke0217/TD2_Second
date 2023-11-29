@@ -43,14 +43,23 @@ ParticleData Particle::MakeNewParticle(const Emitter& emitter, std::mt19937& ran
 {
 	ParticleData particle;
 	std::uniform_real_distribution<float>distribution(-1.0f, 1.0f);
+	std::uniform_real_distribution<float>distri(0.0f, 1.0f);
 	std::uniform_real_distribution<float>distrivelocity(-1.0f, 1.0f);
 	std::uniform_real_distribution<float>distColor(-1.0f, 1.0f);
 	std::uniform_real_distribution<float>distTime(1.0f, 2.0f);
 	particle.transform.scale = { 1.5f,1.5f,1.5f };
 	particle.transform.rotate = { 0.0f,0.0f,0.0f };
-	particle.transform.translate = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
-	particle.velocity = { distrivelocity(randomEngine)*8.0f,distrivelocity(randomEngine)*8.0f,distrivelocity(randomEngine)*8.0f };
-	particle.color = { 1.0f,0.0f,0.0f ,1.0f };
+	if (emitter.type == random) {
+		particle.transform.translate = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
+		particle.velocity = { distrivelocity(randomEngine) * 8.0f,distrivelocity(randomEngine) * 8.0f,distrivelocity(randomEngine) * 8.0f };
+
+	}
+	else {
+		particle.transform.translate = { 0.0f,distri(randomEngine)-1.0f,0.0f};
+		particle.velocity ={0.0f,distri(randomEngine) * 4.0f,0.0f };
+
+	}
+	particle.color = emitter.color;
 	particle.lifeTime = 0.5f;
 	particle.currentTime = 0.0f;
 	particle.isAlive = true;
@@ -173,6 +182,13 @@ void Particle::AddParticle(const Emitter& emitter, const int& count)
 	}
 	++DrawInstanceNum_;
 	
+}
+
+void Particle::Cler()
+{
+	particles_.clear();
+	DrawInstanceNum_=0;
+	instanceCount=0;
 }
 
 void Particle::SettingVertex() {

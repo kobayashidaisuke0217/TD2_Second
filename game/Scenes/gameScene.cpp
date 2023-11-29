@@ -439,10 +439,19 @@ void GameScene::InGame() {
 						object->Touch();
 					}
 				}
+				Transform particletrans = { enemy->GetWorldTransform().scale_,enemy->GetWorldTransform().rotation_ ,enemy->GetWorldTransform().translation_ };
+				if (enemy->GetType() == kTire) {
+					Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+					particle_->AddParticle({ particletrans,height,color }, 3);
 
+				}
+				else {
+					Vector4 color = { 1.0f,0.0f,0.0f,1.0f };
+					particle_->AddParticle({ particletrans,random,color }, 10);
+				}
 				enemy->SetPartener(kflore);
 				enemy->isCollision(object->obb);
-				particle_->AddParticle({ enemy->GetWorldTransform().scale_,enemy->GetWorldTransform().rotation_ ,enemy->GetWorldTransform().translation_ }, 10);
+				
 			}
 		}
 		if (enemy->GetType() == kReflect) {
@@ -754,6 +763,7 @@ void GameScene::ReStart()
 	for (PlayerAimBullet* bullet : bullets_) {
 		delete bullet;
 	}
+	particle_->Cler();
 	bullets_.clear();
 	enemys_.clear();
 	player_->DethAnimation();

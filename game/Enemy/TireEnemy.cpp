@@ -26,6 +26,7 @@ void TireEnemy::Initialize(const Transform& transform, const Vector3& velocity, 
 	isAlive_ = true;
 	ishit_ = false;
 	model_ = model;
+	SetType(kTire);
 	model_->setIsLighting(false);
 }
 
@@ -39,12 +40,14 @@ void TireEnemy::Update()
 	GetOrientations(rotateMatrix, obb_.orientation);
 	if (!ishit_) {
 		velocity_.y = -0.5f;
+		worldTransform_.translation_.y += velocity_.y;
 	}
 	else {
+		worldTransform_.rotation_.z -= velocity_.x;
+		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 		velocity_.y = 0.0f;
 	}
-	worldTransform_.rotation_.z -= velocity_.x;
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	
 	worldTransform_.UpdateMatrix();
 	ishit_ = false;
 }
