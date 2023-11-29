@@ -192,17 +192,7 @@ void GameScene::Update()
 	//preJoyState_ = joyState_;
 	//Input::GetInstance()->GetJoystickState(0, joyState_);
 	GameController::GetInstance()->Update();
-	if (Input::GetInstance()->PressKey(DIK_1)) {
-		MapManager::GetInstance()->MapRead();
-		player_->Initialize();
-		enemyPop_ = false;
-	}
-	if (Input::GetInstance()->PressKey(DIK_2)) {
-		MapManager::GetInstance()->WaveRead(waveNum_);
-		WaveManager::GetInstance()->SetWave(waveNum_);
-		//MapManager::GetInstance()->Clear();
-		
-	}
+	
 
 	ImGui::Begin("wave");
 	ImGui::DragInt("wave", &waveNum_,1,0,30);
@@ -256,11 +246,7 @@ void GameScene::Update()
 	ImGui::Checkbox("POP", &enemyPop_);
 	ImGui::End();
 	
-	if (Input::GetInstance()->PushKey(DIK_E) || enemyPop_) {
-		EnemySpawn(player_->GetWorldTransform(), type);
-		enemyPop_ = false;
-		
-	}
+	
 	
 	if (isTitle_) {
 		Title();
