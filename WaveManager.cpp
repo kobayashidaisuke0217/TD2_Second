@@ -168,6 +168,8 @@ void WaveManager::Update() {
 			case kReflect://1
 				newEnemy = new ReflectEnemy();
 				newEnemy->SetPlayer(player_);
+				transform.scale = { 3.0f,3.0f,3.0f };
+
 				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->reverceEnemyModel_.get());
 				enemyList_->push_back(newEnemy);
 				break;

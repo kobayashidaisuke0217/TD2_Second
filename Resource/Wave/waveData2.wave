@@ -545,46 +545,19 @@ type 0
 frame 210
 
 enemy a
-position -14 8 0
+position -14 1 0
 velocity 1.0 0.0 0.0
 speed 0.5
 type 0
 frame 220
 
 enemy a
-position -14 9 0
+position -14 2 0
 velocity 1.0 0.0 0.0
 speed 0.5
 type 0
 frame 230
 
-enemy a
-position -14 1 0
-velocity 1.0 0.0 0.0
-speed 0.5
-type 0
-frame 250
-
-enemy a
-position -14 2 0
-velocity 1.0 0.0 0.0
-speed 0.5
-type 0
-frame 260
-
-enemy a
-position -14 3 0
-velocity 1.0 0.0 0.0
-speed 0.5
-type 0
-frame 270
-
-enemy a
-position -14 4 0
-velocity 1.0 0.0 0.0
-speed 0.5
-type 0
-frame 280
 
 length 340
 
@@ -654,5 +627,108 @@ speed 0.5
 type 6
 frame 220
 
-
 length 480
+
+//////////////////////////////////////////////
+
+wave 17
+
+enemy a
+position 0 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 7
+frame 10
+
+enemy a
+position 0 13 0
+velocity 0.0 -1.0 0.0
+speed 0.5
+type 7
+frame 240
+
+enemy a
+position -13 13 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 3
+frame 60
+
+
+enemy a
+position 13 13 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 3
+frame 120
+
+enemy a
+position -13 13 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 3
+frame 180
+
+enemy a
+position 13 13 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 3
+frame 240
+
+
+length 440
+
+//////////////////////////////////////////////////
+
+wave 18
+
+enemy a
+position -14 13 0
+velocity 0.0 0.0 0.0
+speed 0.5
+type 6
+frame 10
+
+enemy a
+position 14 13 0
+velocity 0.0 0.0 0.0
+speed 0.5
+type 6
+frame 260
+
+enemy a
+position -14 13 0
+velocity 0.0 0.0 0.0
+speed 0.5
+type 6
+frame 510
+
+enemy a
+position -13 13 0
+velocity 0.8 -1.0 0.0
+speed 0.3
+type 2
+frame 120
+
+enemy a
+position 13 13 0
+velocity -0.8 -1.0 0.0
+speed 0.3
+type 2
+frame 280
+
+length 680
+
+////////////////////////////////////////////////
+
+wave 19
+
+enemy a
+position -12 13 0
+velocity 0.0 0.0 0.0
+speed 0.5
+type 1
+frame 10
+
+length 100
