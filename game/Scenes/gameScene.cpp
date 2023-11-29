@@ -456,7 +456,7 @@ void GameScene::InGame() {
 		}
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
-			ReStart();
+			//ReStart();
 			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death]);
 
 			followCamera_->Shake();
