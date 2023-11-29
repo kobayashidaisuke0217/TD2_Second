@@ -56,6 +56,7 @@ public:
 	std::unique_ptr<Model>ballEnemyModel_;
 	std::unique_ptr<Model>targetballEnemyModel_;
 	std::unique_ptr<Model>reverceEnemyModel_;
+	std::unique_ptr<Particle> particle_;
 private:
 
 	BlueMoon* blueMoon_;
@@ -72,7 +73,7 @@ private:
 
 	XINPUT_STATE joyState_;
 	XINPUT_STATE preJoyState_;
-	std::unique_ptr<Particle> particle_;
+	
 	std::unique_ptr<Player> player_;
 	//std::list<Enemy*> enemys_;
 	std::list <IEnemy*>enemys_;

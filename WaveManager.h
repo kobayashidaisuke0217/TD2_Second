@@ -46,6 +46,7 @@ public:
 	//void ChangeNumAnimation10();
 	void GameClear() { isPastClear_ = true; };
 	bool ISClear() {return isPastClear_;};
+	bool isSpawn_;
 private:
 	WaveManager() = default;
 	~WaveManager() = default;
