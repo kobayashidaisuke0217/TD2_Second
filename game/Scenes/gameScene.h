@@ -144,6 +144,9 @@ private:
 	Vector3 lifeTranslates_[3];
 	uint32_t lifeTextureHandle_;
 	
+	Vector3 startOffset_;
+	float startFloatTheta_;
+
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

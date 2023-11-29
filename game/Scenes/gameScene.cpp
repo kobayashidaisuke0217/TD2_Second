@@ -326,6 +326,9 @@ void GameScene::Title() {
 		}
 		frameCount_++;
 	}
+	worldTransformStart_.translation_ = startOffset_;
+	worldTransformStart_.translation_.y += std::sin(startFloatTheta_) *0.5f;
+	startFloatTheta_ += 0.3f;
 }
 
 void GameScene::InGame() {
@@ -555,7 +558,7 @@ void GameScene::ApplyGlobalVariables()
 	titleTransform_.scale = globalVariables->GetVector3Value(groupName2, "TitleScale");
 	titleTransform_.translate = globalVariables->GetVector3Value(groupName2, "TitleTransform");
 	worldTransformStart_.scale_ = globalVariables->GetVector3Value(groupName2, "startScale");
-	worldTransformStart_.translation_ = globalVariables->GetVector3Value(groupName2, "startPosition");
+	startOffset_ = globalVariables->GetVector3Value(groupName2, "startPosition");
 
 	const char* groupName3 = "UI";
 	move_.scale = globalVariables->GetVector3Value(groupName3, "moveScale");
