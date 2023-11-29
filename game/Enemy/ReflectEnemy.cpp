@@ -38,6 +38,7 @@ void ReflectEnemy::Initialize(const Transform& transform, const Vector3& velocit
 	velocity_ = Normalise(velocity_);
 	velocity_ = Multiply(MoveSpeed_, velocity_);
 	worldTransform_.UpdateMatrix();
+	currentTime_=0;
 }
 
 void ReflectEnemy::Update()
