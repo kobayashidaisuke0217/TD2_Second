@@ -14,7 +14,9 @@ enum AudioNum {
 	inGameBGM,
 	ResultBGM,
 	Block,
-
+	PlusWave,
+	Bound,
+	Clear,
 };
 // チャンクヘッダ
 struct ChunkHeader {

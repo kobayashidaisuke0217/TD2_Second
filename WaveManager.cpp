@@ -287,6 +287,8 @@ void WaveManager::Update() {
 	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_) {
 		if (waves_.size() - 1 > waveNum_) {
 			isEnd_ = false;
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[PlusWave], Audio::GetInstance()->SoundVolume[PlusWave]);
+
 			waveNum_++;
 		}
 		else {

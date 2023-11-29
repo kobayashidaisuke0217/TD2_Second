@@ -59,6 +59,11 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupNameSound, "DeathBGM", Audio::GetInstance()->SoundVolume[Death]);
 	globalVariables->AddItem(groupNameSound, "DeleteEnemyBGM", Audio::GetInstance()->SoundVolume[DeleteEnemy]);
 	globalVariables->AddItem(groupNameSound, "BlockBGM", Audio::GetInstance()->SoundVolume[Block]);
+	globalVariables->AddItem(groupNameSound, "BoundBGM", Audio::GetInstance()->SoundVolume[Bound]);
+	globalVariables->AddItem(groupNameSound, "ClearBGM", Audio::GetInstance()->SoundVolume[Clear]);
+	globalVariables->AddItem(groupNameSound, "EnemyPopBGM", Audio::GetInstance()->SoundVolume[EnemyPop]);
+	globalVariables->AddItem(groupNameSound, "plusWaveBGM", Audio::GetInstance()->SoundVolume[PlusWave]);
+	
 	
 	MapManager::GetInstance()->Initialize();
 	//MapManager::GetInstance()->MapRead();
@@ -462,7 +467,7 @@ void GameScene::InGame() {
 				if (enemy->GetType() == kTire) {
 					Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 					particle_->AddParticle({ particletrans,height,color }, 3);
-
+					
 				}
 				else {
 					Vector4 color = { 1.0f,0.0f,0.0f,1.0f };
@@ -470,9 +475,13 @@ void GameScene::InGame() {
 				}
 				enemy->SetPartener(kflore);
 				enemy->isCollision(object->obb);
-				
+				if (enemy->GetType() == kBound || enemy->GetType() == kReflect || enemy->GetType() == kAimBound) {
+					Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Bound], Audio::GetInstance()->SoundVolume[Bound]);
+
+				}
 			}
 		}
+		
 		if (enemy->GetType() == kReflect) {
 			for (std::shared_ptr<MapManager::Map> object : walls) {
 				if (IsCollision(enemy->GetOBB(), object->obb)) {
@@ -604,7 +613,12 @@ void GameScene::ApplyGlobalVariables()
 	Audio::GetInstance()->SoundVolume[DeleteEnemy] = globalVariables->GetFloatValue(groupNameSound, "DeleteEnemyBGM");
 	
 	Audio::GetInstance()->SoundVolume[Block] = globalVariables->GetFloatValue(groupNameSound, "BlockBGM");
-
+	Audio::GetInstance()->SoundVolume[Bound] = globalVariables->GetFloatValue(groupNameSound, "BoundBGM");
+	Audio::GetInstance()->SoundVolume[Clear] = globalVariables->GetFloatValue(groupNameSound, "ClearBGM");
+	Audio::GetInstance()->SoundVolume[EnemyPop] = globalVariables->GetFloatValue(groupNameSound, "EnemyPopBGM");
+	Audio::GetInstance()->SoundVolume[PlusWave] = globalVariables->GetFloatValue(groupNameSound, "plusWaveBGM");
+	
+	
 }
 
 void GameScene::EnemySpawn(const WorldTransform& worldTransform, EnemyType type)

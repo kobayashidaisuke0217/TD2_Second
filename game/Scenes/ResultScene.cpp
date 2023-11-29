@@ -303,7 +303,7 @@ void ResultScene::Result() {
 			}
 			if (frameCount_ == clearAnimationLength_ / 2) {
 				///ここにクリア音を入れる
-
+				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Clear], Audio::GetInstance()->SoundVolume[Clear]);
 				///
 			}
 			//plus_.rotate = clearTransform_.rotate;

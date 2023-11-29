@@ -93,6 +93,9 @@ void SceneManager::Initialize()
 	audio_->handle_[ResultBGM] = audio_->SoundLoadWave("resource/SE/resultBGM.wav");
 	audio_->handle_[inGameBGM] = audio_->SoundLoadWave("resource/SE/inGameBGM.wav");
 	audio_->handle_[Block] = audio_->SoundLoadWave("resource/SE/block.wav");
+	audio_->handle_[Clear] = audio_->SoundLoadWave("resource/SE/clear.wav");
+	audio_->handle_[Bound] = audio_->SoundLoadWave("resource/SE/bound.wav");
+	audio_->handle_[PlusWave] = audio_->SoundLoadWave("resource/SE/plusWeve.wav");
 	sceneArr_[sceneNum_]->Initialize();
 
 }
