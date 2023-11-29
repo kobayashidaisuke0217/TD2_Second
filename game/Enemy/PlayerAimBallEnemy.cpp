@@ -125,6 +125,8 @@ void PlayerAimBallEnemy::BehaviorLeaveUpdate()
 {
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	standBycount--;
+	worldTransform_.rotation_.z = standBycount / 5.0f;
 	if (worldTransform_.translation_.y >= 50.0f) {
 		behaviorRequest_ = Behavior::kstandBy;
 	}
