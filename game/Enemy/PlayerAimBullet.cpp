@@ -5,7 +5,7 @@ void PlayerAimBullet::Initialize(Vector3 velocity, Transform transform, uint32_t
 	
 	velocity_ = velocity;
 	worldTransform_.translation_ = transform.translate;
-	worldTransform_.rotation_ = transform.rotate;
+	//worldTransform_.rotation_ = transform.rotate;
 	worldTransform_.scale_ = transform.scale;
 	texture_ = tex;
 
