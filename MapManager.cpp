@@ -169,7 +169,7 @@ void MapManager::Update() {
 			object->Update();
 		}
 		if (GameController::GetInstance()->Reverse() && reverseCoolTime_ <= 0) {
-			Audio::GetInstance()->SoundPlayWave( Audio::GetInstance()->handle_[Reverce],1.0);
+			Audio::GetInstance()->SoundPlayWave( Audio::GetInstance()->handle_[Reverce]);
 
 			for (std::shared_ptr<Map> object : floor_) {
 				object->Reverse();
@@ -223,6 +223,7 @@ void MapManager::Map::Update() {
 	//isCollision_ = false;
 	isTouch_ = false;
 	if (isMove_) {
+		//Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Block]);
 		Move();
 	}
 	obb.center = worldTransform.translation_;

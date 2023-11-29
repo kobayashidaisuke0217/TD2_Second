@@ -24,6 +24,7 @@ void SceneManager::Run() {
 		input->Update();
 		glovalVariables_->Update();
 		directionallight_->Update();
+		audio_->Update();
 		blueMoon_->BeginFrame();
 
 		preSceneNum_ = sceneNum_;
@@ -89,7 +90,7 @@ void SceneManager::Initialize()
 	audio_->handle_[DeleteEnemy] = audio_->SoundLoadWave("resource/SE/deleteEnemy.wav");
 	audio_->handle_[ResultBGM] = audio_->SoundLoadWave("resource/SE/resultBGM.wav");
 	audio_->handle_[inGameBGM] = audio_->SoundLoadWave("resource/SE/inGameBGM.wav");
-	audio_->handle_[Move] = audio_->SoundLoadWave("resource/SE/block.wav");
+	audio_->handle_[Block] = audio_->SoundLoadWave("resource/SE/block.wav");
 	sceneArr_[sceneNum_]->Initialize();
 
 }

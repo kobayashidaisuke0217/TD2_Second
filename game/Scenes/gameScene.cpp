@@ -21,7 +21,7 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
-	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[inGameBGM], 1.0f);
+	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[inGameBGM]);
 
 	sceneNum = 1;
 	blueMoon_ = BlueMoon::GetInstance();
@@ -285,7 +285,7 @@ void GameScene::Title() {
 		isStartGame_ = true;
 		isInGame_ = true;
 		isTitle_ = false;
-		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart],1.0f);
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart]);
 
 		//WaveManager::GetInstance()->SetWave(0);
 	}
@@ -343,14 +343,14 @@ void GameScene::InGame() {
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
 		followCamera_->Shake();
 		ReStart();
-		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death],1.0f);
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death]);
 
 	}
 	
 	bullets_.remove_if([](PlayerAimBullet* bullet) {
 		if (!bullet->GetIsAlive()) {
 			delete bullet;
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], 1.0f);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy]);
 			return true;
 		}
 		return false;
@@ -358,7 +358,7 @@ void GameScene::InGame() {
 	enemys_.remove_if([](IEnemy* enemy) {
 		if (!enemy->GetIsAlive()) {
 			delete enemy;
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], 1.0f);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy]);
 
 			return true;
 		}
@@ -403,7 +403,7 @@ void GameScene::InGame() {
  				bullet->isCollision();
 			}
 			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
-				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], 1.0f);
+				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death]);
 
 				ReStart();
 				followCamera_->Shake();
@@ -457,7 +457,7 @@ void GameScene::InGame() {
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
 			ReStart();
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], 1.0f);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death]);
 
 			followCamera_->Shake();
 			return;

@@ -12,7 +12,7 @@ void ResultScene::Finalize() {
 }
 
 void ResultScene::Initialize() {
-	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[ResultBGM], 1.0f);
+	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[ResultBGM]);
 	sceneNum = 2;
 	blueMoon_ = BlueMoon::GetInstance();
 
@@ -306,7 +306,7 @@ void ResultScene::Result() {
 		isFinCount_ = true;
 		isFinClearAnime_ = true;
 		if (GameController::GetInstance()->Enter()) {
-			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart], 1.0f);
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart]);
 
 			phase_ = TOTITLE;
 		}

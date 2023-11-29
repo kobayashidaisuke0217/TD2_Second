@@ -14,8 +14,26 @@ void Audio::Initialize() {
 	// マスターボイスを生成
 	result = xAudio2->CreateMasteringVoice(&masterVoice);
 	audioHandle_ = -1;
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "SoundVolume";
+	globalVariables->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "Ingame", volume[inGameBGM]);
+	globalVariables->AddItem(groupName, "Result", volume[ResultBGM]);
+	globalVariables->AddItem(groupName, "Jump", volume[Jump]);
+	globalVariables->AddItem(groupName, "start", volume[GameStart]);
+	globalVariables->AddItem(groupName, "Reverce", volume[Reverce]);
+	globalVariables->AddItem(groupName, "Death", volume[Death]);
+	globalVariables->AddItem(groupName, "DeleteEnemy", volume[DeleteEnemy]);
+	globalVariables->AddItem(groupName, "Block", volume[Block]);
+	ApplyGlobalVariables();
 }
-
+void Audio::Update()
+{
+	ApplyGlobalVariables();
+	for (int i = 0; i < 20; i++) {
+		volume[i] = std::clamp(volume[i], 0.0f, 1.0f);
+	}
+}
 uint32_t Audio::SoundLoadWave(const char* filename) {
 	audioHandle_++;
 	// .wavファイルを開く
@@ -87,14 +105,14 @@ void Audio::SoundUnload(SoundData* soundData) {
 	soundData->wfex = {};
 }
 
-void Audio::SoundPlayWave(uint32_t audioHandle, float volume) {
+void Audio::SoundPlayWave(uint32_t audioHandle) {
 	HRESULT result;
 
 	//波形フォーマットもとにSourceVoiceの生成
 
 	sourceVoice[audioHandle] = nullptr;
 	result = xAudio2->CreateSourceVoice(&sourceVoice[audioHandle], &soundDatas[audioHandle].wfex);
-	sourceVoice[audioHandle]->SetVolume(volume);
+	sourceVoice[audioHandle]->SetVolume(volume[audioHandle]);
 	assert(SUCCEEDED(result));
 
 	// 再生する波形データの設定
@@ -109,12 +127,12 @@ void Audio::SoundPlayWave(uint32_t audioHandle, float volume) {
 	result = sourceVoice[audioHandle]->Start();
 
 }
-void Audio::SoundPlayloop(uint32_t audioHandle, float volume) {
+void Audio::SoundPlayloop(uint32_t audioHandle) {
 	HRESULT result;
 
 	//波形フォーマットもとにSourceVoiceの生成
 	result = xAudio2->CreateSourceVoice(&sourceVoice[audioHandle], &soundDatas[audioHandle].wfex);
-	sourceVoice[audioHandle]->SetVolume(volume);
+	sourceVoice[audioHandle]->SetVolume(volume[audioHandle]);
 	assert(SUCCEEDED(result));
 
 	// 再生する波形データの設定
@@ -135,4 +153,21 @@ void Audio::StopAudio(uint32_t audioHandle)
 	HRESULT result;
 	result = sourceVoice[audioHandle]->Stop(0);
 
+}
+
+void Audio::ApplyGlobalVariables()
+{
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "SoundVolume";
+	globalVariables->CreateGroup(groupName);
+	volume[inGameBGM] = globalVariables->GetFloatValue(groupName, "Ingame");
+	volume[ResultBGM] = globalVariables->GetFloatValue(groupName, "Result");
+	volume[Jump] = globalVariables->GetFloatValue(groupName, "Jump");
+	volume[GameStart] = globalVariables->GetFloatValue(groupName, "start");
+	volume[Reverce] = globalVariables->GetFloatValue(groupName, "Reverce");
+	volume[Death] = globalVariables->GetFloatValue(groupName, "Death");
+	volume[DeleteEnemy] = globalVariables->GetFloatValue(groupName, "DeleteEnemy");
+
+		volume[Block] = globalVariables->GetFloatValue(groupName, "Block");
+		
 }

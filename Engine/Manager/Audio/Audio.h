@@ -3,6 +3,7 @@
 #pragma comment(lib, "xaudio2.lib")
 #include <fstream>
 #include <wrl.h>
+#include "GlobalVariables.h"
 enum AudioNum {
 	GameStart,
 	Jump,
@@ -12,7 +13,7 @@ enum AudioNum {
 	DeleteEnemy,
 	inGameBGM,
 	ResultBGM,
-	Move,
+	Block,
 
 };
 // チャンクヘッダ
@@ -49,7 +50,7 @@ public:
 	static Audio* GetInstance();
 
 	void Initialize();
-
+	void Update();
 	// 音声データの読み込み
 	uint32_t SoundLoadWave(const char* filename);
 
@@ -57,9 +58,9 @@ public:
 	void SoundUnload(SoundData* soundData);
 
 	// 音声再生
-	void SoundPlayWave(uint32_t audioHandle, float volume);
+	void SoundPlayWave(uint32_t audioHandle);
 	//ループ再生
-	void SoundPlayloop(uint32_t audioHandle, float volume);
+	void SoundPlayloop(uint32_t audioHandle);
 
 	void StopAudio(uint32_t audioHandle);
 	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
@@ -68,5 +69,6 @@ public:
 	SoundData soundDatas[20];
 	uint32_t audioHandle_;
 	uint32_t handle_[20];
-
+	float volume[20];
+	void ApplyGlobalVariables();
 };
