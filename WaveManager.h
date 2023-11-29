@@ -99,6 +99,12 @@ private:
 	int32_t changeAnimationCount_;
 	int32_t waveInterval_ = 180;
 
+	std::unique_ptr<Sprite> finalSprite_;
+	uint32_t finalTextureHandle_;
+	bool isFinal_;
+	float finalScale_;
+	float t_;
+
 	//終了検知
 	bool isEnd_;
 	bool isPastClear_ = false;

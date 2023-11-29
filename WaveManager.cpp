@@ -133,6 +133,12 @@ void WaveManager::Initialize() {
 	isChangeNum_ = false;
 	isChange10 = false;
 	isEnd_ = false;
+
+	finalSprite_.reset(new Sprite);
+	finalSprite_->Initialize({-500,-160,0,0}, { 500,160,0,0 });
+	finalTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/final.png");
+	t_ = 0.0f;
+	isFinal_ = false;
 }
 
 void WaveManager::Update() {
@@ -236,6 +242,18 @@ void WaveManager::Update() {
 		}
 	}
 	currentFrame_++;
+	if (!(waves_.size() - 1 > waveNum_)) {
+		isFinal_ = true;
+		t_ += 0.1f;
+		if (t_ >1.0f){
+			t_ = 1.0f;
+		}
+		float c1 = 1.70158f;
+		float c3 = c1 + 1.0f;
+
+		finalScale_ = float(1 + c3 * std::pow(t_ - 1.0f, 3) + c1 * std::pow(t_ - 1.0f, 2));
+
+	}
 	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_) {
 		if (waves_.size() - 1 > waveNum_) {
 			isEnd_ = false;
@@ -276,6 +294,13 @@ void WaveManager::Draw() {
 	highNum1->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, numberTextureHandle_[num3]);
 	transform.translate = {640.0f,250.0f,0};
 	waveSprite_->Draw(transform, uv,{ 1.0f,1.0f,1.0f,1.0f },waveTextureHandle_);
+
+	if (isFinal_){
+		transform.translate = { 700.0f,200.0f,0 };
+		transform.rotate.z = 0.3f;
+		transform.scale = Vector3{0.5f,0.5f,0.5f} * finalScale_;
+		finalSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f },finalTextureHandle_);
+	}
 }
 
 void WaveManager::ChangeNumAnimation() {
