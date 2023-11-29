@@ -56,7 +56,7 @@ private:
 	//遷移アニメーションの補間用
 	float resetT_;
 	//遷移アニメーションの長さ
-	uint32_t transitionAnimationLength_ = 15;
+	uint32_t transitionAnimationLength_ = 30;
 	//遷移アニメーションの開始までの長さ
 	uint32_t transitionAnimationDelay_ = 0;
 	uint32_t frameCount_;
