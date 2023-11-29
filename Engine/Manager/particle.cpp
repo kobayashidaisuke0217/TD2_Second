@@ -49,9 +49,9 @@ ParticleData Particle::MakeNewParticle(const Emitter& emitter, std::mt19937& ran
 	particle.transform.scale = { 1.5f,1.5f,1.5f };
 	particle.transform.rotate = { 0.0f,0.0f,0.0f };
 	particle.transform.translate = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
-	particle.velocity = { distrivelocity(randomEngine)*10.0f,distrivelocity(randomEngine)*10.0f,distrivelocity(randomEngine)*10.0f };
+	particle.velocity = { distrivelocity(randomEngine)*8.0f,distrivelocity(randomEngine)*8.0f,distrivelocity(randomEngine)*8.0f };
 	particle.color = { 1.0f,0.0f,0.0f ,1.0f };
-	particle.lifeTime = 1.0f;
+	particle.lifeTime = 0.5f;
 	particle.currentTime = 0.0f;
 	particle.isAlive = true;
 	particle.emitter = emitter;
