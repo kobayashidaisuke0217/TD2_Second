@@ -43,15 +43,15 @@ ParticleData Particle::MakeNewParticle(const Emitter& emitter, std::mt19937& ran
 {
 	ParticleData particle;
 	std::uniform_real_distribution<float>distribution(-1.0f, 1.0f);
-	std::uniform_real_distribution<float>distrivelocity(-5.0f, 5.0f);
+	std::uniform_real_distribution<float>distrivelocity(-1.0f, 1.0f);
 	std::uniform_real_distribution<float>distColor(-1.0f, 1.0f);
-	std::uniform_real_distribution<float>distTime(1.0f, 3.0f);
-	particle.transform.scale = { 3.0f,3.0f,3.0f };
+	std::uniform_real_distribution<float>distTime(1.0f, 2.0f);
+	particle.transform.scale = { 1.5f,1.5f,1.5f };
 	particle.transform.rotate = { 0.0f,0.0f,0.0f };
 	particle.transform.translate = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
-	particle.velocity = { distrivelocity(randomEngine),distrivelocity(randomEngine),distrivelocity(randomEngine) };
+	particle.velocity = { distrivelocity(randomEngine)*10.0f,distrivelocity(randomEngine)*10.0f,distrivelocity(randomEngine)*10.0f };
 	particle.color = { 1.0f,0.0f,0.0f ,1.0f };
-	particle.lifeTime = distTime(randomEngine);
+	particle.lifeTime = 1.0f;
 	particle.currentTime = 0.0f;
 	particle.isAlive = true;
 	particle.emitter = emitter;
@@ -124,7 +124,6 @@ void Particle::Update()
 			instancingData[instanceCount].World = MakeIdentity4x4();
 			(*iterator).transform.translate = Add((*iterator).transform.translate, (*iterator).velocity * kDeltTime);
 			(*iterator).currentTime += kDeltTime;
-
 			instancingData[instanceCount].Color = (*iterator).color;
 			++DrawInstanceNum_;
 			++instanceCount;
