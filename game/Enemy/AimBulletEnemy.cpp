@@ -71,6 +71,6 @@ void AimBulletEnemy::TextureInitialize()
 void AimBulletEnemy::Atack()
 {
 	PlayerAimBullet* newBullet = new PlayerAimBullet();
-	newBullet->Initialize({ 0.0f,-1.0f,0.0f }, { {1.0f,1.0f,1.0f},worldTransform_.rotation_,worldTransform_.translation_}, texindex_, model_);
+	newBullet->Initialize(Multiply(MoveSpeed_,{ 0.0f,-1.0f,0.0f }), { {1.5f,2.0f,2.0f},worldTransform_.rotation_,worldTransform_.translation_}, texindex_, model_);
 	gameScene_->AddEnemyBullet(newBullet);
 }
