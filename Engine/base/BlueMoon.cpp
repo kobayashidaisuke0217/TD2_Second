@@ -143,7 +143,7 @@ void BlueMoon::CreateRootSignature3D() {
 	rootParameters[2].DescriptorTable.pDescriptorRanges = descriptoraRange;//tableの中身の配列を指定
 	rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptoraRange);
 
-	rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//pixcelShaderを使う
 	rootParameters[3].Descriptor.ShaderRegister = 1;//レジスタ番号1
 
@@ -157,7 +157,7 @@ void BlueMoon::CreateRootSignature3D() {
 	staticSamplers[0].ShaderRegister = 0;
 	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-
+	
 
 
 	descriptionRootSignature.pParameters = rootParameters;//ルートパラメータ配列へのポインタ
@@ -175,7 +175,7 @@ void BlueMoon::CreateRootSignature3D() {
 		assert(false);
 	}
 	//バイナリを元に生成
-
+	
 	hr = direct_->GetDevice()->CreateRootSignature(0, signatureBlob3D_->GetBufferPointer(),
 		signatureBlob3D_->GetBufferSize(), IID_PPV_ARGS(&rootSignature3D_));
 	assert(SUCCEEDED(hr));
@@ -298,7 +298,7 @@ void BlueMoon::InitializePSO3D() {
 	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
 	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	//実際に生成
-
+	
 	HRESULT hr = direct_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState3D_));
 	assert(SUCCEEDED(hr));
@@ -357,7 +357,7 @@ void BlueMoon::SettingDepth()
 	depthStencilDescParticle.DepthEnable = true;
 	depthStencilDescParticle.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	depthStencilDescParticle.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-
+	
 }
 BlueMoon* BlueMoon::GetInstance()
 {
@@ -366,37 +366,37 @@ BlueMoon* BlueMoon::GetInstance()
 }
 void BlueMoon::variableInitialize()
 {
-
+	
 }
 
 
 
 void BlueMoon::BeginFrame() {
 	//imguiManager_->Begin();
-
-
+	
+	
 	direct_->GetCommandList()->RSSetViewports(1, &viewport_);//viewportを設定
 	direct_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);//scirssorを設定
 	//RootSignatureを設定。PS0に設定しているけど別途設定が必要
-
-
+	
+	
 	direct_->PreDraw();
 	//direct_->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
 	//direct_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());//PS0を設定
 
 }
 void BlueMoon::EndFrame() {
-
+	
 	//imguiManager_->End();
-
+	
 	//imguiManager_->Draw();
 	direct_->PostDraw();
 }
 
 void BlueMoon::Finalize()
 {
-
-
+	
+	
 }
 //void BlueMoon::Update()
 //{
@@ -411,14 +411,14 @@ void BlueMoon::Finalize()
 BlueMoon::~BlueMoon()
 {
 	//imguiManager_->Finalize();
-
+	
 
 	pixelShaderBlob3D_->Release();
 	vertexShaderBlob3D_->Release();
 	pixelShaderBlob2D_->Release();
 	vertexShaderBlob2D_->Release();
 	direct_->Finalize();
-
+	
 
 }
 
@@ -426,7 +426,7 @@ void BlueMoon::ModelPreDraw()
 {
 	direct_->GetCommandList()->SetGraphicsRootSignature(rootSignature3D_.Get());
 	direct_->GetCommandList()->SetPipelineState(graphicsPipelineState3D_.Get());//PS0を設定
-
+	
 }
 
 void BlueMoon::ModelPreDrawWireFrame()
@@ -485,7 +485,7 @@ void BlueMoon::InitializePSO2D() {
 		IID_PPV_ARGS(&graphicsPipelineState2D_[PSO2DCount_]));
 	assert(SUCCEEDED(hr));
 	PSO2DCount_++;
-	//graphicsPipelineStateDesc.DepthStencilState = depthStencilDescParticle;
+
 }
 void BlueMoon::SettingRasterizerState2D() {
 
@@ -557,7 +557,7 @@ void BlueMoon::CreateRootSignature2D() {
 	hr = direct_->GetDevice()->CreateRootSignature(0, signatureBlob2D_->GetBufferPointer(),
 		signatureBlob2D_->GetBufferSize(), IID_PPV_ARGS(&rootSignature2D_));
 	assert(SUCCEEDED(hr));
-}
+	}
 void BlueMoon::CreateInputlayOut2D() {
 	//inputElementDescsをメンバ変数にすると治った
 	inputElementDescs2D_[0].SemanticName = "POSITION";
@@ -570,14 +570,14 @@ void BlueMoon::CreateInputlayOut2D() {
 	inputElementDescs2D_[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	inputElementDescs2D_[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-
+	
 
 	inputLayoutDesc2D_.pInputElementDescs = inputElementDescs2D_;
 	inputLayoutDesc2D_.NumElements = _countof(inputElementDescs2D_);
 }
 
 
-
+	
 #pragma endregion
 #pragma region Particle用のパイプライン
 void BlueMoon::CreateRootSignatureParticle()

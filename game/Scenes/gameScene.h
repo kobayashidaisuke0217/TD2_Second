@@ -10,7 +10,6 @@
 #include "ViewProjection.h"
 #include "Texturemanager.h"
 #include "GlobalVariables.h"
-#include "Particle.h"
 #include "Plane.h"
 #include "game/Player.h"
 #include <list>
@@ -29,6 +28,7 @@
 #pragma endregion
 #include "Input.h"
 #include "FollowCamera.h"
+#include "Engine/Manager/Particle.h"
 class GameScene :public Iscene
 {
 public:
@@ -71,7 +71,7 @@ private:
 
 	XINPUT_STATE joyState_;
 	XINPUT_STATE preJoyState_;
-
+	std::unique_ptr<Particle> particle_;
 	std::unique_ptr<Player> player_;
 	//std::list<Enemy*> enemys_;
 	std::list <IEnemy*>enemys_;
@@ -121,7 +121,7 @@ private:
 	uint32_t titleTextureHandle_;
 	uint32_t backTextureHandle_;
 	uint32_t startTextureHandle_;
-
+	uint32_t particletextureHandle;
 	std::unique_ptr<Sprite> backGroundSprite_;
 
 	std::unique_ptr<Sprite> moveSprite_;

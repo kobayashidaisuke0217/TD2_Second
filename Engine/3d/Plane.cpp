@@ -28,7 +28,7 @@ void Plane::SetColor() {
 
 }
 
-void Plane::Draw(const WorldTransform& transform, const ViewProjection& viewProjection, const Vector4& material, uint32_t index)
+void Plane::Draw(const WorldTransform& transform, const ViewProjection& viewProjection, const Vector4& material, uint32_t texindex)
 {
 	Transform uvTransform = { { 1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f} };
 
@@ -54,7 +54,7 @@ void Plane::Draw(const WorldTransform& transform, const ViewProjection& viewProj
 	direct_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLight_->GetResource()->GetGPUVirtualAddress());
 
 	//texture
-	direct_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureManager_->GetGPUHandle(index));
+	direct_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureManager_->GetGPUHandle(texindex));
 
 
 	//描画！(DrawCall/ドローコール)・3頂点で1つのインスタンス。インスタンスについては今後

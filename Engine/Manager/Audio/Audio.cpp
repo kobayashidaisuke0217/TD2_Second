@@ -86,13 +86,17 @@ void Audio::SoundUnload(SoundData* soundData) {
 	soundData->wfex = {};
 }
 
-void Audio::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData) {
+void Audio::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData, float volume) {
 	HRESULT result;
 
 	//波形フォーマットもとにSourceVoiceの生成
 	IXAudio2SourceVoice* pSourceVoice = nullptr;
+
 	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
+	
 	assert(SUCCEEDED(result));
+	pSourceVoice->SetVolume(volume);
+	
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
@@ -101,6 +105,28 @@ void Audio::SoundPlayWave(IXAudio2* xAudio2, const SoundData& soundData) {
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 
 	// 波形データの再生
+
 	result = pSourceVoice->SubmitSourceBuffer(&buf);
 	result = pSourceVoice->Start();
+
+}
+void Audio::SoundPlayloop(IXAudio2* xAudio2, const SoundData& soundData, float volume) {
+	HRESULT result;
+
+	//波形フォーマットもとにSourceVoiceの生成
+	IXAudio2SourceVoice* pSourceVoice = nullptr;
+	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex);
+	pSourceVoice->SetVolume(volume);
+	assert(SUCCEEDED(result));
+
+	// 再生する波形データの設定
+	XAUDIO2_BUFFER buf{};
+	buf.pAudioData = soundData.pBuffer;
+	buf.AudioBytes = soundData.bufferSize;
+	buf.Flags = XAUDIO2_END_OF_STREAM;
+	buf.LoopCount = XAUDIO2_LOOP_INFINITE;
+	// 波形データの再生
+	result = pSourceVoice->SubmitSourceBuffer(&buf);
+	result = pSourceVoice->Start();
+
 }

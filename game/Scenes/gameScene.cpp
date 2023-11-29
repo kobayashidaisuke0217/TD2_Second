@@ -2,6 +2,7 @@
 #include "MapManager.h"
 #include "GameController.h"
 #include "WaveManager.h"
+#include "Audio.h"
 #include <functional>
 GameScene::~GameScene()
 {
@@ -26,7 +27,7 @@ void GameScene::Initialize()
 	directXCommon_ = DirectXCommon::GetInstance();
 
 	textureManager_ = Texturemanager::GetInstance();
-	textureManager_->Initialize();
+	//textureManager_->Initialize();
 	enemyTex_ = textureManager_->Load("resource/black.png");
 	viewProjection_.Initialize();
 
@@ -156,6 +157,12 @@ void GameScene::Initialize()
 		lifeSprites_.push_back(move(newSprite));
 	}
 	lifeTextureHandle_ = textureManager_->Load("Resource/UI/lifeUI.png");
+	particletextureHandle= textureManager_->Load("Resource/circle.png");
+	particle_ = std::make_unique<Particle>();
+	particle_->Initialize(1000000000);
+	Transform t = { {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	//particle_->AddParticle({ t }, 10);
+	
 }
 
 void GameScene::Update()
@@ -165,7 +172,6 @@ void GameScene::Update()
 	//Input::GetInstance()->GetJoystickState(0, joyState_);
 	GameController::GetInstance()->Update();
 	if (Input::GetInstance()->PressKey(DIK_1)) {
-		//textureManager_->Initialize();
 		MapManager::GetInstance()->MapRead();
 		player_->Initialize();
 		enemyPop_ = false;
@@ -275,6 +281,8 @@ void GameScene::Title() {
 		isStartGame_ = true;
 		isInGame_ = true;
 		isTitle_ = false;
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[GameStart],1.0f);
+
 		//WaveManager::GetInstance()->SetWave(0);
 	}
 
@@ -333,6 +341,8 @@ void GameScene::InGame() {
 	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
 		followCamera_->Shake();
 		ReStart();
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death],1.0f);
+
 	}
 	
 	bullets_.remove_if([](PlayerAimBullet* bullet) {
@@ -388,9 +398,11 @@ void GameScene::InGame() {
  				bullet->isCollision();
 			}
 			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
-				
+				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death], 1.0f);
+
 				ReStart();
 				followCamera_->Shake();
+			
 				return;
 			}
 			
@@ -425,7 +437,7 @@ void GameScene::InGame() {
 
 				enemy->SetPartener(kflore);
 				enemy->isCollision(object->obb);
-
+				particle_->AddParticle({ enemy->GetWorldTransform().scale_,enemy->GetWorldTransform().rotation_ ,enemy->GetWorldTransform().translation_ }, 10);
 			}
 		}
 		if (enemy->GetType() == kReflect) {
@@ -440,6 +452,8 @@ void GameScene::InGame() {
 		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
 			//Initialize();
 			ReStart();
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->xAudio2.Get(), Audio::GetInstance()->soundDatas[Death], 1.0f);
+
 			followCamera_->Shake();
 			return;
 		}
@@ -467,6 +481,7 @@ void GameScene::InGame() {
 		}
 		frameCount_++;
 	}
+	particle_->Update();
 }
 
 void GameScene::Draw()
@@ -500,7 +515,9 @@ void GameScene::Draw3D()
 		titleChar_->Draw(worldTransformStart_, viewProjection_,{1.0f,1.0f,1.0f,1.0f},startTextureHandle_);
 	}
 	blueMoon_->PariclePreDraw();
-
+	
+		particle_->Draw(viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, particletextureHandle);
+	
 	blueMoon_->ModelPreDrawWireFrame();
 
 
