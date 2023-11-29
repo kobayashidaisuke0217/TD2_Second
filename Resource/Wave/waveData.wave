@@ -766,4 +766,121 @@ length 350
 /////////////////////////////////////////////////////////////
 wave 7
 
-length 10
+enemy a
+position 14 1 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 60
+
+enemy a
+position 14 2 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 60
+
+enemy a
+position 14 3 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 60
+
+enemy a
+position 14 4 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 60
+
+enemy a
+position -14 9 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 180
+
+enemy a
+position -14 8 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 180
+
+enemy a
+position -14 7 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 180
+
+enemy a
+position -14 6 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 180
+
+enemy a
+position -14 1 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position -14 2 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position -14 3 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position -14 4 0
+velocity 1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 9 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 8 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 7 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+enemy a
+position 14 6 0
+velocity -1.0 0.0 0.0
+speed 0.5
+type 0
+frame 300
+
+length 800
+
+////////////////////////////////////////////////////////
+wave 9
+
+length 800
