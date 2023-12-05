@@ -47,6 +47,9 @@ public:
 	void ReStartAnimation();
 	void TransitionAnimation();
 	void DrawBackGround();
+
+	void AbsorptionEnergy();
+
 	int BulletStartCount;
 
 	//Enemyのモデル
@@ -148,7 +151,8 @@ private:
 	
 	Vector3 startOffset_;
 	float startFloatTheta_;
-
+	int energyparticleCleateTime_;
+	Vector3* energyEmmitPoint_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

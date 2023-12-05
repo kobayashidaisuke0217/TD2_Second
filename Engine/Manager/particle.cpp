@@ -49,10 +49,15 @@ ParticleData Particle::MakeNewParticle(const Emitter& emitter, std::mt19937& ran
 	std::uniform_real_distribution<float>distTime(1.0f, 2.0f);
 	particle.transform.scale = { 1.5f,1.5f,1.5f };
 	particle.transform.rotate = { 0.0f,0.0f,0.0f };
-	if (emitter.type == random) {
+	particle.attribute = NORMAL;
+	if (emitter.type == absorption) {
 		particle.transform.translate = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
 		particle.velocity = { distrivelocity(randomEngine) * 8.0f,distrivelocity(randomEngine) * 8.0f,distrivelocity(randomEngine) * 8.0f };
-
+		particle.attribute = ABSORPTION;
+	}
+	else if (emitter.type == random) {
+		particle.transform.translate = { distribution(randomEngine),distribution(randomEngine),distribution(randomEngine) };
+		particle.velocity = { distrivelocity(randomEngine) * 8.0f,distrivelocity(randomEngine) * 8.0f,distrivelocity(randomEngine) * 8.0f };
 	}
 	else {
 		particle.transform.translate = { 0.0f,distri(randomEngine)-1.0f,0.0f};

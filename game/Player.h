@@ -49,6 +49,8 @@ public:
 	void SetLife(int32_t life) { life_ = life; };
 	int32_t GetLife() { return life_; };
 	bool IsJumpAble() { return (jumpAble_ && jumpCoolTime_ <= 0); };
+	bool GetIsRecovJump() { return isRecovJump_; };
+	WorldTransform& GetWorldTransformBack() { return worldTransformback_; };
 private:
 	Input* input_ = nullptr;
 	XINPUT_STATE* joyState_;
@@ -135,4 +137,8 @@ private:
 	int32_t kJumpCoolTime_;
 
 	int32_t life_;
+
+
+	//ジャンプ権が回復したときにtrue
+	bool isRecovJump_;
 };

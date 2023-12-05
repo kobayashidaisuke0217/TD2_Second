@@ -182,6 +182,9 @@ void GameScene::Initialize()
 	ApplyGlobalVariables();
 	//particle_->AddParticle({ t }, 10);
 	Audio::GetInstance()->SoundPlayloop(Audio::GetInstance()->handle_[inGameBGM], Audio::GetInstance()->SoundVolume[inGameBGM]);
+
+	energyparticleCleateTime_ = -1;
+	energyEmmitPoint_ = nullptr;
 }
 
 void GameScene::Update()
@@ -400,6 +403,10 @@ void GameScene::InGame() {
 		if (IsCollision(player_->GetOBB(), object->obb)) {
 			object->isFrameCollision_ = player_->OnCollisionFloorVertical(object->obb);
 			object->OnCollision();
+			if (player_->GetIsRecovJump()) {
+				energyparticleCleateTime_ = 30;
+				energyEmmitPoint_ = &object->worldTransform.translation_;
+			}
 		}
 		if (IsCollision(player_->GetFloatTrigger(), object->obb)) {
 			object->Touch();
@@ -509,6 +516,14 @@ void GameScene::InGame() {
 			isRunAnimation_ = false;
 		}
 		frameCount_++;
+	}
+	AbsorptionEnergy();
+	std::list<ParticleData>* particleData = particle_->GetParticleDate();
+	for (std::list<ParticleData>::iterator particleIterator = particleData->begin(); particleIterator != particleData->end(); particleIterator++) {
+		if ((*particleIterator).attribute == ABSORPTION) {
+			(*particleIterator).velocity = 10.0f*Normalise(Lerp(0.2f, Normalise((*particleIterator).velocity), Normalise(player_->GetWorldTransformBack().GetWorldPos() - (Multiply((*particleIterator).emitter.transform.scale.x,(*particleIterator).transform.translate) + (*particleIterator).emitter.transform.translate))));
+			//(particleIterator)->velocity =player_->GetWorldTransform().GetWorldPos() - ((*particleIterator).transform.translate + (*particleIterator).emitter.transform.translate);
+		}
 	}
 	particle_->Update();
 }
@@ -848,4 +863,14 @@ void GameScene::TransitionAnimation() {
 	transitionSpritePosition_.x = (1.0f - resetT_) * transitionStartPosition_.x + resetT_ * transitionEndPosition_.x;
 	transitionSpritePosition_.y = (1.0f - resetT_) * transitionStartPosition_.y + resetT_ * transitionEndPosition_.y;
 	transitionSpritePosition_.z = (1.0f - resetT_) * transitionStartPosition_.z + resetT_ * transitionEndPosition_.z;
+}
+
+void GameScene::AbsorptionEnergy() {
+	if (energyparticleCleateTime_ >0) {
+		Transform particletrans = { {2.0f,2.0f,2.0f },{0,0,0}, *energyEmmitPoint_};
+		Vector4 color = { 0.0f,1.0f,0.0f,1.0f };
+		particle_->AddParticle({ particletrans,absorption,color }, 1);
+
+		energyparticleCleateTime_--;
+	}
 }

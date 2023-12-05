@@ -18,6 +18,7 @@ public:
 	void Finalize();
 	void AddParticle(const Emitter& emitter, const int& count);
 	void Cler();
+	std::list<ParticleData>* GetParticleDate() { return &particles_; };
 private:
 	void SettingVertex();
 	void SetColor();

@@ -187,6 +187,7 @@ void Player::Reset() {
 
 void Player::Update() {
 		ApplyGlobalVariables();
+		isRecovJump_ = false;
 	if (!isDead_) {
 		prePosition_ = worldTransform_.translation_;
 		if (GameController::GetInstance()->Jump() && jumpAble_ && jumpCoolTime_ <= 0) {
@@ -347,6 +348,9 @@ void Player::OnCollision(OBB& partner) {
 bool Player::OnCollisionFloorVertical(OBB& partner) {
 	if (isCollisionFloor_ || 1) {
 		if (std::abs(obb_.center.x - partner.center.x) <= std::abs(obb_.center.y - partner.center.y)) {
+			if (!jumpAble_) {
+				isRecovJump_ = true;
+			}
 			jumpAble_ = true;
 			//acceleration_ = { 0 ,0,0 };
 			velocity_ = { 0,0,0 };

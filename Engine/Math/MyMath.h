@@ -10,6 +10,7 @@
 enum particletype {
 	height,
 	random,
+	absorption,
 };
 struct Vector4 {
 	float x;
@@ -67,6 +68,13 @@ struct Emitter {
 	particletype type;
 	Vector4 color;
 };
+
+enum ParticleAttribute
+{
+	NORMAL,
+	ABSORPTION,
+};
+
 struct ParticleData {
 	Transform transform;
 	Vector3 velocity;
@@ -75,6 +83,8 @@ struct ParticleData {
 	float lifeTime;
 	float currentTime;
 	bool isAlive;
+	ParticleAttribute attribute;
+	
 };
 struct ParticleForGPU {
 	Matrix4x4 World;
