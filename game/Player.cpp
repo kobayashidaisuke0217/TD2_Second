@@ -127,10 +127,12 @@ void Player::Initialize(){
 	isDead_ = false;
 }
 
-void Player::Reset() {
+void Player::Reset(int height) {
 	worldTransform_.scale_ = { 1.0f,1.0f,1.0f };
 	worldTransform_.translation_.x = 0.0f;
-	worldTransform_.translation_.y = 2.0f;
+	GlovalVariables* globalVariables = GlovalVariables::GetInstance();
+	const char* groupName = "Map";
+	worldTransform_.translation_.y = 2.0f + float(height) * globalVariables->GetIntValue(groupName, "FloatForce");
 	worldTransform_.UpdateMatrix();
 	velocity_ = { 0,0,0 };
 	acceleration_ = { 0,0,0 };

@@ -43,7 +43,7 @@ public:
 	void ApplyGlobalVariables();
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	//死んだときに位置をリセットする用
-	void Reset();
+	void Reset(int height);
 	//死亡時のアニメーション
 	void DethAnimation();
 	void SetLife(int32_t life) { life_ = life; };
@@ -51,6 +51,7 @@ public:
 	bool IsJumpAble() { return (jumpAble_ && jumpCoolTime_ <= 0); };
 	bool GetIsRecovJump() { return isRecovJump_; };
 	WorldTransform& GetWorldTransformBack() { return worldTransformback_; };
+	void SetPosition(const Vector3& position) { worldTransform_.translation_ = position; };
 private:
 	Input* input_ = nullptr;
 	XINPUT_STATE* joyState_;

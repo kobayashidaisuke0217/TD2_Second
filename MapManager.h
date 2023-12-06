@@ -79,7 +79,8 @@ public:
 		floor_.clear();
 		wall_.clear();
 	};
-
+	//中心のブロックが上1か下0か
+	int GetCenterHeight();
 private:
 	MapManager() = default;
 	~MapManager() = default;

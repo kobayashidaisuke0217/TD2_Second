@@ -802,7 +802,7 @@ void GameScene::ReStartWave()
 	size_t num = WaveManager::GetInstance()->GetWave();
 	MapManager::GetInstance()->WaveRead(uint32_t(num));
 	WaveManager::GetInstance()->SetWave(uint32_t(num));
-	player_->Reset();
+	player_->Reset(MapManager::GetInstance()->GetCenterHeight());
 }
 
 void GameScene::ReStart()

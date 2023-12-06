@@ -111,7 +111,7 @@ void MapManager::MapBuild() {
 				object->moveDirection_ = 1.0f;
 				mapObject_.push_back((object));
 				if (map[y][x] == MapState::Block) {
-					//object->id = floorID++;
+					object->id = floorID++;
 					floor_.push_back((object));
 				}
 				else if (map[y][x] == MapState::Wall) {
@@ -202,6 +202,18 @@ void MapManager::Draw(const ViewProjection& viewProjection) {
 	for (std::shared_ptr<Map> object : ceiling_) {
 		modelArie_->Draw(object->worldTransform, viewProjection);
 	}
+}
+
+int MapManager::GetCenterHeight() {
+	for (std::shared_ptr<Map> object : floor_) {
+		if (object->id == 13) {
+			if (object->worldTransform.translation_.y > 1.0f) {
+				return 1;
+			}
+			return 0;
+		}
+	}
+	return 0;
 }
 
 void MapManager::Map::Update() {
