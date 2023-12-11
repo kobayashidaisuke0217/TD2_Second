@@ -50,6 +50,9 @@ public:
 	//指定ウェーブの床の位置を読み取って移動させる
 	void WaveRead(uint32_t wave);
 
+	void WaveReadTutorial(uint32_t wave);
+
+
 	void Draw(const ViewProjection&);
 
 	std::vector<std::shared_ptr<Map>>& GetMapObject() { return mapObject_; };

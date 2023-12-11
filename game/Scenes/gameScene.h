@@ -41,9 +41,11 @@ public:
 	void AddEnemyBullet(PlayerAimBullet* enemyBullet);
 	void ReStartWave();
 	void ReStart();
+	void ReStartTutorial();
+
 	void InGame();
 	void Title();
-
+	void Tutorial();
 	void ReStartAnimation();
 	void TransitionAnimation();
 	void DrawBackGround();
@@ -110,7 +112,9 @@ private:
 	uint32_t blackTextureHandle_;
 	bool isTitle_;
 	bool isStartGame_;
+	bool isStartTutorial_;
 	bool isEndGame_;
+	bool isTutorial_;
 	std::unique_ptr<Plane> titleLine_;
 	std::unique_ptr<Plane> titleChar_;
 	WorldTransform worldTransformLine_;

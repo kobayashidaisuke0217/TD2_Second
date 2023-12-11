@@ -29,6 +29,7 @@ public:
 	static WaveManager* GetInstance();
 
 	void LoadFile(const char filename[]);
+	void LoadTutorialFile(const char filename[]);
 	void LoadAllFiles();
 	void SetWave(uint32_t waveNum) { waveNum_ = waveNum; currentFrame_ = 0; };
 	size_t GetWave() { return waveNum_; };
@@ -38,6 +39,7 @@ public:
 	bool IsEnd() { return isEnd_; };
 	void Initialize();
 	void Update();
+	void TutorialUpdate();
 	void Draw();
 	void SetEnemyList(std::list<IEnemy*>* list) { enemyList_ = list; };
 	void SetPlayer(Player* player) { player_ = player; };
@@ -47,6 +49,7 @@ public:
 	void GameClear() { isPastClear_ = true; };
 	bool ISClear() {return isPastClear_;};
 	bool isSpawn_;
+	bool IsClearTutorial() { return isClearTutorialWave_; };
 private:
 	WaveManager() = default;
 	~WaveManager() = default;
@@ -54,6 +57,7 @@ private:
 	WaveManager& operator=(const WaveManager&) = delete;
 
 	std::vector<Wave> waves_;
+	std::vector<Wave> tutorialWaves_;
 	size_t waveNum_;
 	size_t maxWaveNum_;
 	std::list<IEnemy*> *enemyList_;
@@ -113,5 +117,8 @@ private:
 	bool isEnd_;
 	bool isPastClear_ = false;
 	float firstAlpha_;
+
+	//チュートリアル用
+	bool isClearTutorialWave_ = false;//チュートリアルの各ウェーブをクリアしたか
 };
 

@@ -431,5 +431,6 @@
     <None Include="Resource\hlsl\Particle.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
+    <None Include="Resource\Map\waveTutorialMap.csv" />
   </ItemGroup>
 </Project>

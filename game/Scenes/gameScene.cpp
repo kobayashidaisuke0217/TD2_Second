@@ -167,6 +167,8 @@ void GameScene::Initialize()
 	isInGame_ = false;
 	isTitle_ = true;
 	isStartGame_ = false;
+	isStartTutorial_ = false;
+	isTutorial_ = false;
 	isEndGame_ = false;
 	player_->SetLife(3);
 	for (int index = 0; index < 3;index++) {
@@ -254,12 +256,39 @@ void GameScene::Update()
 	if (isTitle_) {
 		Title();
 	}
+	else if (isTutorial_) {
+		Tutorial();
+	}
 	else if (isInGame_) {
 		InGame();
 	}
 	else {
 		if (!isEndGame_) {
 			player_->Update();
+		}
+		if (isStartTutorial_) {
+			std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
+			for (std::shared_ptr<MapManager::Map> object : floors) {
+				if (IsCollision(player_->GetOBB(), object->obb)) {
+					object->isFrameCollision_ = player_->OnCollisionFloorVertical(object->obb);
+					object->OnCollision();
+				}
+				if (IsCollision(player_->GetFloatTrigger(), object->obb)) {
+					object->Touch();
+				}
+			}
+			for (std::shared_ptr<MapManager::Map> object : floors) {
+				if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
+					player_->OnCollisionFloorHorizon(object->obb);
+				}
+			}
+
+			std::vector<std::shared_ptr<MapManager::Map>>& walls = MapManager::GetInstance()->GetWall();
+			for (std::shared_ptr<MapManager::Map> object : walls) {
+				if (IsCollision(player_->GetOBB(), object->obb)) {
+					player_->OnCollisionWall(object->obb);
+				}
+			}
 		}
 		ReStartAnimation();
 	}
@@ -298,6 +327,22 @@ void GameScene::Title() {
 
 		//WaveManager::GetInstance()->SetWave(0);
 	}
+	//チュートリアル開始判定
+	if (player_->GetWorldTransform().GetWorldPos().x > 40.0f) {
+		isTutorial_ = true;
+		isStartTutorial_ = true;
+		isTitle_ = false;
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[GameStart], Audio::GetInstance()->SoundVolume[GameStart]);
+		
+		isInGame_ = false;
+		isTitle_ = false;
+		isTutorial_ = false;
+		frameCount_ = 60;
+		isRunAnimation_ = false;
+		//MapManager::GetInstance()->WaveRead(uint32_t(0));
+		//WaveManager::GetInstance()->SetWave(uint32_t(0));
+	}
+
 
 	worldTransformLine_.translation_ = linePosition_;
 	worldTransformLine_.scale_ = lineScale_;
@@ -528,6 +573,210 @@ void GameScene::InGame() {
 	particle_->Update();
 }
 
+void GameScene::Tutorial() {
+	WaveManager::GetInstance()->TutorialUpdate();
+	//viewProjection_.UpdateMatrix();
+	//viewProjection_.TransferMatrix();
+
+	ImGui::Begin("Scene");
+
+
+	ImGui::InputInt("SceneNum", &sceneNum);
+
+	ImGui::End();
+	player_->Update();
+	if (player_->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+		followCamera_->Shake();
+		ReStart();
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], Audio::GetInstance()->SoundVolume[Death]);
+
+	}
+
+	bullets_.remove_if([](PlayerAimBullet* bullet) {
+		if (!bullet->GetIsAlive()) {
+			delete bullet;
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], Audio::GetInstance()->SoundVolume[DeleteEnemy]);
+			return true;
+		}
+		return false;
+		});
+	enemys_.remove_if([](IEnemy* enemy) {
+		if (!enemy->GetIsAlive()) {
+			delete enemy;
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[DeleteEnemy], Audio::GetInstance()->SoundVolume[DeleteEnemy]);
+
+			return true;
+		}
+		return false;
+		});
+
+	/*std::vector<MapManager::Map>& mapObjects = MapManager::GetInstance()->GetMapObject();
+	for (MapManager::Map & object : mapObjects) {
+		if (IsCollision(player_->GetOBB(), object.obb)) {
+			player_->OnCollision(object.obb);
+		}
+	}*/
+
+	MapManager::GetInstance()->Update();
+	for (IEnemy* enemy : enemys_) {
+		enemy->Update();
+		if (std::abs(enemy->GetWorldTransform().GetWorldPos().x) > horizonBorder_ ||
+			enemy->GetWorldTransform().GetWorldPos().y > upperBorder_ ||
+			enemy->GetWorldTransform().GetWorldPos().y < fallingBorder_) {
+			enemy->Deth();
+		}
+	}
+	for (PlayerAimBullet* bullet : bullets_) {
+
+		bullet->Update();
+	}
+
+	std::vector<std::shared_ptr<MapManager::Map>>& floors = MapManager::GetInstance()->GetFloor();
+	for (std::shared_ptr<MapManager::Map> object : floors) {
+		if (IsCollision(player_->GetOBB(), object->obb)) {
+			object->isFrameCollision_ = player_->OnCollisionFloorVertical(object->obb);
+			object->OnCollision();
+			if (player_->GetIsRecovJump()) {
+				energyparticleCleateTime_ = 30;
+				energyEmmitPoint_ = &object->worldTransform.translation_;
+			}
+		}
+		if (IsCollision(player_->GetFloatTrigger(), object->obb)) {
+			object->Touch();
+		}
+	}
+	for (std::shared_ptr<MapManager::Map> object : floors) {
+		if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
+			player_->OnCollisionFloorHorizon(object->obb);
+		}
+		for (PlayerAimBullet* bullet : bullets_) {
+			if (IsCollision(bullet->GetOBB(), object->obb)) {
+				bullet->isCollision();
+			}
+			if (IsCollision(bullet->GetOBB(), player_->GetOBB())) {
+				Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], Audio::GetInstance()->SoundVolume[Death]);
+
+				ReStart();
+				followCamera_->Shake();
+
+				return;
+			}
+
+		}
+
+	}
+
+	std::vector<std::shared_ptr<MapManager::Map>>& walls = MapManager::GetInstance()->GetWall();
+	for (std::shared_ptr<MapManager::Map> object : walls) {
+		if (IsCollision(player_->GetOBB(), object->obb)) {
+			player_->OnCollisionWall(object->obb);
+		}
+	}
+	for (IEnemy* enemy : enemys_) {
+
+
+		for (std::shared_ptr<MapManager::Map> object : floors) {
+			if (IsCollision(enemy->GetOBB(), object->obb) && !enemy->GetIsHit()) {
+
+				if (enemy->GetType() == kStageUp) {
+					if (object->worldTransform.translation_.y == 0.0f) {
+						object->OnCollision();
+						object->Touch();
+					}
+				}
+				if (enemy->GetType() == kStageDown) {
+					if (object->worldTransform.translation_.y != 0.0f) {
+						object->OnCollision();
+						object->Touch();
+					}
+				}
+				Transform particletrans = { enemy->GetWorldTransform().scale_,enemy->GetWorldTransform().rotation_ ,enemy->GetWorldTransform().translation_ };
+				if (enemy->GetType() == kTire) {
+					Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+					particle_->AddParticle({ particletrans,height,color }, 3);
+
+				}
+				else {
+					Vector4 color = { 1.0f,0.0f,0.0f,1.0f };
+					particle_->AddParticle({ particletrans,random,color }, 10);
+				}
+				enemy->SetPartener(kflore);
+				enemy->isCollision(object->obb);
+				if (enemy->GetType() == kBound || enemy->GetType() == kReflect || enemy->GetType() == kAimBound) {
+					Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Bound], Audio::GetInstance()->SoundVolume[Bound]);
+
+				}
+			}
+		}
+
+		if (enemy->GetType() == kReflect) {
+			for (std::shared_ptr<MapManager::Map> object : walls) {
+				if (IsCollision(enemy->GetOBB(), object->obb)) {
+					enemy->SetPartener(kwall);
+					enemy->isCollision(object->obb);
+
+				}
+			}
+		}
+		if (IsCollision(enemy->GetOBB(), player_->GetOBB())) {
+			//Initialize();
+			ReStart();
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[Death], Audio::GetInstance()->SoundVolume[Death]);
+
+			followCamera_->Shake();
+			return;
+		}
+
+	}
+	if (!isRunAnimation_) {
+		if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave() &&
+			WaveManager::GetInstance()->IsEnd()) {
+			//sceneNum = 2;
+			//isRunAnimation_;
+			isInGame_ = false;
+			isTitle_ = false;
+			frameCount_ = 0;
+			isRunAnimation_ = false;
+			isStartGame_ = false;
+			isEndGame_ = true;
+		}
+	}
+	if (isRunAnimation_) {
+		resetT_ = frameCount_ / float(transitionAnimationLength_);
+		resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
+		//resetT_ = 1.0f;
+		if (frameCount_ >= transitionAnimationLength_) {
+			isRunAnimation_ = false;
+		}
+		frameCount_++;
+	}
+	AbsorptionEnergy();
+	std::list<ParticleData>* particleData = particle_->GetParticleDate();
+	for (std::list<ParticleData>::iterator particleIterator = particleData->begin(); particleIterator != particleData->end(); particleIterator++) {
+		if ((*particleIterator).attribute == ABSORPTION) {
+			(*particleIterator).velocity = 1.0f * (Lerp(0.2f, ((*particleIterator).velocity), (player_->GetWorldTransformBack().GetWorldPos() - (Multiply((*particleIterator).emitter.transform.scale.x, (*particleIterator).transform.translate) + (*particleIterator).emitter.transform.translate))));
+			//(particleIterator)->velocity =player_->GetWorldTransform().GetWorldPos() - ((*particleIterator).transform.translate + (*particleIterator).emitter.transform.translate);
+		}
+	}
+	particle_->Update();
+	if(WaveManager::GetInstance()->IsClearTutorial()) {
+		for (IEnemy* enemy : enemys_) {
+			delete enemy;
+		}
+		for (PlayerAimBullet* bullet : bullets_) {
+			delete bullet;
+		}
+		particle_->Cler();
+		bullets_.clear();
+		enemys_.clear();
+		isInGame_ = false;
+		isTitle_ = false;
+		isTutorial_ = false;
+		frameCount_ = 0;
+		isRunAnimation_ = false;
+	}
+}
+
 void GameScene::Draw()
 {
 	//2D描画準備
@@ -554,7 +803,7 @@ void GameScene::Draw3D()
 
 		bullet->Draw(viewProjection_);
 	}
-	if (!isStartGame_ && !isEndGame_) {
+	if (!isStartGame_ && !isEndGame_ && !isStartTutorial_) {
 		titleLine_->Draw(worldTransformLine_, viewProjection_, { 1.0f,1.0f ,1.0f ,1.0f }, blackTextureHandle_);
 		titleChar_->Draw(worldTransformStart_, viewProjection_,{1.0f,1.0f,1.0f,1.0f},startTextureHandle_);
 	}
@@ -729,10 +978,10 @@ void GameScene::Draw2D() {
 		reversMaterial.w = 0.5f;
 	}
 	reverseSprite_->Draw(reverse_, uv, reversMaterial, reverseTextureHandle_);
-	if (!isStartGame_ && !isEndGame_){
+	if (!isStartGame_ && !isEndGame_ && !isStartTutorial_){
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
 	}
-	else {
+	else if(isStartGame_){
 		Transform lifeTransform;
 		lifeTransform.scale = lifeScale_;
 		lifeTransform.rotate = {0,0,0};
@@ -805,6 +1054,37 @@ void GameScene::ReStartWave()
 	player_->Reset(MapManager::GetInstance()->GetCenterHeight());
 }
 
+void GameScene::ReStartTutorial()
+{
+	for (IEnemy* enemy : enemys_) {
+		delete enemy;
+	}
+	for (PlayerAimBullet* bullet : bullets_) {
+		delete bullet;
+	}
+	enemys_.clear();
+	bullets_.clear();
+	
+	size_t num = WaveManager::GetInstance()->GetWave();
+	if (WaveManager::GetInstance()->IsClearTutorial()) {
+		num++;
+	}
+	if (WaveManager::GetInstance()->IsEnd()) {
+		Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
+
+		//sceneNum = 2;
+		isStartGame_ = true;
+		isInGame_ = true;
+		isStartTutorial_ = false;
+		num = 0;
+	}
+
+
+	MapManager::GetInstance()->WaveReadTutorial(uint32_t(num));
+	WaveManager::GetInstance()->SetWave(uint32_t(num));
+	player_->Reset(MapManager::GetInstance()->GetCenterHeight());
+}
+
 void GameScene::ReStart()
 {
 	for (IEnemy* enemy : enemys_) {
@@ -823,6 +1103,7 @@ void GameScene::ReStart()
 	}
 	isInGame_ = false;
 	isTitle_ = false;
+	isTutorial_ = false;
 	frameCount_ = 0;
 	isRunAnimation_ = false;
 }
@@ -841,9 +1122,17 @@ void GameScene::ReStartAnimation() {
 		}
 		
 		if (frameCount_ == transitionAnimationLength_/2) {
-			ReStartWave();
+			if (isStartTutorial_) {
+				ReStartTutorial();
+			}
+			else {
+				ReStartWave();
+			}
 			if (isStartGame_) {
 				isInGame_ = true;
+			}
+			else if (isStartTutorial_) {
+				isTutorial_ = true;
 			}
 			else {
 				isTitle_ = true;

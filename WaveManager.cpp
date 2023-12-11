@@ -23,6 +23,10 @@ void WaveManager::LoadAllFiles() {
 	LoadFile("Resource/Wave/waveData.wave");
 	LoadFile("Resource/Wave/waveData2.wave");
 	LoadFile("Resource/Wave/waveData3.wave");
+
+	tutorialWaves_.clear();
+	tutorialWaves_.shrink_to_fit();
+	LoadTutorialFile("Resource/Wave/waveTutorialData.wave");
 }
 
 void WaveManager::LoadFile(const char filename[]) {
@@ -40,6 +44,69 @@ void WaveManager::LoadFile(const char filename[]) {
 		s >> identifilter;
 		if (identifilter == "wave") {
 			newWave = &waves_.emplace_back();
+			maxWaveNum_++;
+		}
+		else if (identifilter == "enemy") {
+			if (newWave) {
+				newEnemyData = &newWave->enemyDatas.emplace_back();
+			}
+		}
+		else if (identifilter == "position") {
+			Vector3 position;
+			s >> position.x >> position.y >> position.z;
+			if (newEnemyData) {
+				//マップからトランスフォーム値に変換
+				newEnemyData->translate.x = float(position.x) * 2.0f * 2.0f;
+				newEnemyData->translate.y = float(position.y) * 2.0f * 2.0f;
+				newEnemyData->translate.z = float(position.z) * 2.0f * 2.0f;
+			}
+		}
+		else if (identifilter == "velocity") {
+			if (newEnemyData) {
+				s >> newEnemyData->velocity.x >> newEnemyData->velocity.y >> newEnemyData->velocity.z;
+			}
+		}
+		else if (identifilter == "speed") {
+			if (newEnemyData) {
+				s >> newEnemyData->speed;
+			}
+		}
+		else if (identifilter == "type") {
+			int32_t type;
+			s >> type;
+			if (newEnemyData) {
+				newEnemyData->type = EnemyType(type);
+			}
+		}
+		else if (identifilter == "frame") {
+			if (newEnemyData) {
+				s >> newEnemyData->frame;
+			}
+		}
+		else if (identifilter == "length") {
+			if (newWave) {
+				s >> newWave->length;
+			}
+		}
+	}
+
+}
+
+void WaveManager::LoadTutorialFile(const char filename[]) {
+	std::string line;
+	std::ifstream file(filename);
+	//assert(file.is_open());
+	if (!file.is_open()) {
+		return;
+	}
+	EnemyData* newEnemyData = nullptr;
+	Wave* newWave = nullptr;
+	while (std::getline(file, line)) {
+		std::string identifilter;
+		std::istringstream s(line);
+		s >> identifilter;
+		if (identifilter == "wave") {
+			newWave = &tutorialWaves_.emplace_back();
 			maxWaveNum_++;
 		}
 		else if (identifilter == "enemy") {
@@ -315,6 +382,78 @@ void WaveManager::Update() {
 	}
 	if (isChangeNum_) {
 		ChangeNumAnimation();
+	}
+}
+
+void WaveManager::TutorialUpdate() {
+	for (EnemyData& enemy : tutorialWaves_[size_t(waveNum_)].enemyDatas) {
+		if (currentFrame_ == enemy.frame) {
+			//Enemyの生成処理	
+			IEnemy* newEnemy;
+
+			Transform transform;
+			transform.scale = { 1.0f,1.0f,1.0f };
+			transform.rotate = { 0,0,0 };
+			transform.translate = enemy.translate;
+			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[EnemyPop], Audio::GetInstance()->SoundVolume[EnemyPop]);
+			Vector4 color = { 0.0f,1.0f,0.0f,1.0f };
+			gameScene_->particle_->AddParticle({ transform,random,color }, 10);
+			switch (enemy.type)
+			{
+			case kBullet://0
+				newEnemy = new BulletEnemy();
+				newEnemy->SetStartCount(gameScene_->BulletStartCount);
+				transform.scale = { 1.5, 2, 2 };
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->bulletEnemyModel_.get());
+
+				enemyList_->push_back(newEnemy);
+				break;
+			default://else
+				newEnemy = new ReflectEnemy();
+				//enemy->Initialize(enemyTransform, enemyVelocity_, EnemymoveSpeed_, enemyTex_);
+
+				newEnemy->Initialize(transform, enemy.velocity, enemy.speed, 2, gameScene_->ballEnemyModel_.get());
+				enemyList_->push_back(newEnemy);
+				break;
+			}
+
+		}
+	}
+	currentFrame_++;
+
+	if (waveNum_ < 5) {
+		//isFirst_ = true;
+		//firstAlpha_ = float(5 - waveNum_) / 5.0f;
+		t_ += 0.1f;
+		if (t_ > 1.0f) {
+			t_ = 1.0f;
+		}
+		float c1 = 1.70158f;
+		float c3 = c1 + 1.0f;
+
+		finalScale_ = float(1 + c3 * std::pow(t_ - 1.0f, 3) + c1 * std::pow(t_ - 1.0f, 2));
+
+	}
+	
+	else {
+		isFirst_ = false;
+		t_ = 0.0f;
+	}
+	isClearTutorialWave_ = false;
+	if (currentFrame_ == tutorialWaves_[size_t(waveNum_)].length + waveInterval_) {
+		Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[PlusWave], Audio::GetInstance()->SoundVolume[PlusWave]);
+	}
+	if (currentFrame_ >= tutorialWaves_[size_t(waveNum_)].length + waveInterval_) {
+		isClearTutorialWave_ = true;
+		if (tutorialWaves_.size() - 1 > waveNum_) {
+			isEnd_ = false;
+			//Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[PlusWave], Audio::GetInstance()->SoundVolume[PlusWave]);
+			//waveNum_++;
+		}
+		else {
+			isEnd_ = true;
+		}
+		//currentFrame_ = 0;
 	}
 }
 
