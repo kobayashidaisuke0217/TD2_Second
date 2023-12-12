@@ -102,11 +102,11 @@ void BoundEnemy::isCollision(OBB pertner)
 		if (collisionpartner_ == kflore) {
 			if (std::abs(obb_.center.y - pertner.center.y) <= worldTransform_.scale_.y * 2.0f) {
 				if (!isDown_) {
-					velocity_.y = 0.2f;
+					velocity_.y = 0.5f;
 					worldTransform_.translation_.y = pertner.center.y + pertner.size.y + worldTransform_.scale_.y;
 				}
 				else {
-					velocity_.y = -0.2f;
+					velocity_.y = -0.5f;
 					worldTransform_.translation_.y = pertner.center.y - pertner.size.y - worldTransform_.scale_.y;
 				}
 				//worldTransform_.translation_ = prePos_;
