@@ -388,8 +388,8 @@ void DirectXCommon::InitializeFixFPS()
 
 void DirectXCommon::updateFixFPS()
 {
-	const std::chrono::microseconds kMinTime(uint64_t(100000.0f / 60.0f));
-	const std::chrono::microseconds kMinCheckTime(uint64_t(100000.0f / 65.0f));
+	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
+	const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 65.0f));
 
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 
@@ -399,5 +399,6 @@ void DirectXCommon::updateFixFPS()
 		{
 			std::this_thread::sleep_for(std::chrono::microseconds(1));
 		}
-	}reference_ = std::chrono::steady_clock::now();
+	}
+	reference_ = std::chrono::steady_clock::now();
 }
