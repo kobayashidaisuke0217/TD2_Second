@@ -27,6 +27,7 @@ void WaveManager::LoadAllFiles() {
 	tutorialWaves_.clear();
 	tutorialWaves_.shrink_to_fit();
 	LoadTutorialFile("Resource/Wave/waveTutorialData.wave");
+	LoadTutorialFile("Resource/Wave/waveTutorialData2.wave");
 }
 
 void WaveManager::LoadFile(const char filename[]) {
