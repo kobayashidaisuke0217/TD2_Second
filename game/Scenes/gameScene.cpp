@@ -189,6 +189,7 @@ void GameScene::Initialize()
 	energyEmmitPoint_ = nullptr;
 
 	lifeDrawerT_ = 0.0f;
+	isLifeDecriaceAnimation_ = false;
 }
 
 void GameScene::Update()
@@ -994,18 +995,23 @@ void GameScene::Draw2D() {
 		Transform lifeTransform;
 		lifeTransform.scale = lifeScale_;
 		lifeTransform.rotate = {0,0,0};
-		lifeTranslates_[1] = Lerp(lifeDrawerT_, lifeLeftTopPosition_, {640,360,0});
+		lifeTranslates_[1] = Lerp(lifeDrawerT_, lifeLeftTopPosition_, { 640,360,0 });
+		int life = std::clamp(player_->GetLife(), 0, 3);
+		if (isLifeDecriaceAnimation_) {
+			life++;
+			lifeTranslates_[1].y += lifeUpDown_;
+		}
 		lifeTranslates_[0] = lifeTranslates_[1];
 		lifeTranslates_[0].x -= 100.0f;
 		lifeTranslates_[2] = lifeTranslates_[1];
 		lifeTranslates_[2].x += 100.0f;
-		int life = std::clamp(player_->GetLife(),0,3);
-		if (0.0f < lifeDrawerT_ && lifeDrawerT_ < 1.0f) {
-			life++;
-		}
 		for (int index = 0; index < life; index++) {
 			lifeTransform.translate = lifeTranslates_[index];
-			lifeSprites_[size_t(index)]->Draw(lifeTransform, uv, {1.0f,1.0f,1.0f,1.0f}, lifeTextureHandle_);
+			Vector4 color = {1.0f,1.0f,1.0f,1.0f};
+			if (index >= player_->GetLife()) {
+				color.w = decriaceAnimationAlpha_;
+			}
+			lifeSprites_[size_t(index)]->Draw(lifeTransform, uv, color, lifeTextureHandle_);
 		}
 	}
 	if (isRunAnimation_) {
@@ -1131,13 +1137,22 @@ void GameScene::ReStartAnimation() {
 		frameCount_ = 0;
 		lifeDrawerT_ = 1.0f;
 	}
-	if (!isRunAnimation_) {
+	if (!isRunAnimation_ && !isEndGame_) {
 		lifeDrawerT_ = frameCount_ / float(transitionAnimationDelay_);
 		lifeDrawerT_ *= 4.0f;
 		lifeDrawerT_ = std::clamp(lifeDrawerT_, 0.0f, 1.0f);
+		isLifeDecriaceAnimation_ = true;
+		lifeUpDown_ = (frameCount_ - float(transitionAnimationDelay_ * 0.75f)) / float(transitionAnimationDelay_*0.25f);
+		lifeUpDown_ = std::clamp(lifeUpDown_,0.0f,1.0f);
+		decriaceAnimationAlpha_ = 1.0f - lifeUpDown_;
+		lifeUpDown_ *= 2.0f;
+		lifeUpDown_ -= 1.0f;
+		lifeUpDown_ *= lifeUpDown_;
+		lifeUpDown_ *= -80.0f;
 	}
 	if (isRunAnimation_) {
 		resetT_ = 1.0f;
+		isLifeDecriaceAnimation_ = false;
 		if (!isEndGame_) {
 			resetT_ = frameCount_ / float(transitionAnimationLength_);
 			resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;

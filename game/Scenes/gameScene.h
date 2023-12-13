@@ -153,6 +153,9 @@ private:
 	Vector3 lifeTranslates_[3];
 	Vector3 lifeLeftTopPosition_;//ライフ表示用左上座標
 	float lifeDrawerT_;//ライフ表示用補間係数
+	float lifeUpDown_;
+	bool isLifeDecriaceAnimation_;
+	float decriaceAnimationAlpha_;
 	uint32_t lifeTextureHandle_;
 	
 	Vector3 startOffset_;
