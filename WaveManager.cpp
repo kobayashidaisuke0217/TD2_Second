@@ -215,6 +215,7 @@ void WaveManager::Initialize() {
 }
 
 void WaveManager::Update() {
+	bool isPopWait = false;//出現待ちのエネミーがいるかどうか
 	for (EnemyData& enemy : waves_[size_t(waveNum_)].enemyDatas) {
 		if (currentFrame_ == enemy.frame) {
 			//Enemyの生成処理	
@@ -326,6 +327,9 @@ void WaveManager::Update() {
 			}
 
 		}
+		if (!isPopWait && currentFrame_ <= enemy.frame) {
+			isPopWait = true;
+		}
 	}
 	currentFrame_++;
 
@@ -358,7 +362,7 @@ void WaveManager::Update() {
 		isFirst_ = false;
 		t_ = 0.0f;
 	}
-	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_) {
+	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_ || (!isPopWait && enemyList_->size() ==0)) {
 		if (waves_.size() - 1 > waveNum_) {
 			isEnd_ = false;
 			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[PlusWave], Audio::GetInstance()->SoundVolume[PlusWave]);
