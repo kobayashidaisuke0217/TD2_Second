@@ -187,6 +187,8 @@ void GameScene::Initialize()
 
 	energyparticleCleateTime_ = -1;
 	energyEmmitPoint_ = nullptr;
+
+	lifeDrawerT_ = 0.0f;
 }
 
 void GameScene::Update()
@@ -845,9 +847,16 @@ void GameScene::ApplyGlobalVariables()
 	reverse_.translate = globalVariables->GetVector3Value(groupName3, "reversePosition");
 
 	lifeScale_ = globalVariables->GetVector3Value(groupName3, "lifeScale");
-	lifeTranslates_[0] = globalVariables->GetVector3Value(groupName3, "lifePosition0");
-	lifeTranslates_[1] = globalVariables->GetVector3Value(groupName3, "lifePosition1");
-	lifeTranslates_[2] = globalVariables->GetVector3Value(groupName3, "lifePosition2");
+	/*//lifeTranslates_[0] = globalVariables->GetVector3Value(groupName3, "lifePosition0");
+	//lifeTranslates_[1] = globalVariables->GetVector3Value(groupName3, "lifePosition1");
+	//lifeTranslates_[2] = globalVariables->GetVector3Value(groupName3, "lifePosition2");
+	lifeTranslates_[0] = lifeTranslates_[1];
+	lifeTranslates_[0].x -= 100.0f;
+	lifeTranslates_[2] = lifeTranslates_[1];
+	lifeTranslates_[2].x += 100.0f;*/
+	lifeLeftTopPosition_ = globalVariables->GetVector3Value(groupName3, "lifePosition1");
+
+
 	const char* groupNameEnemy = "EnemyData";
 	
 	BulletStartCount = globalVariables->GetIntValue(groupNameEnemy, "time");
@@ -985,7 +994,15 @@ void GameScene::Draw2D() {
 		Transform lifeTransform;
 		lifeTransform.scale = lifeScale_;
 		lifeTransform.rotate = {0,0,0};
+		lifeTranslates_[1] = Lerp(lifeDrawerT_, lifeLeftTopPosition_, {640,360,0});
+		lifeTranslates_[0] = lifeTranslates_[1];
+		lifeTranslates_[0].x -= 100.0f;
+		lifeTranslates_[2] = lifeTranslates_[1];
+		lifeTranslates_[2].x += 100.0f;
 		int life = std::clamp(player_->GetLife(),0,3);
+		if (0.0f < lifeDrawerT_ && lifeDrawerT_ < 1.0f) {
+			life++;
+		}
 		for (int index = 0; index < life; index++) {
 			lifeTransform.translate = lifeTranslates_[index];
 			lifeSprites_[size_t(index)]->Draw(lifeTransform, uv, {1.0f,1.0f,1.0f,1.0f}, lifeTextureHandle_);
@@ -1112,6 +1129,12 @@ void GameScene::ReStartAnimation() {
 	if (!isRunAnimation_ && frameCount_ >= transitionAnimationDelay_){
 		isRunAnimation_ = true;
 		frameCount_ = 0;
+		lifeDrawerT_ = 1.0f;
+	}
+	if (!isRunAnimation_) {
+		lifeDrawerT_ = frameCount_ / float(transitionAnimationDelay_);
+		lifeDrawerT_ *= 4.0f;
+		lifeDrawerT_ = std::clamp(lifeDrawerT_, 0.0f, 1.0f);
 	}
 	if (isRunAnimation_) {
 		resetT_ = 1.0f;
@@ -1127,6 +1150,7 @@ void GameScene::ReStartAnimation() {
 			}
 			else {
 				ReStartWave();
+				lifeDrawerT_ = 0.0f;
 			}
 			if (isStartGame_) {
 				isInGame_ = true;

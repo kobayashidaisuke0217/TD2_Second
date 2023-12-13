@@ -151,6 +151,8 @@ private:
 	std::vector<std::unique_ptr<Sprite>> lifeSprites_;
 	Vector3 lifeScale_;
 	Vector3 lifeTranslates_[3];
+	Vector3 lifeLeftTopPosition_;//ライフ表示用左上座標
+	float lifeDrawerT_;//ライフ表示用補間係数
 	uint32_t lifeTextureHandle_;
 	
 	Vector3 startOffset_;
