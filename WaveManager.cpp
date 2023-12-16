@@ -222,6 +222,7 @@ void WaveManager::Initialize() {
 }
 
 void WaveManager::Update() {
+	isClearTutorialWave_ = false;
 	bool isPopWait = false;//出現待ちのエネミーがいるかどうか
 	for (EnemyData& enemy : waves_[size_t(waveNum_)].enemyDatas) {
 		if (currentFrame_ == enemy.frame) {
