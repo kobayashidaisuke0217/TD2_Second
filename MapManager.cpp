@@ -26,7 +26,7 @@ void MapManager::Initialize() {
 
 
 	MapRead();
-	modelBlock_.reset(Model::CreateModelFromObj("Resource/block", "block.obj"));
+	modelBlock_.reset(Model::CreateModelFromObj("Resource/block2", "block2.obj"));
 	modelArie_.reset(Model::CreateModelFromObj("Resource/cube", "cube.obj"));
 	cameraShake_ = nullptr;
 }
