@@ -390,6 +390,10 @@ void Player::OnCollisionFloorHorizon(OBB& partner) {
 			//worldTransform_.UpdateMatrix();
 		}
 		else {
+			if (!jumpAble_) {
+				isRecovJump_ = true;
+			}
+			jumpAble_ = true;
 			//横方向から当たったときの処理
 			worldTransform_.translation_.x = partner.center.x + (obb_.center.x - partner.center.x)/(std::sqrtf(std::powf(obb_.center.x - partner.center.x,2))) * (obb_.size.x + partner.size.x);
 			//direction_ *= -1.0f;

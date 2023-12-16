@@ -41,6 +41,7 @@ public:
 	void Update();
 	void TutorialUpdate();
 	void Draw();
+	void DrawTutorial();
 	void SetEnemyList(std::list<IEnemy*>* list) { enemyList_ = list; };
 	void SetPlayer(Player* player) { player_ = player; };
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
@@ -50,6 +51,7 @@ public:
 	bool ISClear() {return isPastClear_;};
 	bool isSpawn_;
 	bool IsClearTutorial() { return isClearTutorialWave_; };
+	void SetIsEnd(bool is) { isEnd_ = is; };
 private:
 	WaveManager() = default;
 	~WaveManager() = default;
@@ -120,5 +122,8 @@ private:
 
 	//チュートリアル用
 	bool isClearTutorialWave_ = false;//チュートリアルの各ウェーブをクリアしたか
+
+	std::unique_ptr<Sprite> tutorialSprite_;
+	uint32_t tutorialTextureHandles_[3];
 };
 

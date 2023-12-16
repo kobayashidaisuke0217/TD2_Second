@@ -356,6 +356,10 @@ void GameScene::Title() {
 		if (IsCollision(player_->GetOBB(), object->obb)) {
 			object->isFrameCollision_ = player_->OnCollisionFloorVertical(object->obb);
 			object->OnCollision();
+			if (player_->GetIsRecovJump()) {
+				energyparticleCleateTime_ = 30;
+				energyEmmitPoint_ = &object->worldTransform.translation_;
+			}
 		}
 		if (IsCollision(player_->GetFloatTrigger(), object->obb)) {
 			object->Touch();
@@ -364,6 +368,10 @@ void GameScene::Title() {
 	for (std::shared_ptr<MapManager::Map> object : floors) {
 		if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
 			player_->OnCollisionFloorHorizon(object->obb);
+			if (player_->GetIsRecovJump()) {
+				energyparticleCleateTime_ = 30;
+				energyEmmitPoint_ = &object->worldTransform.translation_;
+			}
 		}
 	}
 
@@ -463,6 +471,10 @@ void GameScene::InGame() {
 	for (std::shared_ptr<MapManager::Map> object : floors) {
 		if (IsCollision(player_->GetOBB(), object->obb) && (object->isFrameCollision_ == false)) {
 			player_->OnCollisionFloorHorizon(object->obb);
+			if (player_->GetIsRecovJump()) {
+				energyparticleCleateTime_ = 30;
+				energyEmmitPoint_ = &object->worldTransform.translation_;
+			}
 		}
 		for (PlayerAimBullet* bullet : bullets_) {
 			if (IsCollision(bullet->GetOBB(), object->obb)) {
@@ -673,6 +685,10 @@ void GameScene::Tutorial() {
 	for (std::shared_ptr<MapManager::Map> object : walls) {
 		if (IsCollision(player_->GetOBB(), object->obb)) {
 			player_->OnCollisionWall(object->obb);
+			if (player_->GetIsRecovJump()) {
+				energyparticleCleateTime_ = 30;
+				energyEmmitPoint_ = &object->worldTransform.translation_;
+			}
 		}
 	}
 	for (IEnemy* enemy : enemys_) {
@@ -1033,6 +1049,9 @@ void GameScene::DrawBackGround() {
 	if (isStartGame_ || isEndGame_) {
 		WaveManager::GetInstance()->Draw();
 	}
+	if (isTutorial_) {
+		WaveManager::GetInstance()->DrawTutorial();
+	}
 }
 
 void GameScene::Finalize()
@@ -1094,7 +1113,7 @@ void GameScene::ReStartTutorial()
 	}
 	if (WaveManager::GetInstance()->IsEnd()) {
 		Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
-
+		WaveManager::GetInstance()->SetIsEnd(false);
 		//sceneNum = 2;
 		isStartGame_ = true;
 		isInGame_ = true;
@@ -1120,7 +1139,7 @@ void GameScene::ReStart()
 	bullets_.clear();
 	enemys_.clear();
 	player_->DethAnimation();
-	if (isInGame_) {
+	if (isInGame_ && isStartGame_) {
 		int life = player_->GetLife();
 		player_->SetLife(life - 1);
 	}
@@ -1148,6 +1167,7 @@ void GameScene::ReStartAnimation() {
 		lifeUpDown_ *= 2.0f;
 		lifeUpDown_ -= 1.0f;
 		lifeUpDown_ *= lifeUpDown_;
+		lifeUpDown_ -= 1.0f;
 		lifeUpDown_ *= -80.0f;
 	}
 	if (isRunAnimation_) {
@@ -1160,6 +1180,7 @@ void GameScene::ReStartAnimation() {
 		}
 		
 		if (frameCount_ == transitionAnimationLength_/2) {
+			lifeDrawerT_ = 0.0f;
 			if (isStartTutorial_) {
 				ReStartTutorial();
 			}

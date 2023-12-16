@@ -212,6 +212,13 @@ void WaveManager::Initialize() {
 
 	yokeroTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/yokero.png");
 	isFirst_ = false;
+
+	tutorialSprite_.reset(new Sprite);
+	tutorialSprite_->Initialize({ -800,-400.0,0 }, { 800,400.0,0 });
+
+	tutorialTextureHandles_[0] = Texturemanager::GetInstance()->Load("Resource/UI/bigJumpUI.png");
+	tutorialTextureHandles_[1] = Texturemanager::GetInstance()->Load("Resource/UI/Jump.png");
+	tutorialTextureHandles_[2] = Texturemanager::GetInstance()->Load("Resource/yokero.png");
 }
 
 void WaveManager::Update() {
@@ -489,6 +496,13 @@ void WaveManager::Draw() {
 		transform.scale = Vector3{ 0.3f,0.3f,0.3f } *finalScale_;
 		finalSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,firstAlpha_ }, yokeroTextureHandle_);
 	}
+}
+
+void WaveManager::DrawTutorial() {
+	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+	Transform transform = { { 0.3f,0.3f,0.1f },{0,0,0},{640,250,0} };
+	tutorialSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandles_[waveNum_]);
+	
 }
 
 void WaveManager::ChangeNumAnimation() {
