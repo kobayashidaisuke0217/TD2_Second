@@ -162,6 +162,9 @@ private:
 	float startFloatTheta_;
 	int energyparticleCleateTime_;
 	Vector3* energyEmmitPoint_;
+
+	WorldTransform worldTransformInnerTutorialArie_;
+	std::unique_ptr<Plane> tutorialArea_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };

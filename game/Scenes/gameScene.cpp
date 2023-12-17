@@ -190,6 +190,14 @@ void GameScene::Initialize()
 
 	lifeDrawerT_ = 0.0f;
 	isLifeDecriaceAnimation_ = false;
+
+	worldTransformInnerTutorialArie_.Initialize();
+	worldTransformInnerTutorialArie_.scale_.x = 16.0f;
+	worldTransformInnerTutorialArie_.scale_.y = 28.0f;
+	worldTransformInnerTutorialArie_.translation_ = {46,16,0.1f};
+	worldTransformInnerTutorialArie_.UpdateMatrix();
+	tutorialArea_.reset(new Plane);
+	tutorialArea_->Initialize();
 }
 
 void GameScene::Update()
@@ -825,6 +833,8 @@ void GameScene::Draw3D()
 	if (!isStartGame_ && !isEndGame_ && !isStartTutorial_) {
 		titleLine_->Draw(worldTransformLine_, viewProjection_, { 1.0f,1.0f ,1.0f ,1.0f }, blackTextureHandle_);
 		titleChar_->Draw(worldTransformStart_, viewProjection_,{1.0f,1.0f,1.0f,1.0f},startTextureHandle_);
+
+		tutorialArea_->Draw(worldTransformInnerTutorialArie_, viewProjection_, { 0.8f,0.0f,0.0f,0.8f }, fadeTextureHandle_);
 	}
 	blueMoon_->PariclePreDraw();
 	
