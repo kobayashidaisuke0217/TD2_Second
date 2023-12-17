@@ -218,7 +218,7 @@ void WaveManager::Initialize() {
 
 	tutorialTextureHandles_[0] = Texturemanager::GetInstance()->Load("Resource/UI/bigJumpUI.png");
 	tutorialTextureHandles_[1] = Texturemanager::GetInstance()->Load("Resource/UI/Jump.png");
-	tutorialTextureHandles_[2] = Texturemanager::GetInstance()->Load("Resource/yokero.png");
+	tutorialTextureHandles_[2] = Texturemanager::GetInstance()->Load("Resource/UI/reversUI.png");
 }
 
 void WaveManager::Update() {

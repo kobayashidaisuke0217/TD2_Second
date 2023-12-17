@@ -132,6 +132,10 @@ void GameScene::Initialize()
 	globalVariables->AddItem(groupName2, "TitleScale", titleTransform_.scale);
 	globalVariables->AddItem(groupName2, "TitleTransform", titleTransform_.translate);
 
+	worldTransformTutorial_.Initialize();
+	globalVariables->AddItem(groupName2, "tutorialPosition", worldTransformTutorial_.translation_);
+	globalVariables->AddItem(groupName2, "tutorialScale", worldTransformTutorial_.scale_);
+
 	moveSprite_.reset(new Sprite);
 	moveSprite_->Initialize({ -800.0f,-200.0f,0,0 }, { 800.0f,200.0f,0,0 });
 	jumpSprite_.reset(new Sprite);
@@ -198,6 +202,9 @@ void GameScene::Initialize()
 	worldTransformInnerTutorialArie_.UpdateMatrix();
 	tutorialArea_.reset(new Plane);
 	tutorialArea_->Initialize();
+
+	tutorialTextureHandle_ = textureManager_->Load("Resource/tutorial.png");
+
 }
 
 void GameScene::Update()
@@ -401,6 +408,12 @@ void GameScene::Title() {
 	}
 	worldTransformStart_.translation_ = startOffset_;
 	worldTransformStart_.translation_.y += std::sin(startFloatTheta_) *0.5f;
+
+	worldTransformTutorial_.translation_ = tutorialOffset_;
+	worldTransformTutorial_.translation_.y += std::cos(startFloatTheta_) * 0.5f;
+	worldTransformTutorial_.UpdateMatrix();
+
+
 	startFloatTheta_ += 0.1f;
 }
 
@@ -835,6 +848,7 @@ void GameScene::Draw3D()
 		titleChar_->Draw(worldTransformStart_, viewProjection_,{1.0f,1.0f,1.0f,1.0f},startTextureHandle_);
 
 		tutorialArea_->Draw(worldTransformInnerTutorialArie_, viewProjection_, { 0.8f,0.0f,0.0f,0.8f }, fadeTextureHandle_);
+		titleChar_->Draw(worldTransformTutorial_, viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandle_);
 	}
 	blueMoon_->PariclePreDraw();
 	
@@ -865,6 +879,10 @@ void GameScene::ApplyGlobalVariables()
 	worldTransformStart_.scale_ = globalVariables->GetVector3Value(groupName2, "startScale");
 	startOffset_ = globalVariables->GetVector3Value(groupName2, "startPosition");
 
+	tutorialOffset_ = globalVariables->GetVector3Value(groupName2, "tutorialPosition");
+	worldTransformTutorial_.scale_ = globalVariables->GetVector3Value(groupName2, "tutorialScale");
+
+
 	const char* groupName3 = "UI";
 	move_.scale = globalVariables->GetVector3Value(groupName3, "moveScale");
 	move_.translate = globalVariables->GetVector3Value(groupName3, "movePosition");
@@ -882,6 +900,7 @@ void GameScene::ApplyGlobalVariables()
 	lifeTranslates_[2] = lifeTranslates_[1];
 	lifeTranslates_[2].x += 100.0f;*/
 	lifeLeftTopPosition_ = globalVariables->GetVector3Value(groupName3, "lifePosition1");
+
 
 
 	const char* groupNameEnemy = "EnemyData";

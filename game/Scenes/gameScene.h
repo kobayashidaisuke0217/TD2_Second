@@ -165,6 +165,9 @@ private:
 
 	WorldTransform worldTransformInnerTutorialArie_;
 	std::unique_ptr<Plane> tutorialArea_;
+	Vector3 tutorialOffset_;
+	WorldTransform worldTransformTutorial_;
+	uint32_t tutorialTextureHandle_;
 private:
 	void EnemySpawn(const WorldTransform& worldTransform, EnemyType type);
 };
