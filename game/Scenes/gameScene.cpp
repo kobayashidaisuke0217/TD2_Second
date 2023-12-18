@@ -576,8 +576,8 @@ void GameScene::InGame() {
 		}
 
 	}
-	if (!isRunAnimation_) {
-		if (WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave() && 
+	if (!isRunAnimation_) {//クリア
+		if (/*WaveManager::GetInstance()->GetWave() + 1 >= WaveManager::GetInstance()->GetMaxWave() && */
 			WaveManager::GetInstance()->IsEnd()) {
 			//sceneNum = 2;
 			//isRunAnimation_;

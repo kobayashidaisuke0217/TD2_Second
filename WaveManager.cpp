@@ -21,8 +21,8 @@ void WaveManager::LoadAllFiles() {
 	waves_.clear();
 	waves_.shrink_to_fit();
 	LoadFile("Resource/Wave/waveData.wave");
-	LoadFile("Resource/Wave/waveData2.wave");
-	LoadFile("Resource/Wave/waveData3.wave");
+	//LoadFile("Resource/Wave/waveData2.wave");
+	//LoadFile("Resource/Wave/waveData3.wave");
 
 	tutorialWaves_.clear();
 	tutorialWaves_.shrink_to_fit();
@@ -383,7 +383,7 @@ void WaveManager::Update() {
 		isFirst_ = false;
 		t_ = 0.0f;
 	}
-	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_ || (!isPopWait && enemyList_->size() ==0)) {
+	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_ || ((!isPopWait && enemyList_->size() ==0) && (waves_.size() > waveNum_))) {
 		if (waves_.size() - 1 > waveNum_) {
 			isEnd_ = false;
 			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[PlusWave], Audio::GetInstance()->SoundVolume[PlusWave]);
