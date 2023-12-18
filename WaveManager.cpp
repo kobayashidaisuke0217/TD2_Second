@@ -383,7 +383,7 @@ void WaveManager::Update() {
 		isFirst_ = false;
 		t_ = 0.0f;
 	}
-	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_ || ((!isPopWait && enemyList_->size() ==0) && (waves_.size() > waveNum_))) {
+	if (currentFrame_ >= waves_[size_t(waveNum_)].length + waveInterval_ || ((!isPopWait && enemyList_->size() ==0) && (waves_.size()-1 != waveNum_))) {
 		if (waves_.size() - 1 > waveNum_) {
 			isEnd_ = false;
 			Audio::GetInstance()->SoundPlayWave(Audio::GetInstance()->handle_[PlusWave], Audio::GetInstance()->SoundVolume[PlusWave]);
