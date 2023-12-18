@@ -1038,26 +1038,28 @@ void GameScene::Draw2D() {
 		titleSprite_->Draw(titleTransform_, uv, {1.0f,1.0f,1.0f,1.0f},titleTextureHandle_);
 	}
 	else if(isStartGame_){
-		Transform lifeTransform;
-		lifeTransform.scale = lifeScale_;
-		lifeTransform.rotate = {0,0,0};
-		lifeTranslates_[1] = Lerp(lifeDrawerT_, lifeLeftTopPosition_, { 640,360,0 });
-		int life = std::clamp(player_->GetLife(), 0, 3);
 		if (isLifeDecriaceAnimation_) {
-			life++;
-			lifeTranslates_[1].y += lifeUpDown_;
-		}
-		lifeTranslates_[0] = lifeTranslates_[1];
-		lifeTranslates_[0].x -= 100.0f;
-		lifeTranslates_[2] = lifeTranslates_[1];
-		lifeTranslates_[2].x += 100.0f;
-		for (int index = 0; index < life; index++) {
-			lifeTransform.translate = lifeTranslates_[index];
-			Vector4 color = {1.0f,1.0f,1.0f,1.0f};
-			if (index >= player_->GetLife()) {
-				color.w = decriaceAnimationAlpha_;
+			Transform lifeTransform;
+			lifeTransform.scale = lifeScale_;
+			lifeTransform.rotate = { 0,0,0 };
+			lifeTranslates_[1] = Lerp(lifeDrawerT_, lifeLeftTopPosition_, { 640,360,0 });
+			int life = std::clamp(player_->GetLife(), 0, 3);
+			if (isLifeDecriaceAnimation_) {
+				life++;
+				lifeTranslates_[1].y += lifeUpDown_;
 			}
-			lifeSprites_[size_t(index)]->Draw(lifeTransform, uv, color, lifeTextureHandle_);
+			lifeTranslates_[0] = lifeTranslates_[1];
+			lifeTranslates_[0].x -= 100.0f;
+			lifeTranslates_[2] = lifeTranslates_[1];
+			lifeTranslates_[2].x += 100.0f;
+			for (int index = 0; index < life; index++) {
+				lifeTransform.translate = lifeTranslates_[index];
+				Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+				if (index >= player_->GetLife()) {
+					color.w = decriaceAnimationAlpha_;
+				}
+				lifeSprites_[size_t(index)]->Draw(lifeTransform, uv, color, lifeTextureHandle_);
+			}
 		}
 	}
 	if (isRunAnimation_) {
@@ -1076,6 +1078,31 @@ void GameScene::DrawBackGround() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 	Transform pos = { {1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0} };
 	backGroundSprite_->Draw(pos, uv, { 1.0f,1.0f,1.0f,1.0f }, backTextureHandle_);
+
+	if (isStartGame_ && !isLifeDecriaceAnimation_) {
+		Transform lifeTransform;
+		lifeTransform.scale = lifeScale_;
+		lifeTransform.rotate = { 0,0,0 };
+		lifeTranslates_[1] = Lerp(lifeDrawerT_, lifeLeftTopPosition_, { 640,360,0 });
+		int life = std::clamp(player_->GetLife(), 0, 3);
+		if (isLifeDecriaceAnimation_) {
+			life++;
+			lifeTranslates_[1].y += lifeUpDown_;
+		}
+		lifeTranslates_[0] = lifeTranslates_[1];
+		lifeTranslates_[0].x -= 100.0f;
+		lifeTranslates_[2] = lifeTranslates_[1];
+		lifeTranslates_[2].x += 100.0f;
+		for (int index = 0; index < life; index++) {
+			lifeTransform.translate = lifeTranslates_[index];
+			Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+			if (index >= player_->GetLife()) {
+				color.w = decriaceAnimationAlpha_;
+			}
+			lifeSprites_[size_t(index)]->Draw(lifeTransform, uv, color, lifeTextureHandle_);
+		}
+	}
+
 	if (isStartGame_ || isEndGame_) {
 		WaveManager::GetInstance()->Draw();
 	}
@@ -1202,7 +1229,7 @@ void GameScene::ReStartAnimation() {
 	}
 	if (isRunAnimation_) {
 		resetT_ = 1.0f;
-		isLifeDecriaceAnimation_ = false;
+		//isLifeDecriaceAnimation_ = false;
 		if (!isEndGame_) {
 			resetT_ = frameCount_ / float(transitionAnimationLength_);
 			resetT_ = std::powf(resetT_ * 2.0f - 1.0f, 2) * -1.0f + 1.0f;
@@ -1211,6 +1238,7 @@ void GameScene::ReStartAnimation() {
 		
 		if (frameCount_ == transitionAnimationLength_/2) {
 			lifeDrawerT_ = 0.0f;
+			isLifeDecriaceAnimation_ = false;
 			if (isStartTutorial_) {
 				ReStartTutorial();
 			}
