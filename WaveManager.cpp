@@ -21,8 +21,8 @@ void WaveManager::LoadAllFiles() {
 	waves_.clear();
 	waves_.shrink_to_fit();
 	LoadFile("Resource/Wave/waveData.wave");
-	//LoadFile("Resource/Wave/waveData2.wave");
-	//LoadFile("Resource/Wave/waveData3.wave");
+	LoadFile("Resource/Wave/waveData2.wave");
+	LoadFile("Resource/Wave/waveData3.wave");
 
 	tutorialWaves_.clear();
 	tutorialWaves_.shrink_to_fit();
