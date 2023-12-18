@@ -6,6 +6,7 @@
 #include "Sprite.h"
 #include "TextureManager.h"
 #include <Vector>
+#include "Plane.h"
 class GameScene;
 class WaveManager
 {
@@ -42,6 +43,7 @@ public:
 	void TutorialUpdate();
 	void Draw();
 	void DrawTutorial();
+	void Draw3D(const ViewProjection& viewProjection);
 	void SetEnemyList(std::list<IEnemy*>* list) { enemyList_ = list; };
 	void SetPlayer(Player* player) { player_ = player; };
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
@@ -125,5 +127,15 @@ private:
 
 	std::unique_ptr<Sprite> tutorialSprite_;
 	uint32_t tutorialTextureHandles_[3];
+
+	//注意マーク
+	static const size_t kCortionMax_ = 60;
+	std::array<WorldTransform, kCortionMax_> worldTransformCortions_;
+	std::list<Vector3> cortion_;
+	std::unique_ptr<Plane> cortionPlane_;
+	uint32_t cortionTextureHandle_;
+
+	//出現何フレーム前からひょうじするか
+	int cortionDrawFrame_ = 60;
 };
 

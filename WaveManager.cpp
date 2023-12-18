@@ -219,12 +219,25 @@ void WaveManager::Initialize() {
 	tutorialTextureHandles_[0] = Texturemanager::GetInstance()->Load("Resource/UI/bigJumpUI.png");
 	tutorialTextureHandles_[1] = Texturemanager::GetInstance()->Load("Resource/UI/Jump.png");
 	tutorialTextureHandles_[2] = Texturemanager::GetInstance()->Load("Resource/UI/reversUI.png");
+
+
+	cortionPlane_.reset(new Plane);
+	cortionPlane_->Initialize();
+	cortionTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/mark.png");
+
+	for (size_t index = 0; index < kCortionMax_;index++) {
+		worldTransformCortions_[index].Initialize();
+	}
 }
 
 void WaveManager::Update() {
 	isClearTutorialWave_ = false;
+	cortion_.clear();
 	bool isPopWait = false;//出現待ちのエネミーがいるかどうか
 	for (EnemyData& enemy : waves_[size_t(waveNum_)].enemyDatas) {
+		if (currentFrame_ >= enemy.frame - cortionDrawFrame_ && currentFrame_ < enemy.frame && cortion_.size() < kCortionMax_-1) {
+			 cortion_.push_back(enemy.translate);
+		}
 		if (currentFrame_ == enemy.frame) {
 			//Enemyの生成処理	
 			IEnemy* newEnemy;
@@ -400,7 +413,11 @@ void WaveManager::Update() {
 }
 
 void WaveManager::TutorialUpdate() {
+	cortion_.clear();
 	for (EnemyData& enemy : tutorialWaves_[size_t(waveNum_)].enemyDatas) {
+		if (currentFrame_ >= enemy.frame - cortionDrawFrame_ && currentFrame_ < enemy.frame && cortion_.size() < kCortionMax_ - 1) {
+			cortion_.push_back(enemy.translate);
+		}
 		if (currentFrame_ == enemy.frame) {
 			//Enemyの生成処理	
 			IEnemy* newEnemy;
@@ -504,6 +521,29 @@ void WaveManager::DrawTutorial() {
 	Transform transform = { { 0.3f,0.3f,0.1f },{0,0,0},{640,250,0} };
 	tutorialSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandles_[waveNum_]);
 	
+}
+
+void WaveManager::Draw3D(const ViewProjection& viewProjection) {
+	if (cortion_.empty()) {
+		return;
+	}
+	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
+	Transform transform = { { 0.3f,0.3f,0.1f },{0,0,0},{640,250,0} };
+	size_t index = 0;
+	Matrix4x4 toCameraRotate = Inverse(viewProjection.matView);
+	toCameraRotate.m[3][0] = 0;
+	toCameraRotate.m[3][1] = 0;
+	toCameraRotate.m[3][2] = 0;
+	for (Vector3& position : cortion_) {
+		worldTransformCortions_[index].scale_ = {3.0f,3.0f,1.0f};
+		worldTransformCortions_[index].translation_ = position;
+		worldTransformCortions_[index].translation_.z -= 1.0f;
+		worldTransformCortions_[index].matWorld_ = Multiply(Multiply(MakeScaleMatrix(worldTransformCortions_[index].scale_), toCameraRotate), MakeTranslateMatrix(worldTransformCortions_[index].translation_));
+		worldTransformCortions_[index].TransferMatrix();
+		cortionPlane_->Draw(worldTransformCortions_[index],viewProjection, { 1.0f,1.0f,1.0f,1.0f },cortionTextureHandle_);
+		index++;
+	}
+	cortion_.clear();
 }
 
 void WaveManager::ChangeNumAnimation() {

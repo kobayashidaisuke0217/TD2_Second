@@ -850,6 +850,7 @@ void GameScene::Draw3D()
 		tutorialArea_->Draw(worldTransformInnerTutorialArie_, viewProjection_, { 0.8f,0.0f,0.0f,0.8f }, fadeTextureHandle_);
 		titleChar_->Draw(worldTransformTutorial_, viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandle_);
 	}
+	WaveManager::GetInstance()->Draw3D(viewProjection_);
 	blueMoon_->PariclePreDraw();
 	
 		particle_->Draw(viewProjection_, { 1.0f,1.0f,1.0f,1.0f }, particletextureHandle);
