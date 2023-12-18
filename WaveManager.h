@@ -129,11 +129,13 @@ private:
 	uint32_t tutorialTextureHandles_[3];
 
 	//注意マーク
-	static const size_t kCortionMax_ = 60;
+	static const size_t kCortionMax_ = 32;
 	std::array<WorldTransform, kCortionMax_> worldTransformCortions_;
+	std::array<WorldTransform, kCortionMax_> worldTransformArrows_;
 	std::list<Vector3> cortion_;
 	std::unique_ptr<Plane> cortionPlane_;
 	uint32_t cortionTextureHandle_;
+	uint32_t arrowTextureHandle_;
 
 	//出現何フレーム前からひょうじするか
 	int cortionDrawFrame_ = 60;

@@ -224,9 +224,10 @@ void WaveManager::Initialize() {
 	cortionPlane_.reset(new Plane);
 	cortionPlane_->Initialize();
 	cortionTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/mark.png");
-
+	arrowTextureHandle_ = Texturemanager::GetInstance()->Load("Resource/yajirushi.png");
 	for (size_t index = 0; index < kCortionMax_;index++) {
 		worldTransformCortions_[index].Initialize();
+		worldTransformArrows_[index].Initialize();
 	}
 }
 
@@ -537,6 +538,22 @@ void WaveManager::Draw3D(const ViewProjection& viewProjection) {
 	for (Vector3& position : cortion_) {
 		worldTransformCortions_[index].scale_ = {3.0f,3.0f,1.0f};
 		worldTransformCortions_[index].translation_ = position;
+		if (std::abs(position.x) > 52.0f || (position.y >52.0f || position.y < 0)) {
+			worldTransformCortions_[index].translation_.x = std::clamp(position.x,-52.0f,52.0f);
+			worldTransformCortions_[index].translation_.y = std::clamp(position.y, 0.0f, 52.0f);
+			Matrix4x4 rotate = DirectionToDirection({ 1.0f,0,0.0f }, Normalise(position - worldTransformCortions_[index].translation_));
+			if (Normalise(position - worldTransformCortions_[index].translation_).x <0 && Normalise(position - worldTransformCortions_[index].translation_).y == 0) {
+				rotate = Multiply(rotate,MakeRotateXMatrix(3.141592f));
+			}
+			worldTransformArrows_[index].rotation_ = TransformNormal(worldTransformArrows_[index].rotation_,rotate);
+			worldTransformArrows_[index].scale_ = { 3.0f,3.0f,1.0f };
+			worldTransformArrows_[index].translation_ = worldTransformCortions_[index].translation_;
+			worldTransformArrows_[index].translation_.z += 0.1f;
+			worldTransformArrows_[index].matWorld_ = Multiply(Multiply(Multiply(MakeScaleMatrix(worldTransformCortions_[index].scale_), MakeTranslateMatrix({2.0f,0.0f,0.0f})), rotate), MakeTranslateMatrix(worldTransformCortions_[index].translation_));
+			worldTransformArrows_[index].TransferMatrix();
+			//worldTransformArrows_[index].UpdateMatrix();
+			cortionPlane_->Draw(worldTransformArrows_[index], viewProjection, { 1.0f,1.0f,1.0f,1.0f }, arrowTextureHandle_);
+		}
 		worldTransformCortions_[index].translation_.z -= 1.0f;
 		worldTransformCortions_[index].matWorld_ = Multiply(Multiply(MakeScaleMatrix(worldTransformCortions_[index].scale_), toCameraRotate), MakeTranslateMatrix(worldTransformCortions_[index].translation_));
 		worldTransformCortions_[index].TransferMatrix();
