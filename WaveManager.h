@@ -126,7 +126,9 @@ private:
 	bool isClearTutorialWave_ = false;//チュートリアルの各ウェーブをクリアしたか
 
 	std::unique_ptr<Sprite> tutorialSprite_;
-	uint32_t tutorialTextureHandles_[3];
+	std::unique_ptr<Sprite> tutorialSprite1_;
+	std::unique_ptr<Sprite> tutorialSprite2_;
+	uint32_t tutorialTextureHandles_[4];
 
 	//注意マーク
 	static const size_t kCortionMax_ = 32;

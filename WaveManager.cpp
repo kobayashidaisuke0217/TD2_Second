@@ -216,10 +216,17 @@ void WaveManager::Initialize() {
 	tutorialSprite_.reset(new Sprite);
 	tutorialSprite_->Initialize({ -800,-400.0,0 }, { 800,400.0,0 });
 
+	tutorialSprite1_.reset(new Sprite);
+	tutorialSprite1_->Initialize({ -800,-300.0,0 }, { 800,300.0,0 });
+
+	//tutorialSprite2_.reset(new Sprite);
+	//tutorialSprite2_->Initialize({ -800,-300.0,0 }, { 800,400.0,0 });
+
+
 	tutorialTextureHandles_[0] = Texturemanager::GetInstance()->Load("Resource/UI/bigJumpUI.png");
 	tutorialTextureHandles_[1] = Texturemanager::GetInstance()->Load("Resource/UI/Jump.png");
 	tutorialTextureHandles_[2] = Texturemanager::GetInstance()->Load("Resource/UI/reversUI.png");
-
+	tutorialTextureHandles_[3] = Texturemanager::GetInstance()->Load("Resource/UI/jumpUI.png");
 
 	cortionPlane_.reset(new Plane);
 	cortionPlane_->Initialize();
@@ -520,8 +527,18 @@ void WaveManager::Draw() {
 void WaveManager::DrawTutorial() {
 	Transform uv = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f} ,{0.0f,0.0f,0.0f} };
 	Transform transform = { { 0.3f,0.3f,0.1f },{0,0,0},{640,250,0} };
-	tutorialSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandles_[waveNum_]);
-	
+	Transform transform2 = { { 0.3f,0.2f,0.1f },{0,0,0},{640,90,0} };
+
+	if (waveNum_==0) {
+		tutorialSprite1_->Draw(transform2, uv, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandles_[3]);
+
+	}
+	if (waveNum_==2) {
+		tutorialSprite1_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandles_[waveNum_]);
+	}
+	else {
+		tutorialSprite_->Draw(transform, uv, { 1.0f,1.0f,1.0f,1.0f }, tutorialTextureHandles_[waveNum_]);
+	}
 }
 
 void WaveManager::Draw3D(const ViewProjection& viewProjection) {
