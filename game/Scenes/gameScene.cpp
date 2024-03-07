@@ -1169,7 +1169,8 @@ void GameScene::ReStartTutorial()
 		num++;
 	}
 	if (WaveManager::GetInstance()->IsEnd()) {
-		Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
+		//チュートリアル終了、InGameへ
+		//Audio::GetInstance()->StopAudio(Audio::GetInstance()->handle_[inGameBGM]);
 		WaveManager::GetInstance()->SetIsEnd(false);
 		//sceneNum = 2;
 		isStartGame_ = true;
