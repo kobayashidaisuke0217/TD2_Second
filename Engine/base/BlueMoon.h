@@ -43,6 +43,7 @@ public:
 	void ModelPreDrawWireFrame();
 	void PariclePreDraw();
 	void SpritePreDraw();
+	void OutLinePreDraw();
 	void SetBlendMode(int BlendModeNum);
 private:
 
@@ -95,6 +96,16 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12PipelineState>graphicsPipelineStateParticle_;
 	D3D12_RASTERIZER_DESC rasterizerDescParticle_{};
 	D3D12_INPUT_ELEMENT_DESC inputElementDescsParticle_[3];
+	//アウトライン用のパイプライン
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDescOutLine_{};
+	Microsoft::WRL::ComPtr<ID3DBlob>signatureBlobOutLine_;
+	Microsoft::WRL::ComPtr<ID3DBlob>errorBlobOutLine_;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignatureOutLine_;
+	IDxcBlob* vertexShaderBlobOutLine_;
+	IDxcBlob* pixelShaderBlobOutLine_;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState>graphicsPipelineStateOutLine_;
+	D3D12_RASTERIZER_DESC rasterizerDescOutLine_{};
+	D3D12_INPUT_ELEMENT_DESC inputElementDescsOutLine_[3];
 
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData_;
@@ -131,6 +142,11 @@ private:
 	void SettingRasterizerStateParticle();
 	void InitializePSOParticle();
 	void CreateInputlayOutParticle();
+
+	void CreateRootSignatureOutLine();
+	void SettingRasterizerStateOutLine();
+	void InitializePSOOutLine();
+	void CreateInputlayOutOutLine();
 };
 
 

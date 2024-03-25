@@ -234,14 +234,34 @@ void MapManager::Draw(const ViewProjection& viewProjection) {
 	/*for (Map& object : mapObject_) {
 		modelBlock_->Draw(object.worldTransform,viewProjection);
 	}*/
+	ImGui::Begin("OutLine");
+	ImGui::DragFloat3("width", &outLineWidth_.x, 0.1f);
+	ImGui::DragFloat4("color", &outLineColor_.x, 0.1f);
+	ImGui::End();
+	modelBlock_->SetOutLineWidth(outLineWidth_);
+	modelBlock_->SetOutLineColor(outLineColor_);
+
 	for (std::shared_ptr<Map> object : floor_) {
 		modelBlock_->Draw(object->worldTransform, viewProjection);
+		modelBlock_->SetOutLineWidth(outLineWidth_);
+		modelBlock_->SetOutLineColor(outLineColor_);
 	}
 	for (std::shared_ptr<Map> object : wall_) {
 		modelArie_->Draw(object->worldTransform,viewProjection);
+		modelArie_->SetOutLineWidth(outLineWidth_);
+		modelArie_->SetOutLineColor(outLineColor_);
 	}
 	for (std::shared_ptr<Map> object : ceiling_) {
 		modelArie_->Draw(object->worldTransform, viewProjection);
+	}
+	for (std::shared_ptr<Map> object : floor_) {
+		modelBlock_->OutLineDraw(object->worldTransform, viewProjection);
+	}
+	for (std::shared_ptr<Map> object : wall_) {
+		modelArie_->OutLineDraw(object->worldTransform, viewProjection);
+	}
+	for (std::shared_ptr<Map> object : ceiling_) {
+		modelArie_->OutLineDraw(object->worldTransform, viewProjection);
 	}
 }
 

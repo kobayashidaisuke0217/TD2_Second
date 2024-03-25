@@ -420,6 +420,12 @@
     <FxCompile Include="Resource\hlsl\particle.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resource\hlsl\OutLine.VS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\hlsl\OutLine.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\hlsl\Object3D.hlsli">
@@ -432,5 +438,8 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="Resource\Map\waveTutorialMap.csv" />
+    <None Include="Resource\hlsl\OutLine.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
 </Project>

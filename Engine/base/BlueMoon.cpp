@@ -12,6 +12,7 @@ void BlueMoon::Initialize(int32_t width, int32_t height) {
 	CreateRootSignature3D();
 	CreateInputlayOut();
 	SettingBlendState();
+	
 	SettingRasterizerState3D();
 	SettingDepth();
 	InitializePSO3D();
@@ -24,10 +25,17 @@ void BlueMoon::Initialize(int32_t width, int32_t height) {
 
 		InitializePSO2D();
 	}
+
+
 	CreateRootSignatureParticle();
 	CreateInputlayOutParticle();
 	SettingRasterizerStateParticle();
 	InitializePSOParticle();
+	CreateRootSignatureOutLine();
+	CreateInputlayOutOutLine();
+	SettingRasterizerStateOutLine();
+	InitializePSOOutLine();
+
 	SettingViePort();
 
 	SettingScissor();
@@ -440,11 +448,17 @@ void BlueMoon::SpritePreDraw()
 	direct_->GetCommandList()->SetGraphicsRootSignature(rootSignature2D_.Get());
 	direct_->GetCommandList()->SetPipelineState(graphicsPipelineState2D_[kBlendModeNormal].Get());//PS0を設定
 }
+void BlueMoon::OutLinePreDraw()
+{
+	direct_->GetCommandList()->SetGraphicsRootSignature(rootSignatureOutLine_.Get());
+	direct_->GetCommandList()->SetPipelineState(graphicsPipelineStateOutLine_.Get());//PS0を設定
+}
 void BlueMoon::PariclePreDraw()
 {
 	direct_->GetCommandList()->SetGraphicsRootSignature(rootSignatureParticle_.Get());
 	direct_->GetCommandList()->SetPipelineState(graphicsPipelineStateParticle_.Get());//PS0を設定
 }
+
 void BlueMoon::SetBlendMode(int BlendModeNum)
 {
 	if (BlendModeNum > 4) {
@@ -720,5 +734,136 @@ void BlueMoon::CreateInputlayOutParticle()
 
 	inputLayoutDesc_.pInputElementDescs = inputElementDescsParticle_;
 	inputLayoutDesc_.NumElements = _countof(inputElementDescsParticle_);
+}
+
+#pragma endregion
+#pragma region OutLine用のパイプライン
+void BlueMoon::CreateRootSignatureOutLine()
+{
+	//RootSignature作成
+	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
+	descriptionRootSignature.Flags =
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	//RootParameter作成。複数設定できるので配列。
+	D3D12_ROOT_PARAMETER rootParameters[3] = {};
+	
+	//D3D12_DESCRIPTOR_RANGE descriptoraRange[1] = {};
+	//descriptoraRange[0].BaseShaderRegister = 0;
+	//descriptoraRange[0].NumDescriptors = 1;
+	//descriptoraRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//SRVを使用
+	//descriptoraRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;//Offsetを自動計算
+	////transform
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderを使う
+	rootParameters[0].Descriptor.ShaderRegister = 0;
+	//viewProjection
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを使う
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;//vertexShaderで使う
+	rootParameters[1].Descriptor.ShaderRegister = 1;//レジスタ番号を1にバインド
+   
+	//mat
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters[2].Descriptor.ShaderRegister = 2;
+
+
+	
+
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;//バイリニアフィルタ
+	staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;//０～１の範囲外をリピート
+	staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;//比較しない
+	staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;//ありったけのmipmapを使う
+	staticSamplers[0].ShaderRegister = 0;
+	staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+
+	descriptionRootSignature.pParameters = rootParameters;//ルートパラメータ配列へのポインタ
+	descriptionRootSignature.NumParameters = _countof(rootParameters);
+    descriptionRootSignature.pStaticSamplers = staticSamplers;
+	descriptionRootSignature.NumStaticSamplers = _countof(staticSamplers);
+	//シリアライズしてバイナリにする
+
+	HRESULT hr;
+	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
+		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlobOutLine_, &errorBlobOutLine_);
+	if (FAILED(direct_->GetHr())) {
+		Log(reinterpret_cast<char*>(errorBlobOutLine_->GetBufferPointer()));
+		assert(false);
+	}
+	//バイナリを元に生成
+
+	hr = direct_->GetDevice()->CreateRootSignature(0, signatureBlobOutLine_->GetBufferPointer(),
+		signatureBlobOutLine_->GetBufferSize(), IID_PPV_ARGS(&rootSignatureOutLine_));
+	assert(SUCCEEDED(hr));
+}
+void BlueMoon::SettingRasterizerStateOutLine()
+{
+	//裏面（時計回り）を表示しない
+	rasterizerDescOutLine_.CullMode = D3D12_CULL_MODE_FRONT;
+	//三角形の中を塗りつぶす
+	rasterizerDescOutLine_.FillMode = D3D12_FILL_MODE_SOLID;
+
+	//Shaderをコンパイルする
+	vertexShaderBlobOutLine_ = CompileShader(L"Resource/hlsl/OutLine.VS.hlsl",
+		L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	assert(vertexShaderBlobOutLine_ != nullptr);
+
+
+	pixelShaderBlobOutLine_ = CompileShader(L"Resource/hlsl/OutLine.PS.hlsl",
+		L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	assert(pixelShaderBlobOutLine_ != nullptr);
+}
+void BlueMoon::InitializePSOOutLine()
+{
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
+	graphicsPipelineStateDesc.pRootSignature = rootSignatureOutLine_.Get();//RootSignature
+	graphicsPipelineStateDesc.InputLayout = inputLayoutDescOutLine_;//Inputlayout
+	graphicsPipelineStateDesc.VS = { vertexShaderBlobOutLine_->GetBufferPointer(),
+		vertexShaderBlobOutLine_->GetBufferSize() };//vertexShader
+	graphicsPipelineStateDesc.PS = { pixelShaderBlobOutLine_->GetBufferPointer(),
+		pixelShaderBlobOutLine_->GetBufferSize() };//pixcelShader
+	graphicsPipelineStateDesc.BlendState = blendDesc_[kBlendModeAdd];//BlendState
+	graphicsPipelineStateDesc.RasterizerState = rasterizerDescOutLine_;//rasterizerState
+	//書き込むRTVの情報
+	graphicsPipelineStateDesc.NumRenderTargets = 1;
+	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//利用するトポロジ（形状）のタイプ。三角形
+	graphicsPipelineStateDesc.PrimitiveTopologyType =
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	//どのように画面に色を打ち込むのかの設定（気にしなく良い）
+	graphicsPipelineStateDesc.SampleDesc.Count = 1;
+	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDescParticle;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//実際に生成
+	//graphicsPipelineStateOutLine_ = nullptr;
+	HRESULT hr = direct_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
+		IID_PPV_ARGS(&graphicsPipelineStateOutLine_));
+	assert(SUCCEEDED(hr));
+}
+void BlueMoon::CreateInputlayOutOutLine()
+{
+	//inputElementDescsをメンバ変数にすると治った
+	inputElementDescsOutLine_[0].SemanticIndex = 0;
+	inputElementDescsOutLine_[0].SemanticName = "POSITION";
+	inputElementDescsOutLine_[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescsOutLine_[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	inputElementDescsOutLine_[1].SemanticName = "TEXCOORD";
+	inputElementDescsOutLine_[1].SemanticIndex = 0;
+	inputElementDescsOutLine_[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	inputElementDescsOutLine_[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	inputElementDescsOutLine_[2].SemanticName = "NORMAL";
+	inputElementDescsOutLine_[2].SemanticIndex = 0;
+	inputElementDescsOutLine_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	inputElementDescsOutLine_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	
+	inputLayoutDescOutLine_.pInputElementDescs = inputElementDescsOutLine_;
+	inputLayoutDescOutLine_.NumElements = _countof(inputElementDescsOutLine_);
 }
 #pragma endregion

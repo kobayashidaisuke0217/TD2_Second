@@ -43,6 +43,13 @@ struct VertexData {
 	Vector4 position;
 	Vector2 texcoord;
 	Vector3 normal;
+	Vector3 center;
+};
+struct VertexDataOutLine {
+	Vector4 position;
+	Vector2 texcoord;
+	Vector3 normal;
+	Vector3 center;
 };
 struct Material {
 	Vector4 color;
@@ -93,6 +100,7 @@ struct ParticleForGPU {
 struct ModelData {
 	std::vector<VertexData> vertices;
 	MaterialData material;
+	Vector3 center;
 };
 struct AABB {
 	Vector3 min;

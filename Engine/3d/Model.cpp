@@ -11,12 +11,16 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
     directionalLight_ = DirectionalLight::GetInstance();
     CreateVartexData();
     SetColor();
+    CreateOutLineData();
     material_->enableLighting = true;
+    SetOutLineColor( { 1.0f,1.0f,1.0f,1.0f });
+    SetOutLineWidth( { 1.05f,1.05f,1.05f });
 
 }
 
 void Model::Draw(const WorldTransform& transform, const ViewProjection& viewProjection)
 {
+    transform, viewProjection;
     Transform uvTransform = { { 1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f} };
 
     Matrix4x4 uvtransformMtrix = MakeScaleMatrix(uvTransform.scale);
@@ -44,6 +48,23 @@ void Model::Draw(const WorldTransform& transform, const ViewProjection& viewProj
     dxCommon_->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 
 
+}
+void Model::OutLineDraw(const WorldTransform& transform, const ViewProjection& viewProjection)
+{
+    BlueMoon::GetInstance()->OutLinePreDraw();
+    dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
+    //形状を設定。PS0にせっていしているものとはまた別。同じものを設定すると考えておけばいい
+    dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, outlineResource_->GetGPUVirtualAddress());
+    //wvp用のCBufferの場所を設定
+    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, transform.constBuff_->GetGPUVirtualAddress());
+    //viewProjection
+    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, viewProjection.constBuff_->GetGPUVirtualAddress());
+
+    //Draw
+    dxCommon_->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+
+    BlueMoon::GetInstance()->ModelPreDraw();
 }
 void Model::Finalize()
 {
@@ -157,7 +178,7 @@ void Model::CreateVartexData()
 {
 
     vertexResource = dxCommon_->CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
-
+    
 
     vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 
@@ -168,6 +189,20 @@ void Model::CreateVartexData()
     vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
     std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+
+
+    //vertexResourceOutLine = dxCommon_->CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(VertexDataOutLine) * modelData_.vertices.size());
+
+
+    //VBVOutline_.BufferLocation = vertexResourceOutLine->GetGPUVirtualAddress();
+
+    //VBVOutline_.SizeInBytes = sizeof(VertexDataOutLine) * (UINT)modelData_.vertices.size();
+
+    //VBVOutline_.StrideInBytes = sizeof(VertexDataOutLine);
+
+    //vertexResourceOutLine->Map(0, nullptr, reinterpret_cast<void**>(&vertexDataOutLine_));
+
+    //std::memcpy(vertexDataOutLine_, modelData_.vertices.data(), sizeof(VertexDataOutLine) * modelData_.vertices.size());
 }
 
 void Model::SetColor()
@@ -184,6 +219,18 @@ void Model::TransformMatrix()
     wvpResource_ = DirectXCommon::CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(Transformmatrix));
     wvpResource_->Map(0, NULL, reinterpret_cast<void**>(&wvpData_));
     wvpData_->WVP = MakeIdentity4x4();
+}
+
+void Model::CreateOutLineData()
+{
+
+    //アウトライン用リソース
+    outlineResource_ = DirectXCommon::CreateBufferResource(dxCommon_->GetDevice().Get(), sizeof(OutLineData));
+    //Material* materialData = nullptr;
+    outlineResource_->Map(0, nullptr, reinterpret_cast<void**>(&outlineData_));
+    outlineData_->color = Vector4{ 0.0f, 0.0f, 0.0f, 1.0f };
+    outlineData_->scale = MakeScaleMatrix({ 1.05f,1.05f,1.05f });
+
 }
 
 

@@ -3,6 +3,7 @@
 #include"MyMath.h"
 struct ConstBufferDataWorldTransform {
 	Matrix4x4 matWorld; // ローカル → ワールド変換行列
+	Matrix4x4 WorldInverceTranspose;
 };
 struct WorldTransform {
 	// 定数バッファ

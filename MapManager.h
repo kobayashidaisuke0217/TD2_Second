@@ -109,5 +109,7 @@ private:
 	std::function<void()> cameraShake_;
 	int32_t reverseCoolTime_;
 	int32_t kReverseCoolTime_;
+	Vector3 outLineWidth_ = { 1.05f,1.05f,1.05f };
+	Vector4 outLineColor_ = { 1.0f,1.0f,1.0f,1.0f };
 };
 
