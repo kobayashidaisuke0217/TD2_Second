@@ -432,7 +432,7 @@ void Player::OnCollisionEnemy() {
 void Player::Draw(const ViewProjection& viewProjection) {
 	//model_->Draw(worldTransformOBB_,viewProjection);
 	body_->Draw(worldTransformbody_,viewProjection);
-	body_->OutLineDraw(worldTransformbody_, viewProjection);
+	//body_->OutLineDraw(worldTransformbody_, viewProjection);
 	if (jumpAble_ && jumpCoolTime_ <= 0) {
 		back2_->setIsLighting(false);
 		back2_->Draw(worldTransformback_, viewProjection);

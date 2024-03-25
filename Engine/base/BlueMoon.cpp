@@ -804,7 +804,7 @@ void BlueMoon::SettingRasterizerStateOutLine()
 	//裏面（時計回り）を表示しない
 	rasterizerDescOutLine_.CullMode = D3D12_CULL_MODE_FRONT;
 	//三角形の中を塗りつぶす
-	rasterizerDescOutLine_.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	rasterizerDescOutLine_.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//Shaderをコンパイルする
 	vertexShaderBlobOutLine_ = CompileShader(L"Resource/hlsl/OutLine.VS.hlsl",
