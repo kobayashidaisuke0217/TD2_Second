@@ -21,6 +21,7 @@ VertexShaderOutput main(VertexShaderInput input) {
 	 wvp = mul(gOutLineData.Scale,wvp);
 	output.position = mul(input.position, wvp);
 	output.texcoord = input.texcoord;
-	output.normal = normalize(mul(input.normal, (float32_t3x3)gTransformationMatrix.WorldInverseTranspose)); output.color = gOutLineData.Color;
+	output.normal = normalize(mul(input.normal, (float32_t3x3)gTransformationMatrix.WorldInverseTranspose)); 
+	output.color = gOutLineData.Color;
 	return output;
 }
